@@ -1,0 +1,50 @@
+Task,Metric,Canonical,Robust,Delta
+Informative Fusion,Accuracy,0.707238,0.701772,-0.005467
+Informative Fusion,Balanced Accuracy,0.613592,0.614263,0.000671
+Informative Fusion,Precision,0.686728,0.67989,-0.006839
+Informative Fusion,Recall,0.980896,0.980143,-0.000753
+Informative Fusion,F1,0.807867,0.802863,-0.005004
+Informative Fusion,F2,0.903492,0.900598,-0.002894
+Informative Fusion,MCC,0.360224,0.359228,-0.000996
+Informative Fusion,Average Precision,0.892082,0.889288,-0.002793
+Humanitarian Fusion,Accuracy,0.556939,0.557579,0.00064
+Humanitarian Fusion,Macro F1,0.400466,0.390816,-0.00965
+Humanitarian Fusion,Weighted F1,0.577619,0.578878,0.001259
+Manual Review,Accuracy,0.56201,0.564469,0.002458
+Manual Review,Balanced Accuracy,0.596943,0.597406,0.000463
+Manual Review,Precision,0.753597,0.752918,-0.000679
+Manual Review,Recall,0.340097,0.337991,-0.002106
+Manual Review,F1,0.46868,0.466546,-0.002134
+Manual Review,F2,0.38202,0.379859,-0.002162
+Manual Review,MCC,0.219972,0.222261,0.002289
+Manual Review,Average Precision,0.710638,0.70779,-0.002848
+Manual Review,Review Rate,0.256339,0.252953,-0.003387
+Informative Baseline - Prior / majority,Accuracy,0.6275,0.6196,-0.0079
+Informative Baseline - Prior / majority,Balanced Accuracy,0.5,0.5,0.0
+Informative Baseline - Prior / majority,Precision,0.6275,0.6196,-0.0079
+Informative Baseline - Prior / majority,Recall,1.0,1.0,0.0
+Informative Baseline - Prior / majority,F1,0.7711,0.7651,-0.006
+Informative Baseline - Prior / majority,F2,0.8939,0.8906,-0.0033
+Informative Baseline - Prior / majority,MCC,0.0,0.0,0.0
+Informative Baseline - Prior / majority,Average Precision,0.6275,0.6196,-0.0079
+Informative Baseline - Always informative,Accuracy,0.6275,0.6196,-0.0079
+Informative Baseline - Always informative,Balanced Accuracy,0.5,0.5,0.0
+Informative Baseline - Always informative,Precision,0.6275,0.6196,-0.0079
+Informative Baseline - Always informative,Recall,1.0,1.0,0.0
+Informative Baseline - Always informative,F1,0.7711,0.7651,-0.006
+Informative Baseline - Always informative,F2,0.8939,0.8906,-0.0033
+Informative Baseline - Always informative,MCC,0.0,0.0,0.0
+Informative Baseline - Always informative,Average Precision,0.6275,0.6196,-0.0079
+Informative Baseline - Always not informative,Accuracy,0.3725,0.3804,0.0079
+Informative Baseline - Always not informative,Balanced Accuracy,0.5,0.5,0.0
+Informative Baseline - Always not informative,Precision,0.0,0.0,0.0
+Informative Baseline - Always not informative,Recall,0.0,0.0,0.0
+Informative Baseline - Always not informative,F1,0.0,0.0,0.0
+Informative Baseline - Always not informative,F2,0.0,0.0,0.0
+Informative Baseline - Always not informative,MCC,0.0,0.0,0.0
+Informative Baseline - Always not informative,Average Precision,0.6275,0.6196,-0.0079
+Humanitarian Baseline - Train majority,Accuracy,0.3785,0.3888,0.0103
+Humanitarian Baseline - Train majority,Balanced Accuracy,0.125,0.125,0.0
+Humanitarian Baseline - Train majority,Macro F1,0.0686,0.07,0.0014
+Humanitarian Baseline - Train majority,Weighted F1,0.2079,0.2177,0.0098
+Humanitarian Baseline - Train majority,MCC,0.0,0.0,0.0

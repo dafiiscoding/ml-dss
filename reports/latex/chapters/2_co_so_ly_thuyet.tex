@@ -1,0 +1,116 @@
+\chapter{Cơ sở lý thuyết và kỹ thuật áp dụng}
+
+\section{Kiến trúc DSS ba tầng}
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+  node distance=5mm,
+  box/.style={draw=HUSTBlue,rounded corners=2pt,minimum width=3.1cm,
+              minimum height=1.2cm,align=center,fill=boxgray},
+  arrow/.style={-{Latex[length=2.5mm]},thick,HUSTBlue}
+]
+\node[box] (data) {CrisisMMD\\text + image};
+\node[box,right=of data] (predict) {Predictive\\TF--IDF / CLIP\\6 classifiers};
+\node[box,right=of predict] (fusion) {Late Fusion\\probability level};
+\node[box,right=of fusion] (dss) {Prescriptive\\Risk / Priority\\Routing / Review};
+\node[box,below=of fusion] (ui) {Presentation\\Streamlit dashboard};
+\draw[arrow] (data) -- (predict);
+\draw[arrow] (predict) -- (fusion);
+\draw[arrow] (fusion) -- (dss);
+\draw[arrow] (dss) |- (ui);
+\draw[arrow] (ui) -| (data);
+\end{tikzpicture}
+\caption{Kiến trúc từ dữ liệu đến quyết định và phản hồi người dùng.}
+\end{figure}
+
+Tầng \emph{Predictive} trả lời ``điều gì đang xảy ra?''. Tầng \emph{Prescriptive}
+chuyển xác suất thành khuyến nghị ``nên làm gì tiếp theo?''. Tầng \emph{Presentation}
+cho phép người điều phối kiểm tra, lọc và phản hồi. Cách tách này giúp phân biệt metric
+mô hình với chính sách vận hành.
+
+\section{Text Mining và Social Media Mining}
+Tweet được chuyển chữ thường, bỏ URL, mention, HTML entity, giữ nội dung hashtag và chuẩn
+hóa khoảng trắng. Biểu diễn TF--IDF unigram/bigram có tối đa 2.000 đặc trưng:
+\[
+\operatorname{tfidf}(t,d)=\operatorname{tf}(t,d)
+\log\frac{N}{1+\operatorname{df}(t)}.
+\]
+Vectorizer chỉ fit trên train. Việc bỏ URL/mention giảm nhiễu định danh; giữ từ trong hashtag
+bảo toàn tín hiệu sự kiện.
+
+\section{Các thuật toán phân lớp}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Logistic Regression:} baseline tuyến tính, hỗ trợ
+        \code{class\_weight=balanced}.
+  \item \textbf{Decision Tree:} mô hình luật rẽ nhánh dễ diễn giải, giới hạn độ sâu để giảm overfit.
+  \item \textbf{Naive Bayes:} MultinomialNB cho TF--IDF, GaussianNB cho embedding ảnh.
+  \item \textbf{k-NN:} dự báo theo láng giềng; dùng để kiểm tra ảnh hưởng của không gian đặc trưng.
+  \item \textbf{Linear SVM:} siêu phẳng lề lớn, được calibration để tạo xác suất cho fusion.
+  \item \textbf{Random Forest:} ensemble nhiều cây, giảm phương sai bằng bagging.
+\end{itemize}
+Không thuật toán nào được mặc định là tốt nhất; tất cả được fit trên train và chọn bằng dev.
+
+\section{Học không giám sát và luật kết hợp}
+K-Means được dùng như công cụ khám phá, không phải routing. Báo cáo silhouette cho
+\(k=2,\ldots,12\), sau đó dùng \(k=8\) để đối chiếu với taxonomy tám lớp, không tuyên bố
+đây là \(k\) tối ưu. Apriori xem mỗi tweet như một giỏ keyword/hashtag; transaction loại
+cặp trùng nghĩa như \code{\#earthquake}/\code{earthquake} để tránh luật hiển nhiên.
+Lift lớn hơn 1 cho biết đồng xuất hiện mạnh hơn giả thuyết độc lập.
+
+\section{Đánh giá mất cân bằng và kiểm soát rò rỉ}
+Informative dùng
+\[
+F_2=5\frac{\mathrm{Precision}\cdot\mathrm{Recall}}
+{4\mathrm{Precision}+\mathrm{Recall}},
+\]
+vì bỏ sót tin hữu ích có chi phí cao. Tám lớp dùng Macro-F1 để lớp hiếm có trọng số ngang
+lớp lớn. Ngoài kiểm tra ID, file ảnh được băm SHA-256; dev/test loại mẫu có hash ảnh hoặc
+text đã xuất hiện ở split trước. Do đó metric chính thức không hưởng lợi từ bản sao xuyên split.
+
+\section{CLIP và Late Fusion}
+CLIP ViT-B/32 pretrained tạo vector ảnh 512 chiều, chuẩn hóa \(L_2\). Nhóm không fine-tune
+CLIP và xem nó là bộ trích đặc trưng phụ trợ. Hai nhánh được hợp nhất ở mức xác suất:
+\[
+\bm p_{\mathrm{fusion}}=\alpha\bm p_{\mathrm{text}}
+ +(1-\alpha)\bm p_{\mathrm{image}}.
+\]
+\(\alpha\), threshold informative và conflict threshold được chọn trên dev leakage-safe.
+
+\section{Phân biệt bằng chứng, suy luận và chính sách}
+\begin{insight}[Nguyên tắc diễn giải]
+\textbf{Bằng chứng} là số liệu đo trực tiếp (phân bố, metric, hash trùng).
+\textbf{Suy luận} là kết luận có giới hạn từ bằng chứng (ví dụ clustering không đủ ổn định
+để routing). \textbf{Chính sách} là lựa chọn của người vận hành khi dữ liệu không có ground
+truth (trọng số Risk Score, ngưỡng Priority). Báo cáo không gọi chính sách heuristic là
+``mô hình tối ưu''.
+\end{insight}
+
+\section{Ma trận truy vết kỹ thuật}
+\begin{longtable}{p{3cm}p{4cm}p{4cm}p{3cm}}
+\toprule
+\textbf{Kỹ thuật} & \textbf{Mục đích} & \textbf{Hiện thực/artifact} & \textbf{Vị trí báo cáo}\\
+\midrule
+\endhead
+Audit schema, missing, duplicate & Xác nhận dữ liệu thật và hợp lệ &
+\code{audit\_data.py}, \code{data\_quality\_summary.json} & Chương 3\\
+SHA-256 split audit & Loại rò rỉ ảnh/text xuyên split &
+\code{split\_integrity.csv} & Chương 3, 5\\
+TF--IDF & Biểu diễn tweet cho classifier cổ điển &
+\code{text\_preprocessing.py} & Chương 3, 5\\
+CLIP embedding & Biểu diễn ảnh 512 chiều &
+\code{image\_preprocessing.py}, cache \code{.npy} & Chương 3, 4\\
+EDA theo event/label & Phát hiện mất cân bằng và domain shift &
+\code{02\_eda.ipynb} & Chương 4\\
+K-Means & Khám phá cấu trúc chủ đề không giám sát &
+\code{kmeans\_silhouette\_by\_k.csv} & Chương 4\\
+Apriori & Tìm liên kết hashtag/địa danh &
+\code{apriori\_rules.csv} & Chương 4\\
+Sáu classifier & So sánh kiến thức phân loại của môn &
+\code{03\_modeling.ipynb} & Chương 5\\
+Late Fusion & Hợp nhất bằng chứng text và ảnh &
+\code{evaluate\_fusion.py} & Chương 5\\
+Risk, routing, review & Chuyển dự báo thành quyết định &
+\code{decision\_rules.py}, \code{audit\_dss.py} & Chương 5, 6\\
+Streamlit & Giao diện theo dõi và xử lý hàng đợi &
+\code{app/}, screenshots & Chương 7\\
+\bottomrule
+\end{longtable}

@@ -1,0 +1,36 @@
+{
+  "group": "29",
+  "lecturer": "TS. Lê Hải Hà",
+  "semester": "2025.2",
+  "location_date": "Hà Nội, tháng 6 năm 2026",
+  "members": [
+    {
+      "name": "Đoàn Danh Long",
+      "student_id": "20237354",
+      "contribution": "TO_BE_FILLED",
+      "evidence": "Repository và lịch sử làm việc",
+      "share_percent": null
+    },
+    {
+      "name": "TO_BE_FILLED",
+      "student_id": "TO_BE_FILLED",
+      "contribution": "TO_BE_FILLED",
+      "evidence": "Artefact/log tương ứng",
+      "share_percent": null
+    },
+    {
+      "name": "TO_BE_FILLED",
+      "student_id": "TO_BE_FILLED",
+      "contribution": "TO_BE_FILLED",
+      "evidence": "Artefact/log tương ứng",
+      "share_percent": null
+    },
+    {
+      "name": "TO_BE_FILLED",
+      "student_id": "TO_BE_FILLED",
+      "contribution": "TO_BE_FILLED",
+      "evidence": "Artefact/log tương ứng",
+      "share_percent": null
+    }
+  ]
+}

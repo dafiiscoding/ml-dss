@@ -1,0 +1,109 @@
+\input{chapters/team_info}
+
+\begin{titlepage}
+\centering
+\begin{tikzpicture}[remember picture,overlay]
+  \draw[HUSTBlue,line width=1pt,dash pattern=on 6pt off 3pt]
+    ($(current page.north west)+(1.4cm,-1.4cm)$) rectangle
+    ($(current page.south east)+(-1.4cm,1.4cm)$);
+  \draw[HUSTBlue,line width=0.4pt]
+    ($(current page.north west)+(1.65cm,-1.65cm)$) rectangle
+    ($(current page.south east)+(-1.65cm,1.65cm)$);
+\end{tikzpicture}
+
+{\large\bfseries ĐẠI HỌC BÁCH KHOA HÀ NỘI\par}
+{\large\bfseries KHOA TOÁN -- TIN\par}
+\vspace{2pt}{\color{HUSTBlue}\rule{3cm}{0.8pt}}\par
+\vspace{0.8cm}
+
+\begin{tabular}{c@{\hskip 1.6cm}c}
+  \includegraphics[height=2.6cm]{logo_bachkhoa.png}
+  &
+  \includegraphics[height=2.6cm]{logo_toantin.png}
+\end{tabular}
+
+\vspace{1cm}
+{\Large\bfseries BÁO CÁO BÀI TẬP NHÓM\par}
+\vspace{4pt}
+{\large HỌC PHẦN HỆ HỖ TRỢ QUYẾT ĐỊNH\par}
+\vspace{0.9cm}
+{\color{HUSTBlue}\LARGE\bfseries
+HỆ HỖ TRỢ QUYẾT ĐỊNH ỨNG PHÓ THẢM HỌA\par}
+\vspace{5pt}
+{\color{HUSTBlue}\LARGE\bfseries
+TỪ VĂN BẢN VÀ HÌNH ẢNH MẠNG XÃ HỘI\par}
+\vspace{6pt}
+{\large\itshape
+A Multimodal Decision Support System for Disaster Response\par}
+\vspace{1.2cm}
+
+{\large
+\begin{tabular}{r@{\hskip 0.6cm}l}
+  \textbf{Giảng viên:} & \color{HUSTRed}\TeamLecturer\\[4pt]
+  \textbf{Nhóm thực hiện:} & Nhóm \TeamGroup\\[4pt]
+  \textbf{Thành viên 1:} & \MemberOneDisplay\\[4pt]
+  \textbf{Thành viên 2:} & \MemberTwoDisplay\\[4pt]
+  \textbf{Thành viên 3:} & \MemberThreeDisplay\\[4pt]
+  \textbf{Thành viên 4:} & \MemberFourDisplay\\[4pt]
+  \textbf{Học kỳ:} & \TeamSemester
+\end{tabular}\par}
+
+\vfill
+{\bfseries \TeamLocationDate\par}
+\end{titlepage}
+
+\chapter*{Lời mở đầu}
+\addcontentsline{toc}{chapter}{Lời mở đầu}
+Trong thảm họa, mạng xã hội cung cấp thông tin hiện trường nhanh nhưng đồng thời tạo ra
+khối lượng dữ liệu lớn, nhiễu và khó xác minh. Một hệ thống hữu ích không thể dừng ở việc
+gán nhãn bài đăng; nó phải chuyển bằng chứng từ dữ liệu thành quyết định có thể kiểm tra:
+bài nào cần chú ý, mức độ ưu tiên, đội nào tiếp nhận và trường hợp nào phải có người duyệt.
+
+Báo cáo trình bày quy trình xây dựng một DSS đa phương thức trên CrisisMMD v2.0, từ kiểm
+tra dữ liệu, EDA train-only, so sánh sáu thuật toán, late fusion, đến Risk Score, routing
+và dashboard. Mọi kết quả mô hình được chọn trên dev và báo cáo trên test đã loại ảnh/text
+trùng với split trước. Những phần không có ground truth, đặc biệt Risk Score và Priority,
+được công khai là chính sách heuristic và được kiểm tra bằng scenario/sensitivity thay vì
+tuyên bố tối ưu thống kê.
+
+\chapter*{Lời cảm ơn}
+\addcontentsline{toc}{chapter}{Lời cảm ơn}
+Nhóm 29 xin trân trọng cảm ơn TS. Lê Hải Hà đã cung cấp nền tảng kiến thức và định hướng
+cho học phần Hệ hỗ trợ quyết định. Nhóm đồng thời ghi nhận bộ dữ liệu mở CrisisMMD của
+QCRI, các thư viện mã nguồn mở và những công cụ hỗ trợ đã được liệt kê trong phụ lục.
+
+\chapter*{Tóm tắt}
+\addcontentsline{toc}{chapter}{Tóm tắt}
+Báo cáo xây dựng một DSS đa phương thức giúp trung tâm điều phối cứu nạn lọc, ưu tiên và
+phân luồng thông tin từ mạng xã hội. Dữ liệu gồm 18.082 cặp tweet--ảnh CrisisMMD v2.0.
+Sáu thuật toán cổ điển được so sánh trên TF--IDF và embedding CLIP 512 chiều. Audit phát
+hiện 2.649 nhãn informative sẽ sai nếu suy diễn từ humanitarian và 305 hàng ảnh trùng theo
+SHA-256; pipeline vì vậy join nhãn informative chính thức và đánh giá trên 2.189 mẫu dev,
+2.169 mẫu test leakage-safe. Với informative, Late Fusion đạt Accuracy 0,7072, F1 0,8079
+và F2 0,9035; tuy nhiên baseline luôn dự báo informative đã đạt F2 0,8939, nên F2 không
+được diễn giải độc lập. Với tám lớp humanitarian, fusion đạt Macro-F1 0,4005 so với
+majority baseline 0,0686. Hậu kiểm robust không tune lại đạt F2 0,9006 và Macro-F1
+0,3908; bootstrap/event analysis cho thấy lợi thế humanitarian rõ nhưng lớp hiếm và
+domain shift vẫn là giới hạn. Tầng quyết định cung cấp Risk Score, Priority, routing và Manual
+Review; các trọng số ưu tiên được xem là chính sách minh bạch, không phải ground truth học
+được.
+
+\vspace{6pt}
+\noindent\textbf{Từ khóa:} DSS, CrisisMMD, Text Mining, CLIP, Late Fusion,
+Human-in-the-loop.
+
+\chapter*{Bảng thuật ngữ viết tắt}
+\addcontentsline{toc}{chapter}{Bảng thuật ngữ viết tắt}
+\begin{longtable}{>{\bfseries}p{3.2cm}p{11cm}}
+\toprule
+\textmd{\bfseries Thuật ngữ} & \textbf{Giải nghĩa}\\
+\midrule
+DSS & Decision Support System -- Hệ hỗ trợ quyết định.\\
+TF--IDF & Term Frequency--Inverse Document Frequency.\\
+CLIP & Contrastive Language--Image Pre-training; dùng để trích đặc trưng ảnh.\\
+EDA & Exploratory Data Analysis -- Phân tích khám phá dữ liệu.\\
+F2 & Chỉ số F-score nhấn mạnh Recall hơn Precision.\\
+Macro-F1 & F1 trung bình đều trên các lớp, phù hợp dữ liệu mất cân bằng.\\
+SHA-256 & Hàm băm dùng phát hiện file ảnh giống hệt nhau.\\
+\bottomrule
+\end{longtable}

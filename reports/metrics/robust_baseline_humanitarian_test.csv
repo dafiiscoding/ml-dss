@@ -1,0 +1,2 @@
+Model,Predicted Class,Accuracy,Balanced Accuracy,Macro F1,Weighted F1,MCC
+Train majority,not_humanitarian,0.3888,0.125,0.07,0.2177,0.0

@@ -1,0 +1,51 @@
+\chapter{Giới thiệu bài toán}
+
+\section{Bối cảnh và tính cấp thiết}
+Khi thảm họa tự nhiên xảy ra (lũ lụt, bão, động đất, cháy rừng), mạng xã hội trở thành kênh
+thông tin hiện trường nhanh nhất nhưng cũng \textbf{nhiễu nhất}: lẫn lộn giữa lời kêu cứu thật,
+tin tức, cảm xúc cá nhân và tin giả. Trung tâm điều phối cứu nạn rơi vào tình trạng
+\emph{quá tải thông tin}, không thể đọc thủ công hàng vạn bài đăng mỗi giờ; bỏ sót một bài đăng
+khẩn cấp (người bị thương, mắc kẹt) có thể trả giá bằng sinh mạng. Do đó cần một hệ thống
+\textbf{tự động lọc, phân loại và phân luồng} thông tin cứu trợ dựa trên cả văn bản và hình ảnh.
+
+\section{Đối tượng sử dụng và quyết định cần hỗ trợ}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Ban điều phối trung tâm:} phân bổ nguồn lực tổng thể.
+  \item \textbf{Đội phản ứng khẩn cấp / Hạ tầng / Cứu trợ:} tiếp nhận thông tin đã phân luồng.
+  \item \textbf{Giám sát viên (Supervisor):} kiểm duyệt mẫu nghi mâu thuẫn/tin giả.
+\end{itemize}
+Hệ thống trả lời \textbf{5 câu hỏi quyết định}: (1) bài đăng có đáng chú ý không?
+(2) thuộc danh mục thảm họa nào? (3) mức ưu tiên? (4) phân về đội nào? (5) có cần kiểm duyệt thủ công?
+
+\section{Mục tiêu và phạm vi}
+Mục tiêu của dự án là xây dựng một nguyên mẫu DSS có thể: (i) xử lý toàn bộ 18.082 cặp
+tweet--ảnh CrisisMMD; (ii) so sánh tối thiểu sáu thuật toán phân lớp; (iii) phát hiện tin
+informative với đánh giá đa chỉ số và dummy baseline; (iv) phân loại 8 nhóm humanitarian
+để định tuyến; và
+(v) chuyển xác suất dự báo thành Risk Score, Priority, đội tiếp nhận và cờ Manual Review.
+
+Phạm vi là dữ liệu tiếng Anh đã gán nhãn của bảy thảm họa năm 2017. Hệ thống không tự
+thu thập dữ liệu thời gian thực, không suy diễn tọa độ GPS và không tự động điều động lực
+lượng ngoài đời. Đầu ra là khuyến nghị hỗ trợ người ra quyết định, luôn cần con người chịu
+trách nhiệm cuối cùng.
+
+\section{Câu hỏi nghiên cứu và tiêu chí thành công}
+\begin{enumerate}[leftmargin=*]
+  \item Văn bản, ảnh và late fusion khác nhau thế nào khi cùng dự báo một ground truth?
+  \item Các lớp hiếm có được nhận diện đủ tốt để tự động hóa hay phải giữ human-in-the-loop?
+  \item Mâu thuẫn text--ảnh có thể tạo một hàng đợi kiểm duyệt nằm trong giới hạn năng lực không?
+  \item Kết quả dự báo được chuyển thành priority/routing ra sao mà vẫn minh bạch về giả định?
+\end{enumerate}
+Tiêu chí lựa chọn là F2 cho informative và Macro-F1 cho tám lớp, nhưng kết luận cuối phải
+đối chiếu dummy baseline và đọc đồng thời Accuracy, F1, Balanced Accuracy và MCC. Tiêu chí
+hệ thống gồm: split sạch, routing phủ đủ tám lớp, Manual Review có capacity, dashboard chạy
+được và mọi kết luận trong báo cáo truy về artifact thực thi.
+
+\section{Đóng góp chính}
+\begin{enumerate}[leftmargin=*]
+  \item Quy trình DSS 3 tầng end-to-end trên dữ liệu thật, gắn phân tích với quyết định cụ thể.
+  \item Phát hiện và sửa lỗi suy diễn nhãn informative làm sai 2.649/18.082 mẫu.
+  \item Phát hiện ảnh trùng xuyên split và tạo evaluation mask theo SHA-256.
+  \item So sánh hệ thống sáu thuật toán phân lớp của môn học cho bài toán mất cân bằng.
+  \item Khai thác tín hiệu \emph{mâu thuẫn đa phương thức} có nhãn thật để thiết kế luật kiểm duyệt.
+\end{enumerate}

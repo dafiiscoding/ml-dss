@@ -1,0 +1,108 @@
+{
+  "validation": {
+    "rows": 2189,
+    "informative_positive_rate": 0.6213,
+    "informative": [
+      {
+        "Model": "Prior / majority",
+        "Accuracy": 0.6213,
+        "Balanced Accuracy": 0.5,
+        "Precision": 0.6213,
+        "Recall": 1.0,
+        "F1": 0.7664,
+        "F2": 0.8913,
+        "MCC": 0.0,
+        "Average Precision": 0.6213
+      },
+      {
+        "Model": "Always informative",
+        "Accuracy": 0.6213,
+        "Balanced Accuracy": 0.5,
+        "Precision": 0.6213,
+        "Recall": 1.0,
+        "F1": 0.7664,
+        "F2": 0.8913,
+        "MCC": 0.0,
+        "Average Precision": 0.6213
+      },
+      {
+        "Model": "Always not informative",
+        "Accuracy": 0.3787,
+        "Balanced Accuracy": 0.5,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1": 0.0,
+        "F2": 0.0,
+        "MCC": 0.0,
+        "Average Precision": 0.6213
+      }
+    ],
+    "humanitarian": [
+      {
+        "Model": "Train majority",
+        "Predicted Class": "not_humanitarian",
+        "Accuracy": 0.3956,
+        "Balanced Accuracy": 0.125,
+        "Macro F1": 0.0709,
+        "Weighted F1": 0.2243,
+        "MCC": 0.0
+      }
+    ]
+  },
+  "test": {
+    "rows": 2169,
+    "informative_positive_rate": 0.6275,
+    "informative": [
+      {
+        "Model": "Prior / majority",
+        "Accuracy": 0.6275,
+        "Balanced Accuracy": 0.5,
+        "Precision": 0.6275,
+        "Recall": 1.0,
+        "F1": 0.7711,
+        "F2": 0.8939,
+        "MCC": 0.0,
+        "Average Precision": 0.6275
+      },
+      {
+        "Model": "Always informative",
+        "Accuracy": 0.6275,
+        "Balanced Accuracy": 0.5,
+        "Precision": 0.6275,
+        "Recall": 1.0,
+        "F1": 0.7711,
+        "F2": 0.8939,
+        "MCC": 0.0,
+        "Average Precision": 0.6275
+      },
+      {
+        "Model": "Always not informative",
+        "Accuracy": 0.3725,
+        "Balanced Accuracy": 0.5,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "F1": 0.0,
+        "F2": 0.0,
+        "MCC": 0.0,
+        "Average Precision": 0.6275
+      }
+    ],
+    "humanitarian": [
+      {
+        "Model": "Train majority",
+        "Predicted Class": "not_humanitarian",
+        "Accuracy": 0.3785,
+        "Balanced Accuracy": 0.125,
+        "Macro F1": 0.0686,
+        "Weighted F1": 0.2079,
+        "MCC": 0.0
+      }
+    ]
+  },
+  "interpretation": {
+    "warning": "F2 strongly rewards recall. The always-informative baseline must be shown beside the final system.",
+    "always_informative_test_f2": 0.8939,
+    "fusion_test_f2": 0.9035,
+    "absolute_f2_gain_over_dummy": 0.0096
+  }
+}

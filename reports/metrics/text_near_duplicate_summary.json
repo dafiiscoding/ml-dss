@@ -1,0 +1,68 @@
+{
+  "method": {
+    "semantic_signal": "normalized CLIP text embedding cosine",
+    "lexical_signal": "0.6 char 3-5 gram TF-IDF + 0.4 word 1-2 gram TF-IDF",
+    "semantic_threshold": 0.98,
+    "lexical_threshold": 0.8,
+    "comparison": "validation against train; test against train+validation",
+    "scope": "only rows still eligible under the exact SHA/text mask",
+    "decision": "candidate only; no evaluation row is removed automatically"
+  },
+  "rows_embedded": 18082,
+  "nearest_similarity_distributions": {
+    "val": {
+      "eligible_rows": 2189,
+      "clip_nearest_quantiles": {
+        "0.5": 0.889531,
+        "0.9": 0.948073,
+        "0.95": 0.958027,
+        "0.99": 0.969259,
+        "0.995": 0.97205,
+        "0.999": 0.980309,
+        "1.0": 0.984754
+      },
+      "lexical_nearest_quantiles": {
+        "0.5": 0.354671,
+        "0.9": 0.494454,
+        "0.95": 0.544658,
+        "0.99": 0.669731,
+        "0.995": 0.723699,
+        "0.999": 0.89197,
+        "1.0": 0.981414
+      }
+    },
+    "test": {
+      "eligible_rows": 2169,
+      "clip_nearest_quantiles": {
+        "0.5": 0.891667,
+        "0.9": 0.947123,
+        "0.95": 0.956681,
+        "0.99": 0.971847,
+        "0.995": 0.976616,
+        "0.999": 0.983224,
+        "1.0": 0.990647
+      },
+      "lexical_nearest_quantiles": {
+        "0.5": 0.363614,
+        "0.9": 0.503257,
+        "0.95": 0.547474,
+        "0.99": 0.669982,
+        "0.995": 0.725217,
+        "0.999": 0.854066,
+        "1.0": 0.946672
+      }
+    }
+  },
+  "additional_candidate_rows": 16,
+  "candidate_rows_by_split": {
+    "test": 9,
+    "val": 7
+  },
+  "candidate_rows_by_signal": {
+    "clip_semantic": 6,
+    "tfidf_lexical": 10
+  },
+  "same_event_candidates": 7,
+  "same_informative_label_candidates": 13,
+  "same_humanitarian_label_candidates": 6
+}

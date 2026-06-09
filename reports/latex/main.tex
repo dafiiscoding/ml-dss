@@ -1,0 +1,113 @@
+% =============================================================
+% BÁO CÁO BÀI TẬP NHÓM - HỆ HỖ TRỢ QUYẾT ĐỊNH
+% Biên dịch: xelatex main.tex (hai lần)
+% =============================================================
+\documentclass[12pt,a4paper,oneside]{report}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\IfFontExistsTF{Cascadia Mono}
+  {\newfontfamily\monofont{Cascadia Mono}}
+  {\newfontfamily\monofont{Courier New}}
+
+\usepackage[a4paper,margin=2.5cm,headheight=16pt]{geometry}
+\usepackage{indentfirst}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{0.5cm}
+
+\usepackage[table,dvipsnames]{xcolor}
+\definecolor{HUSTBlue}{RGB}{0,51,102}
+\definecolor{HUSTRed}{RGB}{197,24,24}
+\definecolor{boxgray}{RGB}{247,247,247}
+\definecolor{linkcol}{RGB}{0,71,133}
+
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\graphicspath{{../figures/}{../figures/screenshots/}{assets/}}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{
+  font=small,
+  labelfont={bf,color=HUSTBlue},
+  justification=centering,
+  skip=6pt
+}
+\usepackage{booktabs,array,multirow,longtable,tabularx}
+\usepackage{enumitem}
+\renewcommand{\arraystretch}{1.2}
+
+\usepackage[most]{tcolorbox}
+\newtcolorbox{insight}[1][]{
+  enhanced,breakable,boxrule=0.6pt,colback=boxgray,colframe=HUSTBlue,
+  arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt,fonttitle=\bfseries,
+  title={#1}
+}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape\nouppercase{\leftmark}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]
+  {\LARGE\bfseries\color{HUSTBlue}}
+  {\colorbox{HUSTBlue}{\color{white}\rule[-6pt]{0pt}{28pt}\,\thechapter\,}}
+  {14pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{10pt}{24pt}
+\titleformat{\section}
+  {\Large\bfseries\color{HUSTBlue}}{\thesection}{0.8em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{HUSTBlue}}{\thesubsection}{0.8em}{}
+
+\renewcommand{\chaptername}{Chương}
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\listfigurename}{Danh sách hình}
+\renewcommand{\bibname}{Tài liệu tham khảo}
+\renewcommand{\appendixname}{Phụ lục}
+
+\usepackage[unicode]{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=linkcol,
+  citecolor=HUSTRed,
+  urlcolor=linkcol,
+  pdftitle={Hệ hỗ trợ quyết định ứng phó thảm họa đa phương thức},
+  pdfauthor={Nhóm 29}
+}
+
+\newcommand{\code}[1]{\nolinkurl{#1}}
+\newcommand{\MissingMember}{\textcolor{HUSTRed}{\textit{Chưa cung cấp}}}
+
+\begin{document}
+\pagenumbering{roman}
+\input{chapters/0_frontmatter}
+\tableofcontents
+\listoffigures
+\cleardoublepage
+\pagenumbering{arabic}
+
+\input{chapters/1_gioi_thieu}
+\input{chapters/2_co_so_ly_thuyet}
+\input{chapters/3_du_lieu}
+\input{chapters/4_eda}
+\input{chapters/5_mo_hinh}
+\input{chapters/6_ket_qua}
+\input{chapters/7_dashboard}
+\input{chapters/8_ket_luan}
+\input{chapters/9_phu_luc}
+\input{chapters/references}
+\end{document}

@@ -1,0 +1,6 @@
+,Test
+Accuracy,0.544
+Macro Precision,0.3662
+Macro Recall,0.4463
+Macro F1,0.3646
+Weighted F1,0.5695

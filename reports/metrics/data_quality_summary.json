@@ -1,0 +1,244 @@
+{
+  "protocol": {
+    "master_split": "humanitarian",
+    "informative_target": "joined official informative label",
+    "evaluation_filter": "exclude dev/test rows whose exact image or cleaned text appeared in an earlier split",
+    "old_derived_informative_mismatches": 2649,
+    "modality_label_derivation_mismatches": 0
+  },
+  "splits": {
+    "train": {
+      "rows": 13608,
+      "unique_tweet_ids": 11584,
+      "unique_image_ids": 13608,
+      "missing_values": 0,
+      "duplicate_tweet_image_pairs": 0,
+      "missing_image_files": 0,
+      "humanitarian_classes": 8,
+      "informative_distribution": {
+        "informative": 8338,
+        "not_informative": 5270
+      },
+      "evaluation_eligible_rows": 13608,
+      "excluded_prior_split_duplicates": 0,
+      "processed_csv_order_match": true,
+      "processed_csv_targets_match": true
+    },
+    "val": {
+      "rows": 2237,
+      "unique_tweet_ids": 2237,
+      "unique_image_ids": 2237,
+      "missing_values": 0,
+      "duplicate_tweet_image_pairs": 0,
+      "missing_image_files": 0,
+      "humanitarian_classes": 8,
+      "informative_distribution": {
+        "informative": 1386,
+        "not_informative": 851
+      },
+      "evaluation_eligible_rows": 2189,
+      "excluded_prior_split_duplicates": 48,
+      "processed_csv_order_match": true,
+      "processed_csv_targets_match": true
+    },
+    "test": {
+      "rows": 2237,
+      "unique_tweet_ids": 2237,
+      "unique_image_ids": 2237,
+      "missing_values": 0,
+      "duplicate_tweet_image_pairs": 0,
+      "missing_image_files": 0,
+      "humanitarian_classes": 8,
+      "informative_distribution": {
+        "informative": 1397,
+        "not_informative": 840
+      },
+      "evaluation_eligible_rows": 2169,
+      "excluded_prior_split_duplicates": 68,
+      "processed_csv_order_match": true,
+      "processed_csv_targets_match": true
+    }
+  },
+  "overlap": {
+    "train_val": {
+      "shared_tweet_ids": 0,
+      "train_affected_rows_tweet_ids": 0,
+      "val_affected_rows_tweet_ids": 0,
+      "shared_image_ids": 0,
+      "train_affected_rows_image_ids": 0,
+      "val_affected_rows_image_ids": 0,
+      "shared_image_hashes": 43,
+      "train_affected_rows_image_hashes": 105,
+      "val_affected_rows_image_hashes": 48,
+      "shared_raw_text_hashes": 0,
+      "train_affected_rows_raw_text_hashes": 0,
+      "val_affected_rows_raw_text_hashes": 0,
+      "shared_clean_text_hashes": 1,
+      "train_affected_rows_clean_text_hashes": 1,
+      "val_affected_rows_clean_text_hashes": 1,
+      "shared_tweet_image_pairs": 0
+    },
+    "train_test": {
+      "shared_tweet_ids": 0,
+      "train_affected_rows_tweet_ids": 0,
+      "test_affected_rows_tweet_ids": 0,
+      "shared_image_ids": 0,
+      "train_affected_rows_image_ids": 0,
+      "test_affected_rows_image_ids": 0,
+      "shared_image_hashes": 46,
+      "train_affected_rows_image_hashes": 119,
+      "test_affected_rows_image_hashes": 61,
+      "shared_raw_text_hashes": 0,
+      "train_affected_rows_raw_text_hashes": 0,
+      "test_affected_rows_raw_text_hashes": 0,
+      "shared_clean_text_hashes": 1,
+      "train_affected_rows_clean_text_hashes": 1,
+      "test_affected_rows_clean_text_hashes": 1,
+      "shared_tweet_image_pairs": 0
+    },
+    "val_test": {
+      "shared_tweet_ids": 0,
+      "val_affected_rows_tweet_ids": 0,
+      "test_affected_rows_tweet_ids": 0,
+      "shared_image_ids": 0,
+      "val_affected_rows_image_ids": 0,
+      "test_affected_rows_image_ids": 0,
+      "shared_image_hashes": 21,
+      "val_affected_rows_image_hashes": 24,
+      "test_affected_rows_image_hashes": 36,
+      "shared_raw_text_hashes": 0,
+      "val_affected_rows_raw_text_hashes": 0,
+      "test_affected_rows_raw_text_hashes": 0,
+      "shared_clean_text_hashes": 0,
+      "val_affected_rows_clean_text_hashes": 0,
+      "test_affected_rows_clean_text_hashes": 0,
+      "shared_tweet_image_pairs": 0
+    }
+  },
+  "embeddings": {
+    "train": {
+      "available": true,
+      "shape": [
+        13608,
+        512
+      ],
+      "std": 0.044181,
+      "mean_l2_norm": 1.0,
+      "zero_norm_rows": 0,
+      "metadata_rows": 13608,
+      "metadata_order_match": true
+    },
+    "val": {
+      "available": true,
+      "shape": [
+        2237,
+        512
+      ],
+      "std": 0.044182,
+      "mean_l2_norm": 1.0,
+      "zero_norm_rows": 0,
+      "metadata_rows": 2237,
+      "metadata_order_match": true
+    },
+    "test": {
+      "available": true,
+      "shape": [
+        2237,
+        512
+      ],
+      "std": 0.044181,
+      "mean_l2_norm": 1.0,
+      "zero_norm_rows": 0,
+      "metadata_rows": 2237,
+      "metadata_order_match": true
+    }
+  },
+  "images": {
+    "files_on_disk": 18104,
+    "valid_images": 18082,
+    "invalid_files": 22,
+    "invalid_file_examples": [
+      "mexico_earthquake\\24_9_2017\\._911808511948058629_0.jpg",
+      "hurricane_maria\\20_9_2017\\._910539526921125888_0.jpg",
+      "hurricane_irma\\18_9_2017\\._909759902188556288_0.png",
+      "hurricane_irma\\19_9_2017\\._910187552266743808_0.jpg",
+      "hurricane_harvey\\18_9_2017\\._909765035563601920_0.jpg",
+      "hurricane_harvey\\7_9_2017\\._905652450647982081_0.jpg",
+      "california_wildfires\\10_10_2017\\._917791044158185473_0.jpg",
+      "california_wildfires\\10_10_2017\\._917793736918216706_0.jpg",
+      "california_wildfires\\10_10_2017\\._917821459321556992_0.jpg",
+      "california_wildfires\\10_10_2017\\._917825152636907523_0.jpg"
+    ],
+    "exact_duplicate_extra_files": 305,
+    "referenced_unique_hashes": 17777,
+    "referenced_duplicate_extra_rows": 305,
+    "color_modes": {
+      "RGB": 17890,
+      "RGBA": 188,
+      "P": 3,
+      "L": 1
+    },
+    "top_dimensions": [
+      [
+        "1200x675",
+        1191
+      ],
+      [
+        "1200x900",
+        1114
+      ],
+      [
+        "900x1200",
+        664
+      ],
+      [
+        "1200x800",
+        473
+      ],
+      [
+        "675x1200",
+        407
+      ],
+      [
+        "1024x576",
+        320
+      ],
+      [
+        "640x360",
+        282
+      ],
+      [
+        "1200x630",
+        255
+      ],
+      [
+        "1024x768",
+        235
+      ],
+      [
+        "1200x1200",
+        234
+      ],
+      [
+        "640x480",
+        220
+      ],
+      [
+        "480x360",
+        208
+      ],
+      [
+        "1024x683",
+        115
+      ],
+      [
+        "768x1024",
+        114
+      ],
+      [
+        "1024x682",
+        105
+      ]
+    ]
+  }
+}

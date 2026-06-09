@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "confirmed_near_duplicate": "same substantive item or copied wording; source prefix, encoding, hashtag order, or attribution may differ",
+    "related_not_duplicate": "same topic/event but materially different fact, update, publisher report, or product post",
+    "template_not_duplicate": "shared boilerplate with a different event, identifier, named entity, or destination",
+    "mask_policy": "only confirmed_near_duplicate rows are proposed for the robust evaluation mask"
+  },
+  "reviewed_candidates": 16,
+  "review_status_counts": {
+    "confirmed_near_duplicate": 5,
+    "related_not_duplicate": 7,
+    "template_not_duplicate": 4
+  },
+  "confirmed_exclusions": 5,
+  "confirmed_exclusions_by_split": {
+    "test": 2,
+    "val": 3
+  },
+  "canonical_evaluation_mask_changed": false
+}

@@ -1,0 +1,4 @@
+Model,Accuracy,Balanced Accuracy,Precision,Recall,F1,F2,MCC,Average Precision
+Prior / majority,0.6275,0.5,0.6275,1.0,0.7711,0.8939,0.0,0.6275
+Always informative,0.6275,0.5,0.6275,1.0,0.7711,0.8939,0.0,0.6275
+Always not informative,0.3725,0.5,0.0,0.0,0.0,0.0,0.0,0.6275

@@ -1,0 +1,7 @@
+Model,Accuracy,Macro Precision,Macro Recall,Macro F1,Weighted F1
+Logistic Regression,0.5354,0.3603,0.4768,0.3637,0.5653
+Decision Tree,0.4079,0.2288,0.2406,0.2323,0.4163
+Naive Bayes,0.5477,0.3462,0.4028,0.3362,0.559
+k-NN,0.5943,0.4101,0.353,0.3563,0.5851
+SVM (Linear),0.619,0.4889,0.3586,0.3631,0.597
+Random Forest,0.5706,0.5433,0.276,0.2795,0.5262

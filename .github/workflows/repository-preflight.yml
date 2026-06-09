@@ -1,0 +1,20 @@
+name: Repository preflight
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Compile Python sources
+        run: python -m compileall -q app scripts src tests
+      - name: Check generated team metadata
+        run: python -m scripts.apply_team_info --check
+      - name: Check GitHub submission set
+        run: python -m scripts.submission_preflight

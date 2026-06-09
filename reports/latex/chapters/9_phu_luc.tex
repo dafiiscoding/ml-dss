@@ -1,0 +1,62 @@
+\appendix
+\chapter{Phụ lục}
+
+\section{Bảng phân công công việc}
+\TeamInfoStatusText
+\begin{table}[H]\centering\small
+\begin{tabularx}{\textwidth}{p{3.5cm}p{2.2cm}XX}
+\toprule
+\textbf{Thành viên} & \textbf{MSSV} & \textbf{Công việc} & \textbf{Minh chứng}\\
+\midrule
+\MemberOneName & \MemberOneId & \MemberOneContribution & \MemberOneEvidence\\
+\MemberTwoName & \MemberTwoId & \MemberTwoContribution & \MemberTwoEvidence\\
+\MemberThreeName & \MemberThreeId & \MemberThreeContribution & \MemberThreeEvidence\\
+\MemberFourName & \MemberFourId & \MemberFourContribution & \MemberFourEvidence\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Khai báo sử dụng AI}
+Dự án sử dụng Claude và OpenAI Codex để hỗ trợ lập kế hoạch, refactor code, dựng notebook,
+soạn LaTeX và rà lỗi. AI không được dùng làm bằng chứng thay cho kết quả chạy. Nhóm kiểm chứng
+bằng annotation thật, join nhãn chính thức, hash audit, dev/test tách biệt, notebook execute,
+unit test, bootstrap robustness, integration test, Streamlit AppTest và screenshot trình duyệt. Các lỗi quan trọng
+do audit phát hiện gồm suy diễn sai 2.649 nhãn informative, duplicate ảnh xuyên split và lỗi
+logic hạ High Priority khi conflict; tất cả đã được sửa và có test hồi quy.
+
+\section{Bảng tự chấm tham khảo}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\textwidth}{XrrX}
+\toprule
+\textbf{Tiêu chí} & \textbf{Tối đa} & \textbf{Tự chấm} & \textbf{Minh chứng}\\
+\midrule
+Hiểu bài toán & 15 & 14 & Chương 1, câu hỏi quyết định\\
+Dữ liệu/tiền xử lý & 15 & 15 & Nhãn official, SHA-256, embedding audit\\
+EDA/insight & 20 & 19 & Train-only, event, K sweep, Apriori, conflict\\
+Mô hình/hệ thống & 20 & 19 & 24 lượt model, fusion, bootstrap, per-class, DSS tests\\
+Khuyến nghị & 15 & 13 & Chương 6, capacity và policy sensitivity\\
+Báo cáo/minh chứng & 10 & 9 & PDF, notebook, screenshot, traceability\\
+Tổ chức nhóm & 5 & 1 & Thiếu ba tên, MSSV và minh chứng cá nhân\\
+\midrule
+\textbf{Tổng} & \textbf{100} & \textbf{90} & Chưa tính là bản nộp cuối\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Siêu tham số chính}
+TF--IDF có 2.000 đặc trưng, n-gram (1,2). Logistic Regression dùng trọng số lớp
+cân bằng, tối đa 2.000 vòng lặp; Decision Tree sâu tối đa 20;
+k-NN dùng \(k=15\); Linear SVM được calibration 3-fold; Random Forest có 200 cây và
+balanced subsample. K-Means thử \(k=2,\ldots,12\), \(n\_init=10\); \(k=8\) chỉ dùng
+đối chiếu taxonomy. CLIP là \code{openai/clip-vit-base-patch32}.
+
+\section{Kiểm thử và artifact}
+\begin{itemize}[leftmargin=*]
+  \item Notebook: \code{notebooks/02\_eda.ipynb}, \code{03\_modeling.ipynb}.
+  \item Data audit: \code{data\_quality\_summary.json}, \code{split\_integrity.csv}.
+  \item Robustness: summary JSON và các bảng bootstrap/event/class trong
+        \code{reports/metrics/}.
+  \item Metrics: \code{reports/metrics/}; hình và screenshot: \code{reports/figures/}.
+  \item DSS audit: \code{dss\_scenarios.csv}, \code{dss\_threshold\_sensitivity.csv}.
+  \item Tests: 37 unit tests, 6 Streamlit AppTest và integration ảnh thật.
+\end{itemize}

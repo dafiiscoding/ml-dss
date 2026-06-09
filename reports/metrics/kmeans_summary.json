@@ -1,0 +1,102 @@
+{
+  "silhouette": 0.021,
+  "selection_note": "k=8 is domain-aligned with the eight humanitarian categories; the silhouette sweep remains uniformly low.",
+  "cluster_terms": {
+    "0": [
+      "storm",
+      "tropical",
+      "tropical storm",
+      "winds",
+      "storm surge",
+      "surge",
+      "tornado",
+      "weather",
+      "caribbean",
+      "coast"
+    ],
+    "1": [
+      "victims",
+      "help victims",
+      "help",
+      "aid",
+      "aid victims",
+      "helping victims",
+      "donate",
+      "helping",
+      "support victims",
+      "texasstrong"
+    ],
+    "2": [
+      "city",
+      "help",
+      "buildings",
+      "major",
+      "71",
+      "volunteers",
+      "relief",
+      "rescue",
+      "following",
+      "puebla"
+    ],
+    "3": [
+      "relief",
+      "relief efforts",
+      "efforts",
+      "support",
+      "disaster relief",
+      "effort",
+      "relief effort",
+      "fund",
+      "supplies",
+      "support relief"
+    ],
+    "4": [
+      "help",
+      "damage",
+      "tornado",
+      "houston",
+      "news",
+      "puertorico",
+      "affected",
+      "hit",
+      "people",
+      "post"
+    ],
+    "5": [
+      "mora",
+      "cyclone",
+      "cyclone mora",
+      "bangladesh",
+      "antonio",
+      "antonio mora",
+      "day",
+      "love",
+      "action",
+      "moka"
+    ],
+    "6": [
+      "rico",
+      "puerto rico",
+      "puerto",
+      "help",
+      "trump",
+      "help puerto",
+      "57",
+      "relief",
+      "people",
+      "power"
+    ],
+    "7": [
+      "hurricanes",
+      "affected hurricanes",
+      "affected",
+      "response",
+      "hr",
+      "cities",
+      "jose",
+      "named",
+      "says",
+      "local"
+    ]
+  }
+}

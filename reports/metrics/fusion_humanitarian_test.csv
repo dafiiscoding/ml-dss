@@ -1,0 +1,4 @@
+Model,Accuracy,Macro F1,Weighted F1
+Text-only,0.4481,0.326,0.4693
+Image-only,0.544,0.3646,0.5695
+Late Fusion,0.5569,0.4005,0.5776

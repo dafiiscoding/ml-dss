@@ -1,0 +1,117 @@
+\chapter{Phân tích khám phá dữ liệu và insight}
+
+\noindent EDA phục vụ thiết kế chỉ dùng 13.608 mẫu train. Notebook
+\code{02\_eda.ipynb} đã execute, có output nhúng và không có cell lỗi.
+
+\section{Phân bố nhãn}
+\begin{figure}[H]\centering
+\includegraphics[width=0.92\textwidth]{label_distribution.png}
+\caption{Phân bố informative và humanitarian trên train.}
+\end{figure}
+
+Informative chiếm 61,27\%, nhưng humanitarian mất cân bằng 219:1. Các lớp cần phản ứng
+sinh tử lại hiếm nhất. Suy luận hợp lệ là Accuracy có thể che lỗi lớp hiếm; quyết định
+tương ứng là F2, Macro-F1 và human-in-the-loop. Không suy luận rằng lớp hiếm sẽ được dự báo
+tốt chỉ nhờ class weight.
+
+\section{Khác biệt theo sự kiện}
+\begin{figure}[H]\centering
+\includegraphics[width=0.92\textwidth]{event_distribution.png}
+\caption{Số mẫu và cơ cấu humanitarian theo sự kiện trên train.}
+\end{figure}
+
+Sri Lanka floods có 69,3\% \code{not\_humanitarian}, còn Iraq--Iran earthquake chỉ 22,8\%.
+Mexico earthquake có 27,9\% rescue/donation. Đây là bằng chứng về thay đổi phân bố theo
+sự kiện. Dashboard vì vậy cung cấp filter event; khi triển khai sang thảm họa mới cần
+theo dõi drift và hiệu chỉnh lại, thay vì dùng metric năm 2017 như bảo đảm cố định.
+
+\section{Text Mining}
+Tweet informative và not-informative có số từ trung bình gần như nhau: 11,75 và 11,68.
+Do đó độ dài không phải feature đủ mạnh; nội dung TF--IDF quan trọng hơn.
+\begin{figure}[H]\centering
+\includegraphics[width=0.92\textwidth]{text_length_distribution.png}
+\caption{Phân bố độ dài và token nổi bật trên train.}
+\end{figure}
+
+\section{K-Means}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}
+  \includegraphics[width=\textwidth]{kmeans_silhouette_sweep.png}
+  \caption{Silhouette với \(k=2,\ldots,12\).}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+  \includegraphics[width=\textwidth]{kmeans_clusters.png}
+  \caption{Cụm \(k=8\) và nhãn thật.}
+\end{subfigure}
+\caption{Phân cụm TF--IDF trên train.}
+\end{figure}
+
+Silhouette chỉ 0,014--0,024 và tăng nhẹ đến biên khảo sát, không có elbow rõ. \(k=8\) được
+giữ để đối chiếu taxonomy tám lớp, không được xem là số cụm tối ưu. Một số cụm có chủ đề
+relief/Puerto Rico/power, nhưng crosstab vẫn trộn nhiều nhãn. Kết luận: clustering hữu ích
+cho khám phá chủ đề, không đủ ổn định để routing.
+
+\section{Apriori}
+Sau khi loại transaction trùng nghĩa hashtag/từ thường, các luật mạnh còn lại phản ánh
+context sự kiện:
+\begin{table}[H]\centering\small
+\caption{Một số luật Apriori trên train.}
+\begin{tabular}{llrrr}
+\toprule
+\textbf{Tiền đề} & \textbf{Kết quả} & \textbf{Support} & \textbf{Confidence} & \textbf{Lift}\\
+\midrule
+\code{\#floodsl} & \code{\#lka} & .010 & .539 & 40.013\\
+\code{\#iraq} & \code{\#iran} & .006 & .659 & 25.672\\
+\code{\#wildfires} & \code{\#california} & .007 & .508 & 25.541\\
+\code{\#iran} & \code{\#earthquake} & .018 & .717 & 18.507\\
+\code{\#puertorico} & \code{\#hurricanemaria} & .025 & .627 & 7.045\\
+\bottomrule
+\end{tabular}
+\end{table}
+Các luật này hỗ trợ filter/drill-down theo sự kiện, nhưng không chứng minh quan hệ nhân quả
+và không thay thế classifier.
+
+\section{EDA ảnh và mâu thuẫn đa phương thức}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}
+  \includegraphics[width=\textwidth]{multimodal_conflict.png}
+  \caption{Tỉ lệ bất đồng category.}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+  \includegraphics[width=\textwidth]{tsne_clip.png}
+  \caption{t-SNE CLIP train theo ground truth chung.}
+\end{subfigure}
+\caption{Bằng chứng đa phương thức trên train.}
+\end{figure}
+
+55,0\% mẫu train có category text và ảnh khác nhau. Tỉ lệ ở missing, injured và affected
+lần lượt 91,7\%, 91,0\% và 88,9\%. Điều này \textbf{không chứng minh ảnh sai}; nó chỉ cho
+thấy hai modality thường mang bằng chứng khác nhau. Vì vậy fusion phải tune trên ground
+truth chung và conflict cao được chuyển người duyệt.
+
+t-SNE chỉ là hình chiếu trực quan, không dùng để khẳng định separability. Hiệu quả ảnh được
+đánh giá bằng dev/test ở Chương 5.
+
+\section{Chuỗi suy luận từ EDA đến thiết kế}
+\begin{table}[H]\centering\small
+\caption{Bằng chứng, suy luận và quyết định thiết kế.}
+\begin{tabularx}{\textwidth}{p{3.3cm}XX}
+\toprule
+\textbf{Bằng chứng train} & \textbf{Suy luận có giới hạn} & \textbf{Quyết định}\\
+\midrule
+Mất cân bằng 219:1 & Accuracy không đại diện lớp hiếm & F2, Macro-F1, class weight\\
+Event profile khác nhau & Có khả năng domain shift & Filter event, cần recalibration\\
+Độ dài hai lớp gần nhau & Length không đủ phân loại & TF--IDF nội dung\\
+Silhouette thấp & Cụm không đủ cho routing & Clustering chỉ cho EDA\\
+Luật hashtag lift cao & Context sự kiện có cấu trúc & Drill-down phụ trợ\\
+55\% modality bất đồng & Không tin tuyệt đối một nhánh & Tune fusion, Manual Review\\
+Hash ảnh trùng xuyên split & Metric ảnh có thể lạc quan & Evaluation mask SHA-256\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{insight}[Kết luận GĐ2]
+GĐ2 được xem là hoàn thành vì có EDA train-only, kiểm kê ảnh, phân tích theo event/label,
+K-Means có sweep theo \(k\), Apriori đã loại luật hiển nhiên, CLIP visualization và bảng
+insight--decision. Các kết luận đều nêu giới hạn, không biến tương quan thành nhân quả.
+\end{insight}

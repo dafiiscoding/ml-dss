@@ -1,0 +1,68 @@
+{
+  "method": "Sensitivity analysis with canonical fusion weights and thresholds locked; no model fitting, selection, or retuning on robust rows.",
+  "canonical_rows": 2169,
+  "robust_rows": 2032,
+  "additional_rows_excluded": 137,
+  "canonical_positive_rate": 0.6274781005071461,
+  "robust_positive_rate": 0.6195866141732284,
+  "canonical_metrics": {
+    "informative": {
+      "Accuracy": 0.7072383586906409,
+      "Balanced Accuracy": 0.6135917642094848,
+      "Precision": 0.6867283950617284,
+      "Recall": 0.9808963997060984,
+      "F1": 0.8078668683812406,
+      "F2": 0.9034921494315106,
+      "MCC": 0.3602236263990665,
+      "Average Precision": 0.8920819495149876
+    },
+    "humanitarian": {
+      "Accuracy": 0.5569386814200092,
+      "Macro F1": 0.40046588742023737,
+      "Weighted F1": 0.5776191031206683
+    },
+    "manual_review": {
+      "Accuracy": 0.562010142923006,
+      "Balanced Accuracy": 0.5969430449486479,
+      "Precision": 0.7535971223021583,
+      "Recall": 0.3400974025974026,
+      "F1": 0.46868008948545864,
+      "F2": 0.38202042304886946,
+      "MCC": 0.2199719081813164,
+      "Average Precision": 0.7106380273777556,
+      "Review Rate": 0.25633932687874594
+    }
+  },
+  "robust_metrics": {
+    "informative": {
+      "Accuracy": 0.7017716535433071,
+      "Balanced Accuracy": 0.614262947142797,
+      "Precision": 0.6798898071625344,
+      "Recall": 0.9801429706115965,
+      "F1": 0.8028627195836044,
+      "F2": 0.900598452780616,
+      "MCC": 0.35922772469872843,
+      "Average Precision": 0.8892884795344891
+    },
+    "humanitarian": {
+      "Accuracy": 0.5575787401574803,
+      "Macro F1": 0.39081573026656724,
+      "Weighted F1": 0.5788784715971195
+    },
+    "manual_review": {
+      "Accuracy": 0.5644685039370079,
+      "Balanced Accuracy": 0.5974060052283592,
+      "Precision": 0.7529182879377432,
+      "Recall": 0.33799126637554583,
+      "F1": 0.4665461121157324,
+      "F2": 0.37985865724381623,
+      "MCC": 0.22226078109321895,
+      "Average Precision": 0.7077896809135409,
+      "Review Rate": 0.2529527559055118
+    }
+  },
+  "informative_f2_gain_over_always_positive": {
+    "canonical": 0.009592149431510544,
+    "robust": 0.009998452780616063
+  }
+}

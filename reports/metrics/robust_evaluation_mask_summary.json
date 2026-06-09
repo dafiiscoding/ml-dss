@@ -1,0 +1,25 @@
+{
+  "policy": {
+    "canonical_mask": "exact prior-split image SHA or cleaned-text hash exclusions",
+    "robust_mask": "canonical mask plus pairwise-verified image/text near-duplicates",
+    "canonical_mask_changed": false
+  },
+  "canonical_eligible_rows": {
+    "test": 2169,
+    "train": 13608,
+    "val": 2189
+  },
+  "robust_eligible_rows": {
+    "test": 2032,
+    "train": 13608,
+    "val": 2078
+  },
+  "additional_verified_exclusions": 248,
+  "additional_verified_exclusions_by_split": {
+    "test": 137,
+    "val": 111
+  },
+  "confirmed_image_rows": 244,
+  "confirmed_text_rows": 5,
+  "image_text_overlap_rows": 1
+}

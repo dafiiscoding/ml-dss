@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "confirmed_near_duplicate": "same scene or graphic after resize, crop, compression, color adjustment, or text overlay",
+    "related_not_duplicate": "same storm/event family but a materially different map, advisory, timestamp, or observation",
+    "template_not_duplicate": "same layout with different story, timestamp, or source",
+    "phash_collision": "visually distinct content sharing a low-frequency hash",
+    "mask_policy": "only confirmed_near_duplicate rows are proposed for the robust evaluation mask"
+  },
+  "reviewed_candidates": 261,
+  "review_status_counts": {
+    "confirmed_near_duplicate": 244,
+    "phash_collision": 3,
+    "related_not_duplicate": 10,
+    "template_not_duplicate": 4
+  },
+  "confirmed_exclusions": 244,
+  "confirmed_exclusions_by_split": {
+    "test": 135,
+    "val": 109
+  },
+  "canonical_evaluation_mask_changed": false
+}

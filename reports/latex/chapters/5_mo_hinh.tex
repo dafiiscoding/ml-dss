@@ -1,0 +1,273 @@
+\chapter{Mô hình, Late Fusion và tầng quyết định}
+
+\section{Thiết kế thực nghiệm}
+Sáu model được fit trên 13.608 train rows. Model tốt nhất, trọng số fusion và threshold
+được chọn trên 2.189 dev rows leakage-safe. Test 2.169 rows chỉ dùng báo cáo cuối. Text,
+ảnh và fusion cùng dự báo nhãn chính thức; modality label chỉ dùng chẩn đoán.
+
+\section{So sánh sáu model trên dev}
+\begin{table}[H]\centering\scriptsize
+\caption{Text informative, chọn theo F2.}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Model} & \textbf{Acc.} & \textbf{Prec.} & \textbf{Recall} & \textbf{F1} & \textbf{F2}\\
+\midrule
+Logistic Regression & .7085 & .7816 & .7368 & .7585 & .7453\\
+Decision Tree & .6044 & .7546 & .5382 & .6283 & .5710\\
+Naive Bayes & .7177 & .7265 & .8750 & .7939 & .8406\\
+k-NN & .4523 & .7193 & .1941 & .3057 & .2273\\
+\textbf{Linear SVM} & \textbf{.7204} & .7234 & \textbf{.8904} & \textbf{.7983} & \textbf{.8511}\\
+Random Forest & .7195 & .7457 & .8324 & .7867 & .8135\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]\centering\scriptsize
+\caption{Text humanitarian, chọn theo Macro-F1.}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Model} & \textbf{Acc.} & \textbf{Macro-P} & \textbf{Macro-R} &
+\textbf{Macro-F1} & \textbf{Weighted-F1}\\
+\midrule
+\textbf{Logistic Regression} & .4641 & .3145 & \textbf{.4095} & \textbf{.3297} & .4875\\
+Decision Tree & .2810 & .2118 & .2346 & .1302 & .1747\\
+Naive Bayes & \textbf{.5263} & .2677 & .2429 & .2446 & \textbf{.4982}\\
+k-NN & .4079 & \textbf{.3940} & .1449 & .1195 & .2871\\
+Linear SVM & .5112 & .3019 & .2697 & .2787 & .4856\\
+Random Forest & .4947 & .2921 & .2571 & .2626 & .4734\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]\centering\scriptsize
+\caption{Image informative trên CLIP, chọn theo F2.}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Model} & \textbf{Acc.} & \textbf{Prec.} & \textbf{Recall} & \textbf{F1} & \textbf{F2}\\
+\midrule
+Logistic Regression & .7579 & .8529 & .7375 & .7910 & .7580\\
+Decision Tree & .6807 & .7487 & .7316 & .7401 & .7350\\
+Naive Bayes & .7177 & \textbf{.8681} & .6434 & .7390 & .6785\\
+\textbf{k-NN} & .7542 & .7915 & \textbf{.8206} & \textbf{.8058} & \textbf{.8146}\\
+Linear SVM & \textbf{.7593} & .8078 & .8037 & \textbf{.8058} & .8045\\
+Random Forest & .7478 & .7949 & .8007 & .7978 & .7996\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]\centering\scriptsize
+\caption{Image humanitarian trên CLIP, chọn theo Macro-F1.}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Model} & \textbf{Acc.} & \textbf{Macro-P} & \textbf{Macro-R} &
+\textbf{Macro-F1} & \textbf{Weighted-F1}\\
+\midrule
+\textbf{Logistic Regression} & .5354 & .3603 & \textbf{.4768} & \textbf{.3637} & .5653\\
+Decision Tree & .4079 & .2288 & .2406 & .2323 & .4163\\
+Naive Bayes & .5477 & .3462 & .4028 & .3362 & .5590\\
+k-NN & .5943 & .4101 & .3530 & .3563 & .5851\\
+Linear SVM & \textbf{.6190} & .4889 & .3586 & .3631 & \textbf{.5970}\\
+Random Forest & .5706 & \textbf{.5433} & .2760 & .2795 & .5262\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+k-NN thất bại trên TF--IDF thưa nhưng cạnh tranh trên embedding ảnh. SVM có F2 tốt cho
+text informative. Với bài toán tám lớp, Logistic Regression không có Accuracy cao nhất
+nhưng có Macro-F1 tốt nhất do cân bằng lớp hiếm tốt hơn; đây là lý do chọn metric trước
+khi nhìn kết quả.
+
+\section{Đối chứng dummy baseline}
+Test leakage-safe có 62,75\% mẫu informative. Vì F2 nhấn mạnh Recall, bộ phân loại luôn
+dự báo informative đã đạt F2 0,8939 dù Balanced Accuracy chỉ 0,5 và MCC bằng 0.
+\begin{table}[H]\centering\small
+\caption{Đối chứng informative trên test leakage-safe.}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Hệ thống} & \textbf{Acc.} & \textbf{Balanced Acc.} &
+\textbf{F1} & \textbf{F2} & \textbf{MCC} & \textbf{Avg. Precision}\\
+\midrule
+Always informative & .6275 & .5000 & .7711 & .8939 & .0000 & .6275\\
+Late Fusion & .7072 & .6136 & .8079 & .9035 & .3602 & .8921\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Chênh lệch F2 chỉ 0,0096. Giá trị của fusion ở task này phải được nhìn đồng thời qua
+Accuracy tăng 0,0797, F1 tăng 0,0368, Balanced Accuracy và MCC dương; không dùng F2 riêng
+lẻ làm headline chất lượng.
+
+Với humanitarian, majority baseline luôn dự báo \code{not\_humanitarian}, đạt Accuracy
+0,3785 nhưng Macro-F1 chỉ 0,0686. Fusion đạt Macro-F1 0,4005, cho thấy khả năng phân biệt
+tám lớp vượt baseline rõ hơn nhiều.
+
+\section{Late Fusion trên test}
+Dev chọn informative text/image \(=0,70/0,30\), threshold 0,38; category dùng
+\(0,55/0,45\).
+\begin{table}[H]\centering\small
+\caption{Informative trên test leakage-safe.}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Hệ thống} & \textbf{Threshold} & \textbf{Acc.} & \textbf{Prec.} &
+\textbf{Recall} & \textbf{F1} & \textbf{F2}\\
+\midrule
+Text-only & .34 & .6745 & .6619 & .9838 & .7914 & .8966\\
+Image-only & .20 & .6754 & .6643 & .9758 & .7905 & .8921\\
+\textbf{Late Fusion} & .38 & \textbf{.7072} & \textbf{.6867} & .9809 &
+\textbf{.8079} & \textbf{.9035}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Humanitarian trên test leakage-safe.}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Hệ thống} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Weighted-F1}\\
+\midrule
+Text-only & .4481 & .3260 & .4693\\
+Image-only & .5440 & .3646 & .5695\\
+\textbf{Late Fusion} & \textbf{.5569} & \textbf{.4005} & \textbf{.5776}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Fusion cải thiện Accuracy/F1 informative và Macro-F1 tám lớp. Lợi thế F2 informative so
+với dummy nhỏ, trong khi lợi thế humanitarian so với majority baseline rõ hơn. Điều này
+hỗ trợ giữ ảnh như bằng chứng bổ sung, nhưng không đủ để kết luận hệ thống tốt đồng đều ở
+mọi lớp.
+
+\section{Phân tích theo lớp}
+\begin{table}[H]\centering\scriptsize
+\caption{Late Fusion humanitarian theo lớp trên test sạch.}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Lớp} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Support}\\
+\midrule
+injured/dead & .2202 & .6316 & .3265 & 38\\
+missing/found & .0435 & .2000 & .0714 & 5\\
+rescue/donation & .5262 & .5468 & .5363 & 331\\
+infrastructure & .4925 & .5305 & .5108 & 311\\
+affected & .2124 & .5000 & .2982 & 82\\
+vehicle damage & .1385 & .5000 & .2169 & 18\\
+other relevant & .6588 & .4938 & .5645 & 563\\
+not humanitarian & .7507 & .6200 & .6791 & 821\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Missing/found chỉ có 5 mẫu test sạch và F1 0,0714; vehicle damage có 18 mẫu và F1 0,2169.
+Đây là giới hạn trọng yếu: các lớp sinh tử/hiếm chưa đủ bằng chứng để tự động hóa quyết định.
+
+\section{Hậu kiểm robustness và độ bất định}
+Canonical mask chỉ loại exact duplicate theo ảnh/text đã xuất hiện ở split trước. Sau
+review từng cặp, robust mask loại thêm 137 test rows near-duplicate đã xác minh, còn
+2.032 rows. Toàn bộ model, trọng số fusion và threshold được giữ nguyên; không fit, chọn
+hay tune lại trên robust rows.
+
+\begin{table}[H]\centering\small
+\caption{Độ nhạy metric khi chuyển từ canonical sang robust test.}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Metric} & \textbf{Canonical} & \textbf{Robust} & \textbf{Chênh lệch}\\
+\midrule
+Informative Accuracy & .7072 & .7018 & -.0055\\
+Informative F1 & .8079 & .8029 & -.0050\\
+Informative F2 & .9035 & .9006 & -.0029\\
+Informative MCC & .3602 & .3592 & -.0010\\
+Humanitarian Macro-F1 & .4005 & .3908 & -.0097\\
+Humanitarian Weighted-F1 & .5776 & .5789 & +.0013\\
+Manual Review F1 & .4687 & .4665 & -.0021\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Kết quả không phụ thuộc mạnh vào các near-duplicate đã xác nhận. Macro-F1 giảm nhiều hơn
+các metric khác vì robust test chỉ còn 28 mẫu injured/dead, 4 missing/found và 15 vehicle
+damage; thay đổi vài dự báo làm F1 lớp hiếm dao động rõ.
+
+Bootstrap phân tầng 2.000 lần trên robust test cho kết quả:
+\begin{table}[H]\centering\small
+\caption{Khoảng tin cậy percentile 95\%, cấu hình đã khóa.}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Đại lượng} & \textbf{Ước lượng} & \textbf{CI thấp} & \textbf{CI cao}\\
+\midrule
+Informative F2 & .9006 & .8938 & .9068\\
+F2 gain so với always-informative & .0100 & .0032 & .0161\\
+Humanitarian Macro-F1 & .3908 & .3636 & .4208\\
+Macro-F1 gain so với majority & .3208 & .2936 & .3508\\
+Manual Review F1 & .4665 & .4370 & .4962\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Paired F2 gain có CI không chứa 0 dưới giả định lấy mẫu độc lập theo hàng, nhưng độ lớn
+thực tiễn chỉ khoảng 0,01. Đây không phải bằng chứng tổng quát hóa sang một thảm họa chưa
+từng thấy, vì các hàng trong cùng event có thể tương quan.
+
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\textwidth]{robust_bootstrap_intervals.png}
+\caption{CI bootstrap trên robust test.}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\textwidth]{robust_event_stability.png}
+\caption{Macro-F1 theo event.}
+\end{subfigure}
+\caption{Độ bất định tổng thể và biến động theo thảm họa.}
+\end{figure}
+
+Informative F2 theo event nằm trong khoảng 0,8377--0,9270, thấp nhất ở
+\code{srilanka\_floods}. Humanitarian Macro-F1 tính trên các lớp hiện diện nằm trong
+0,3458--0,4615, thấp nhất ở \code{iraq\_iran\_earthquake} chỉ có 61 rows. Ba lớp
+injured/dead, missing/found và vehicle damage vẫn dưới 30 mẫu; không có lớp support đủ
+lớn nào dịch F1 quá 0,05 giữa canonical và robust mask.
+
+\section{Manual Review}
+Conflict score là giá trị lớn hơn giữa chênh lệch informative và total-variation distance
+của hai phân bố tám lớp. Ngưỡng 0,54 được chọn trên dev với capacity tối đa 25\%. Trên test:
+review rate 25,63\%, Precision 0,7536, Recall 0,3401, F1 0,4687. Hệ thống ưu tiên xung đột
+mạnh thay vì đẩy mọi trường hợp cho người.
+
+\section{Risk Score và routing}
+Risk Score là chính sách minh bạch:
+\[
+\begin{aligned}
+\operatorname{Risk}={}&0,40S_{\mathrm{informative}}
++0,25S_{\mathrm{severity}}\\
+&+0,20S_{\mathrm{keyword}}
++0,15(S_{\mathrm{severity}}\times C_{\mathrm{category}}).
+\end{aligned}
+\]
+Confidence được nhân severity để một dự báo rất chắc chắn là \code{not\_humanitarian}
+không làm tăng risk. Ngưỡng 0--39/40--69/70--100 ánh xạ Low/Medium/High. Tám category có
+routing đầy đủ đến Emergency, Relief, Infrastructure, Coordination hoặc No Action.
+
+CrisisMMD không có ground truth Priority. Vì vậy trọng số và threshold trên là giả định chính
+sách, không phải optimum học được. Sensitivity trên 2.169 test rows:
+\begin{table}[H]\centering\small
+\caption{Độ nhạy của số lượng case theo policy threshold.}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Policy} & \textbf{Low max} & \textbf{Medium max} &
+\textbf{Medium cases} & \textbf{High cases}\\
+\midrule
+Sensitive & 29 & 59 & 1.174 & 346\\
+Current & 39 & 69 & 1.338 & 55\\
+Strict & 49 & 79 & 968 & 2\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Khi conflict cao, Low được nâng lên Medium; High giữ nguyên High. Supervisor review song
+song với đội phản ứng gốc, ví dụ \code{Supervisor + Emergency Team}, tránh lỗi hạ mức hoặc
+chặn phản ứng khẩn cấp.
+
+\begin{insight}[Kết luận GĐ3--GĐ4]
+GĐ3 hoàn thành vì có đủ bốn bảng so sánh sáu model, dummy baseline, lựa chọn trên dev,
+test sạch, fusion, robustness, confusion/per-class analysis. GĐ4 hoàn thành ở mức prototype vì routing phủ tám lớp,
+Manual Review có capacity, scenario test bảo toàn High Priority và sensitivity công khai
+tính phụ thuộc chính sách. Risk Score chưa được xác nhận bằng ground truth ưu tiên thực tế.
+\end{insight}

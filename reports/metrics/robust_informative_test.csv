@@ -1,0 +1,2 @@
+,Accuracy,Balanced Accuracy,Precision,Recall,F1,F2,MCC,Average Precision
+Late Fusion,0.701772,0.614263,0.67989,0.980143,0.802863,0.900598,0.359228,0.889288

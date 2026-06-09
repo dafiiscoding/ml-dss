@@ -1,0 +1,31 @@
+{
+  "evaluation_rows": {
+    "train": 13608,
+    "validation": 2189,
+    "test": 2169
+  },
+  "text_informative": {
+    "best": "SVM (Linear)",
+    "selection_metric": "F2",
+    "validation_score": 0.8511,
+    "test_metrics": {
+      "Accuracy": 0.7063,
+      "Precision": 0.7162,
+      "Recall": 0.881,
+      "F1": 0.7901,
+      "F2": 0.8422
+    }
+  },
+  "text_humanitarian": {
+    "best": "Logistic Regression",
+    "selection_metric": "Macro F1",
+    "validation_score": 0.3297,
+    "test_metrics": {
+      "Accuracy": 0.4481,
+      "Macro Precision": 0.3115,
+      "Macro Recall": 0.4169,
+      "Macro F1": 0.326,
+      "Weighted F1": 0.4693
+    }
+  }
+}

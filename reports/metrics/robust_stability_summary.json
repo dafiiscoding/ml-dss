@@ -1,0 +1,28 @@
+{
+  "method": "2000 deterministic stratified bootstrap resamples on the locked robust test set; no fitting or retuning.",
+  "informative_f2_95_ci": [
+    0.8938214017343107,
+    0.9067698624585067
+  ],
+  "humanitarian_macro_f1_95_ci": [
+    0.3635992483339116,
+    0.4208046507346924
+  ],
+  "informative_f2_gain_vs_dummy_95_ci": [
+    0.003187559063116489,
+    0.016136019787312498
+  ],
+  "humanitarian_macro_f1_gain_vs_dummy_95_ci": [
+    0.29361342267834817,
+    0.350818825079129
+  ],
+  "event_rows": 7,
+  "lowest_event_informative_f2": "srilanka_floods",
+  "lowest_event_humanitarian_macro_f1": "iraq_iran_earthquake",
+  "low_support_classes": [
+    "injured_or_dead_people",
+    "missing_or_found_people",
+    "vehicle_damage"
+  ],
+  "material_f1_shift_classes": []
+}

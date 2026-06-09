@@ -1,0 +1,47 @@
+\chapter{Sản phẩm: Dashboard điều phối}
+
+\section{Năm trang chức năng}
+Dashboard đọc batch cache trên test nên không chạy lại CLIP cho hàng nghìn ảnh mỗi lần mở.
+Năm trang gồm:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Overview:} workload, priority, routing và risk distribution trên toàn test batch.
+  \item \textbf{EDA:} train-only statistics, K-Means sweep, Apriori, image audit và conflict.
+  \item \textbf{Model Evaluation:} dev comparison và test leakage-safe/per-class metrics.
+  \item \textbf{Single-Case Demo:} chạy text + ảnh thật hoặc text-only qua toàn pipeline.
+  \item \textbf{Priority Queue:} filter theo priority/team/event/review, inspect và export CSV.
+\end{itemize}
+
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{01_overview_safe.png}\caption{Overview}\end{subfigure}
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{02_eda_train_only.png}\caption{EDA train-only}\end{subfigure}
+\caption{Tổng quan vận hành và minh chứng dữ liệu ảnh.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{03_model_fusion_safe.png}\caption{Đánh giá test sạch}\end{subfigure}
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{05_priority_queue_safe.png}\caption{Priority Queue}\end{subfigure}
+\caption{Đánh giá mô hình và hàng đợi quyết định.}
+\end{figure}
+
+\section{Hướng dẫn chạy và công nghệ}
+\begin{verbatim}
+pip install -r requirements.txt
+python -m scripts.run_all
+streamlit run app/streamlit_app.py
+\end{verbatim}
+Stack chính gồm Python, pandas, scikit-learn, PyTorch/Transformers, CLIP, Streamlit, Plotly,
+Matplotlib/Seaborn, mlxtend và Jupyter. Khi model/embedding đã tồn tại, có thể chạy trực tiếp
+dashboard mà không cần huấn luyện lại.
+
+\section{Vì sao Streamlit là frontend phù hợp}
+Rubric yêu cầu dashboard/app có KPI, biểu đồ, bộ lọc, kết quả mô hình và minh chứng hỗ trợ
+quyết định; không yêu cầu một framework frontend riêng. Streamlit đủ cho prototype học thuật,
+giữ logic Python và artifact thống nhất, giảm rủi ro sai lệch giữa backend và giao diện. React
+hoặc frontend tách rời chỉ cần thiết khi triển khai production, phân quyền nhiều người dùng,
+API độc lập hoặc yêu cầu hiệu năng/giao diện phức tạp hơn.
+
+\begin{insight}[Kết luận GĐ5]
+GĐ5 hoàn thành ở mức prototype: năm trang đọc dữ liệu/model thật, không dùng số liệu hard-code,
+AppTest không có exception và browser QA kiểm tra desktop/mobile. Frontend riêng không làm tăng
+giá trị học thuật nếu không giải quyết thêm yêu cầu vận hành.
+\end{insight}

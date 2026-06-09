@@ -1,0 +1,4 @@
+Model,Threshold,Accuracy,Balanced Accuracy,Precision,Recall,F1,F2,MCC,Average Precision
+Text-only,0.34,0.6745,0.5687,0.6619,0.9838,0.7914,0.8966,0.2649,0.8007
+Image-only,0.2,0.6754,0.5727,0.6643,0.9758,0.7905,0.8921,0.2614,0.8833
+Late Fusion,0.38,0.7072,0.6136,0.6867,0.9809,0.8079,0.9035,0.3602,0.8921

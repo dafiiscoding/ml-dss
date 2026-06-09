@@ -1,0 +1,25 @@
+\chapter{Kết luận và hướng phát triển}
+
+\section{Kết luận}
+Dự án đã thay dữ liệu synthetic bằng CrisisMMD thật, sửa lỗi nhãn informative 2.649 mẫu,
+kiểm soát duplicate xuyên split và xây dựng quy trình tái lập từ EDA đến quyết định. Sáu
+thuật toán được so sánh trên dev sạch. Informative fusion đạt Accuracy 0,7072, F1 0,8079
+và F2 0,9035, nhưng F2 chỉ hơn always-positive baseline 0,0096. Humanitarian fusion đạt
+Macro-F1 0,4005 so với majority baseline 0,0686 trên test sạch. Giá trị chính không chỉ
+là dự báo nhãn, mà là chuyển kết quả thành hàng đợi, mức ưu
+tiên, đội tiếp nhận và cơ chế human-in-the-loop có giới hạn năng lực rõ ràng.
+
+Hậu kiểm loại thêm near-duplicate đã xác minh cho F2 0,9006 và Macro-F1 0,3908 mà không
+tune lại. Bootstrap cho thấy F2 gain so với dummy có CI 95\% [0,0032; 0,0161], tức khác
+0 theo giả định row-bootstrap nhưng vẫn nhỏ về thực tiễn. Biến động theo event và support
+rất thấp ở ba lớp khẩn cấp cho thấy hệ thống phù hợp hỗ trợ sàng lọc, chưa phù hợp tự động
+ra quyết định sinh tử.
+
+\section{Hướng phát triển}
+\begin{itemize}[leftmargin=*]
+  \item Tích hợp NER trích xuất địa danh để định vị người kêu cứu.
+  \item Crawl dữ liệu thời gian thực; hiệu chỉnh xác suất (calibration).
+  \item Thay TF-IDF bằng embedding ngôn ngữ; tinh chỉnh trọng số fusion theo lớp.
+  \item Thu thập ground truth Priority và chi phí xử lý để học/tối ưu policy Risk Score.
+  \item Leave-one-event-out hoặc group split theo event để đánh giá domain shift nghiêm ngặt hơn.
+\end{itemize}

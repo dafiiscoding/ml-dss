@@ -1,0 +1,36 @@
+{
+  "method": {
+    "metrics": [
+      "CLIP image cosine",
+      "64x64 grayscale pixel correlation",
+      "64x64 RGB mean absolute error",
+      "96-bin RGB histogram cosine",
+      "dimension and aspect-ratio comparison"
+    ],
+    "purpose": "triage for pairwise visual review; evidence bands are not automatic duplicate decisions"
+  },
+  "candidate_rows": 261,
+  "evidence_band_counts": {
+    "moderate": 122,
+    "strong": 88,
+    "weak": 51
+  },
+  "contact_sheets": [
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\strong_01.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\strong_02.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\strong_03.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\strong_04.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\strong_05.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\moderate_01.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\moderate_02.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\moderate_03.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\moderate_04.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\moderate_05.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\moderate_06.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\moderate_07.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\weak_01.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\weak_02.jpg",
+    "C:\\Users\\doand\\Desktop\\Workspace\\1-Projects\\ml-dss\\reports\\figures\\image_duplicate_review\\weak_03.jpg"
+  ],
+  "canonical_evaluation_mask_changed": false
+}

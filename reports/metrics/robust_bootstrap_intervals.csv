@@ -1,0 +1,14 @@
+Task,Metric,Estimate,CI Low,CI High,CI Width,Bootstrap SE,Resamples,Method
+Informative Fusion,Accuracy,0.701772,0.688976,0.714075,0.025098,0.006434,2000,stratified by informative target
+Informative Fusion,F1,0.802863,0.795747,0.809821,0.014074,0.003676,2000,stratified by informative target
+Informative Fusion,F2,0.900598,0.893821,0.90677,0.012948,0.003325,2000,stratified by informative target
+Informative Fusion,MCC,0.359228,0.322879,0.393291,0.070411,0.018482,2000,stratified by informative target
+Informative Fusion vs Dummy,F2 Gain,0.009965,0.003188,0.016136,0.012948,0.003325,2000,"paired, stratified by informative target"
+Humanitarian Fusion,Accuracy,0.557579,0.535913,0.57874,0.042827,0.010677,2000,stratified by humanitarian target
+Humanitarian Fusion,Macro F1,0.390816,0.363599,0.420805,0.057205,0.014823,2000,stratified by humanitarian target
+Humanitarian Fusion,Weighted F1,0.578878,0.558016,0.599286,0.04127,0.010452,2000,stratified by humanitarian target
+Humanitarian Fusion vs Dummy,Macro F1 Gain,0.32083,0.293613,0.350819,0.057205,0.014823,2000,"paired, stratified by humanitarian target"
+Manual Review,Precision,0.752918,0.720585,0.787755,0.06717,0.017109,2000,stratified by disagreement target
+Manual Review,Recall,0.337991,0.310895,0.365939,0.055044,0.014042,2000,stratified by disagreement target
+Manual Review,F1,0.466546,0.437034,0.496193,0.059159,0.01515,2000,stratified by disagreement target
+Manual Review,Review Rate,0.252953,0.234744,0.272146,0.037402,0.009408,2000,stratified by disagreement target

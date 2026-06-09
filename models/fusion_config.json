@@ -1,0 +1,22 @@
+{
+  "informative": {
+    "text_weight": 0.7000000000000001,
+    "image_weight": 0.29999999999999993,
+    "threshold": 0.38000000000000006
+  },
+  "category": {
+    "text_weight": 0.55,
+    "image_weight": 0.44999999999999996
+  },
+  "manual_review": {
+    "conflict_threshold": 0.5399999999999999,
+    "max_review_rate_on_dev": 0.25
+  },
+  "selection_split": "leakage-safe dev",
+  "evaluation_split": "leakage-safe test",
+  "evaluation_rows": {
+    "validation": 2189,
+    "test": 2169
+  },
+  "target": "official multimodal label"
+}

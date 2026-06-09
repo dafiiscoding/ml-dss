@@ -1,0 +1,87 @@
+\chapter{Dữ liệu và tiền xử lý}
+
+\section{Nguồn và cấu trúc CrisisMMD v2.0}
+CrisisMMD do QCRI công bố, gồm \textbf{18.082} cặp tweet--ảnh từ bảy thảm họa năm
+2017: Harvey, Irma, Maria, động đất Mexico, động đất Iraq--Iran, cháy rừng California
+và lũ Sri Lanka. Mỗi task có nhãn chung, nhãn text, nhãn image và cờ đồng thuận.
+
+Hai task informative và humanitarian dùng cách chia train/dev/test khác nhau. Dự án chọn
+split humanitarian làm partition thống nhất, sau đó join toàn bộ nhãn informative chính thức
+theo khóa \code{tweet\_id, image\_id}. Đây là bước quan trọng: suy diễn informative chung
+từ humanitarian sẽ làm sai \textbf{2.649/18.082 mẫu} (14,65\%). Quan hệ suy diễn chỉ đúng
+cho nhãn riêng \code{label\_text} và \code{label\_image}.
+
+\section{Các trường chính}
+\begin{table}[H]\centering
+\caption{Các trường được sử dụng trong pipeline.}
+\begin{tabularx}{\textwidth}{p{3.5cm}X}
+\toprule
+\textbf{Trường} & \textbf{Vai trò}\\
+\midrule
+\code{event\_name} & Chiều phân tích theo thảm họa.\\
+\code{tweet\_id, image\_id} & Khóa định danh và kiểm tra giao nhau split.\\
+\code{tweet\_text, image} & Đầu vào văn bản và đường dẫn ảnh.\\
+\code{label} & Ground truth informative chính thức.\\
+\code{label\_top} & Ground truth humanitarian chung, tám lớp.\\
+\code{label\_text\_*}, \code{label\_image\_*} & Nhãn modality, chỉ dùng chẩn đoán.\\
+\code{multimodal\_agree} & Cờ đồng thuận category text--ảnh.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Kiểm tra chất lượng và split integrity}
+\begin{table}[H]\centering
+\caption{Kết quả audit dữ liệu và hàng đánh giá leakage-safe.}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Chỉ số} & \textbf{Train} & \textbf{Dev} & \textbf{Test}\\
+\midrule
+Số dòng gốc & 13.608 & 2.237 & 2.237\\
+Giá trị thiếu & 0 & 0 & 0\\
+Trùng cặp tweet--ảnh & 0 & 0 & 0\\
+Đường dẫn ảnh thiếu & 0 & 0 & 0\\
+Số lớp humanitarian & 8 & 8 & 8\\
+Hàng evaluation leakage-safe & 13.608 & 2.189 & 2.169\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Không có tweet ID, image ID hay cặp ID giao nhau giữa split. Tuy nhiên SHA-256 phát hiện
+43 hash ảnh chung train--dev, 46 hash chung train--test và 21 hash chung dev--test. Có thêm
+một text đã làm sạch trùng giữa train với mỗi split đánh giá. Evaluation mask loại 48 hàng
+dev và 68 hàng test đã xuất hiện ở split trước. Trên toàn corpus có 17.777 hash ảnh duy nhất,
+tương ứng 305 hàng ảnh lặp.
+
+Trên đĩa có 18.104 file: 18.082 ảnh hợp lệ được annotation tham chiếu và 22 file metadata
+\code{.\_*} từ macOS. Không annotation nào trỏ đến 22 file này.
+
+\section{Phân bố nhãn train}
+Informative chính thức có 8.338 mẫu informative và 5.270 not-informative. Với humanitarian,
+\code{not\_humanitarian} có 5.260 mẫu, trong khi \code{missing\_or\_found\_people} chỉ
+có 24 mẫu, tỉ lệ \textbf{219:1}. Vì vậy pipeline dùng class weight khi thuật toán hỗ trợ và
+chọn model bằng F2/Macro-F1.
+
+\section{Tiền xử lý văn bản}
+Văn bản được chuyển chữ thường, bỏ URL, mention, HTML entity, bỏ ký tự đặc biệt nhưng giữ
+nội dung hashtag, sau đó chuẩn hóa khoảng trắng. TF--IDF dùng tối đa 2.000 đặc trưng,
+unigram--bigram và stopword tiếng Anh. Vectorizer chỉ fit train; dev/test chỉ transform.
+
+\section{Tiền xử lý ảnh và kiểm tra cache}
+Ảnh được mở bằng Pillow, chuyển RGB, resize \(224\times224\), đưa qua CLIP ViT-B/32 và
+chuẩn hóa \(L_2\). Cache có kích thước:
+\[
+(13.608,512),\quad(2.237,512),\quad(2.237,512).
+\]
+Audit xác nhận độ lệch chuẩn khoảng 0,04418, norm trung bình bằng 1, không có vector zero và
+metadata \code{tweet\_id/image\_id} khớp thứ tự annotation ở cả ba split.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{image_gallery.png}
+\caption{Ảnh train đại diện cho tám lớp humanitarian chung.}
+\end{figure}
+
+\begin{insight}[Kết luận GĐ0--GĐ1]
+Dữ liệu và ảnh thật đã đủ; nhãn official được join đúng; processed CSV và embedding cache
+khớp thứ tự; evaluation có mask chống duplicate xuyên split. Vì vậy GĐ0 và GĐ1 chỉ được
+coi là hoàn thành sau audit này, không dựa vào việc file ``đã tồn tại''.
+\end{insight}

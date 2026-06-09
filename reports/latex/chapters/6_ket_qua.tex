@@ -1,0 +1,68 @@
+\chapter{Kết quả, khuyến nghị và câu hỏi bắt buộc}
+
+\section{Kết quả end-to-end}
+Pipeline thật đã chạy:
+\[
+\text{annotation}\rightarrow\text{audit}\rightarrow
+\text{TF--IDF/CLIP}\rightarrow\text{model}\rightarrow
+\text{fusion}\rightarrow\text{DSS}\rightarrow\text{dashboard}.
+\]
+Integration test trên một bài Hurricane Harvey relief dự báo đúng lớp
+\code{rescue\_volunteering\_or\_donation\_effort}, Risk Score 55,9, Priority Medium và
+định tuyến Relief Team.
+
+Dashboard mô phỏng vận hành trên toàn bộ 2.237 test rows, gồm 56 case High và 579 case
+Manual Review. Metric mô hình không tính trên toàn bộ batch này mà dùng 2.169 hàng
+leakage-safe như Chương 5.
+
+\section{Khuyến nghị vận hành}
+\begin{enumerate}[leftmargin=*]
+  \item Xử lý High trước, nhưng trong High vẫn ưu tiên injured/missing và case có địa điểm rõ.
+  \item Với conflict High, Supervisor xác minh song song với đội phản ứng gốc; không chờ review
+        xong mới gửi cảnh báo sinh tử.
+  \item Theo dõi workload Manual Review theo ca trực. Capacity thấp hơn 25\% phải tăng threshold;
+        capacity cao hơn có thể giảm threshold để tăng recall.
+  \item Dùng event filter để nhận biết drift. Không áp dụng nguyên threshold năm 2017 cho thảm
+        họa mới mà không đánh giá lại.
+  \item Không tự động điều động dựa trên lớp missing/vehicle vì support test quá thấp.
+  \item Risk weight và Priority threshold phải được cơ quan vận hành phê duyệt bằng dữ liệu nghiệp
+        vụ; phiên bản hiện tại chỉ là policy prototype minh bạch.
+\end{enumerate}
+
+\section{Trả lời tám câu hỏi bắt buộc}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Bài toán thực tế?} Quá tải thông tin mạng xã hội trong thảm họa, dẫn đến bỏ sót
+        hoặc phân luồng chậm.
+  \item \textbf{Ai sử dụng?} Ban điều phối, Emergency/Relief/Infrastructure/Coordination Team
+        và Supervisor.
+  \item \textbf{Quyết định gì?} Có đáng chú ý không, category nào, priority, đội nhận và có cần
+        người duyệt hay không.
+  \item \textbf{Dữ liệu nào?} 18.082 cặp tweet--ảnh CrisisMMD, nhãn chung và nhãn modality.
+  \item \textbf{Xử lý/phân tích?} Join nhãn chính thức, audit hash, regex/TF--IDF, CLIP,
+        EDA train-only, K-Means, Apriori, sáu classifier, fusion và luật DSS.
+  \item \textbf{Kết quả quan trọng?} Informative fusion đạt Accuracy 0,7072 và F1 0,8079,
+        nhưng F2 chỉ hơn always-positive baseline 0,0096. Humanitarian Macro-F1 đạt 0,4005
+        so với majority baseline 0,0686. Trên robust test không tune lại, F2 còn 0,9006
+        và Macro-F1 còn 0,3908; lớp hiếm vẫn yếu.
+  \item \textbf{Hành động đề xuất?} Priority Queue, routing theo category, review song song khi
+        conflict và hiệu chỉnh threshold theo capacity.
+  \item \textbf{Hạn chế/rủi ro?} Dữ liệu năm 2017, thiếu GPS, lớp hiếm, domain shift, duplicate
+        ảnh và Priority không có ground truth.
+\end{enumerate}
+
+\section{Phân biệt điều đã chứng minh và chưa chứng minh}
+\begin{table}[H]\centering\small
+\caption{Biên giới của kết luận.}
+\begin{tabularx}{\textwidth}{XX}
+\toprule
+\textbf{Đã có bằng chứng} & \textbf{Chưa có bằng chứng}\\
+\midrule
+Fusion hơn dummy về Accuracy/F1 và hơn từng nhánh ở humanitarian &
+Mức tăng F2 khoảng 0,01 có ý nghĩa vận hành lớn\\
+Conflict rule có precision 0,7536 & Priority threshold là tối ưu thực tế\\
+Routing phủ đủ tám category & Lớp missing đủ tin cậy để tự động điều động\\
+Row-bootstrap gain CI không chứa 0 & Tổng quát hóa sang event chưa thấy\\
+Dashboard chạy và cache đúng model & Hệ thống chịu tải production thời gian thực\\
+\bottomrule
+\end{tabularx}
+\end{table}

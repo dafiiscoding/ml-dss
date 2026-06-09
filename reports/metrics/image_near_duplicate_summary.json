@@ -1,0 +1,24 @@
+{
+  "method": {
+    "hash": "64-bit DCT perceptual hash",
+    "max_hamming_distance": 4,
+    "comparison": "validation against train; test against train+validation",
+    "scope": "only rows still eligible under the exact SHA/text mask",
+    "decision": "candidate only; no evaluation row is removed automatically"
+  },
+  "rows_hashed": 18082,
+  "additional_candidate_rows": 261,
+  "candidate_rows_by_split": {
+    "test": 141,
+    "val": 120
+  },
+  "candidate_rows_by_distance": {
+    "0": 167,
+    "2": 57,
+    "4": 37
+  },
+  "same_informative_label_candidates": 207,
+  "same_humanitarian_label_candidates": 123,
+  "same_event_candidates": 241,
+  "candidates_with_multiple_nearest_matches": 59
+}

@@ -1,0 +1,9 @@
+Class,Canonical Precision,Canonical Recall,Canonical F1,Canonical Support,Robust Precision,Robust Recall,Robust F1,Robust Support,F1 Delta,Support Delta,Stability Flag
+injured_or_dead_people,0.220183,0.631579,0.326531,38,0.193548,0.642857,0.297521,28,-0.02901,-10,low support
+missing_or_found_people,0.043478,0.2,0.071429,5,0.045455,0.25,0.076923,4,0.005495,-1,low support
+rescue_volunteering_or_donation_effort,0.526163,0.546828,0.536296,331,0.521472,0.559211,0.539683,304,0.003386,-27,stable
+infrastructure_and_utility_damage,0.492537,0.530547,0.510836,311,0.488599,0.526316,0.506757,285,-0.004079,-26,stable
+affected_individuals,0.212435,0.5,0.298182,82,0.213483,0.493506,0.298039,77,-0.000143,-5,stable
+vehicle_damage,0.138462,0.5,0.216867,18,0.105263,0.4,0.166667,15,-0.050201,-3,low support
+other_relevant_information,0.658768,0.493783,0.564467,563,0.659033,0.489603,0.561822,529,-0.002645,-34,stable
+not_humanitarian,0.750737,0.619976,0.679119,821,0.748476,0.621519,0.679115,790,-5e-06,-31,stable

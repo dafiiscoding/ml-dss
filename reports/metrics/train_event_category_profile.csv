@@ -1,0 +1,8 @@
+event_name,affected_individuals,infrastructure_and_utility_damage,injured_or_dead_people,missing_or_found_people,not_humanitarian,other_relevant_information,rescue_volunteering_or_donation_effort,vehicle_damage
+california_wildfires,0.0381,0.231,0.0355,0.0035,0.2803,0.2552,0.1384,0.0182
+hurricane_harvey,0.0405,0.142,0.0078,0.0,0.3569,0.2319,0.2059,0.015
+hurricane_irma,0.0206,0.1401,0.008,0.0015,0.367,0.318,0.1357,0.0091
+hurricane_maria,0.024,0.1286,0.007,0.0012,0.4422,0.2276,0.1659,0.0035
+iraq_iran_earthquake,0.0722,0.186,0.1357,0.0,0.2276,0.2495,0.1204,0.0088
+mexico_earthquake,0.036,0.1061,0.0536,0.0078,0.3155,0.1889,0.2795,0.0127
+srilanka_floods,0.0279,0.0647,0.0114,0.0038,0.6929,0.0673,0.1282,0.0038

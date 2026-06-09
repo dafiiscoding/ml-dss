@@ -1,0 +1,9 @@
+,injured_or_dead_people,missing_or_found_people,rescue_volunteering_or_donation_effort,infrastructure_and_utility_damage,affected_individuals,vehicle_damage,other_relevant_information,not_humanitarian
+injured_or_dead_people,24,3,1,4,2,2,1,1
+missing_or_found_people,1,1,1,0,0,0,1,1
+rescue_volunteering_or_donation_effort,15,7,181,25,28,10,14,51
+infrastructure_and_utility_damage,20,1,23,165,34,14,27,27
+affected_individuals,9,2,10,7,41,2,4,7
+vehicle_damage,1,0,0,3,4,9,0,1
+other_relevant_information,19,2,38,85,41,19,278,81
+not_humanitarian,20,7,90,46,43,9,97,509

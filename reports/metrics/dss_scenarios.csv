@@ -1,0 +1,5 @@
+scenario,informative_probability,category,category_confidence,conflict_score,risk_score,priority,base_priority,assigned_team,base_assigned_team,recommended_action,manual_review,review_reason
+critical_injury,0.99,injured_or_dead_people,0.95,0.0,98.8,High,High,Emergency Team,Emergency Team,Verify location immediately and dispatch rescue/medical crews.,False,
+infrastructure_damage,0.82,infrastructure_and_utility_damage,0.75,0.0,77.8,High,High,Infrastructure Team,Infrastructure Team,Inspect blocked roads or utility failures to plan repairs.,False,
+ordinary_post,0.1,not_humanitarian,0.99,0.0,4.0,Low,Low,No Action,No Action,Archive post and monitor for future developments.,False,
+critical_conflict,0.99,injured_or_dead_people,0.95,0.9,98.8,High,High,Supervisor + Emergency Team,Emergency Team,Verify the text-image conflict immediately. In parallel: Verify location immediately and dispatch rescue/medical crews.,True,High multimodal conflict (0.90 >= 0.54). Text and image require human review.

@@ -1,0 +1,44 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+
+.data/
+.ai/
+.env
+.env.*
+.venv/
+venv/
+
+data/raw/
+data/sample/temp_upload.*
+
+models/*.npy
+models/*.pkl
+models/*.csv
+models/_emb_tmp/
+
+reports/latex/*.aux
+reports/latex/*.log
+reports/latex/*.out
+reports/latex/*.toc
+reports/latex/*.lof
+reports/latex/*.lot
+reports/latex/*.synctex.gz
+reports/pdf_review*/
+reports/figures/pdf_qa/
+reports/figures/image_duplicate_review/
+
+.playwright-mcp/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local course materials are not part of the submission repository.
+slide kiến thức môn học/
+
+# Local agent instructions/state are kept outside the academic submission.
+AGENTS.md
+CLAUDE.md
