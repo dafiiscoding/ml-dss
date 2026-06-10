@@ -1,89 +1,329 @@
-\chapter{Dữ liệu và tiền xử lý}
+\chapter{Dữ liệu, tiền xử lý và biểu diễn đặc trưng}
 
-\section{Nguồn và cấu trúc CrisisMMD v2.0}
-CrisisMMD do QCRI công bố, gồm \textbf{18.082} cặp tweet--ảnh từ bảy thảm họa năm
-2017: Harvey, Irma, Maria, động đất Mexico, động đất Iraq--Iran, cháy rừng California
-và lũ Sri Lanka. Mỗi task có nhãn chung, nhãn text, nhãn image và cờ đồng thuận.
+\section{Vai trò của dữ liệu trong bài toán}
 
-Hai task informative và humanitarian dùng cách chia train/dev/test khác nhau. Dự án chọn
-split humanitarian làm partition thống nhất, sau đó join toàn bộ nhãn informative chính thức
-theo khóa \code{tweet\_id, image\_id}. Đây là bước quan trọng: suy diễn informative chung
-từ humanitarian sẽ làm sai \textbf{2.649/18.082 mẫu} (14,65\%). Quan hệ suy diễn chỉ đúng
-cho nhãn riêng \code{label\_text} và \code{label\_image}.
+Một mô hình học máy không trực tiếp ``hiểu'' tweet hay ảnh. Nó học quan hệ thống kê
+giữa một biểu diễn số của đầu vào và nhãn mục tiêu. Vì vậy, chất lượng của dự án phụ
+thuộc vào ba điều kiện trước khi lựa chọn thuật toán:
 
-\section{Các trường chính}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{đúng đối tượng:} mỗi dòng phải thực sự mô tả một cặp tweet--ảnh và
+        mang đúng nhãn chính thức;
+  \item \textbf{đúng ranh giới đánh giá:} thông tin của dev/test không được đi vào
+        quá trình fit đặc trưng hoặc huấn luyện;
+  \item \textbf{đúng biểu diễn:} văn bản và ảnh phải được chuyển thành các vector
+        có ý nghĩa đối với classifier.
+\end{enumerate}
+
+Trong chương này, \textit{tiền xử lý} là các thao tác làm đầu vào nhất quán hơn,
+chẳng hạn bỏ URL hoặc chuyển ảnh sang RGB. \textit{Biểu diễn đặc trưng} là bước
+chuyển đầu vào thành vector số. \textit{Feature engineering} là toàn bộ quá trình
+lựa chọn, tạo và kiểm soát các đặc trưng để mô hình sử dụng. Theo nghĩa đó, dự án
+có hai nhánh feature engineering: TF--IDF cho văn bản và embedding CLIP cho ảnh.
+
+\section{Bộ dữ liệu CrisisMMD v2.0}
+
+\subsection{Nguồn, đơn vị quan sát và phạm vi}
+
+CrisisMMD là bộ dữ liệu đa phương thức do Qatar Computing Research Institute
+công bố cho nghiên cứu ứng phó thảm họa \cite{crisismmd2018}. Phiên bản sử dụng
+trong dự án gồm \textbf{18.082 cặp tweet--ảnh} thuộc bảy sự kiện năm 2017:
+ba cơn bão Harvey, Irma, Maria; cháy rừng California; động đất Mexico; động đất
+Iraq--Iran; và lũ Sri Lanka.
+
+Đơn vị quan sát của dự án là \textbf{một cặp tweet--ảnh}, không phải một người dùng
+hay một sự kiện. Một tweet có thể xuất hiện với nhiều ảnh, do đó
+\code{tweet\_id} không nhất thiết duy nhất trong tập train; cặp
+\code{tweet\_id, image\_id} mới là khóa của một quan sát. Sự phân biệt này quan
+trọng khi kiểm tra trùng lặp và khi căn thứ tự embedding với annotation.
+
+\subsection{Hai nhiệm vụ dự báo}
+
+Dự án sử dụng hai bộ nhãn chung do CrisisMMD cung cấp:
+
+\begin{description}[leftmargin=4.2cm,style=nextline]
+  \item[Informativeness] Bài đăng có chứa thông tin hữu ích cho hoạt động ứng
+        phó thảm họa hay không. Đây là bài toán nhị phân gồm
+        \code{informative} và \code{not\_informative}.
+  \item[Humanitarian category] Nếu xét nội dung nhân đạo, bài đăng thuộc nhóm
+        nhu cầu hoặc thiệt hại nào. Đây là bài toán tám lớp: người bị ảnh hưởng;
+        người bị thương hoặc tử vong; người mất tích hoặc được tìm thấy; thiệt
+        hại hạ tầng và tiện ích; thiệt hại phương tiện; cứu hộ, tình nguyện hoặc
+        quyên góp; thông tin liên quan khác; và nội dung không mang tính nhân đạo.
+\end{description}
+
+Ngoài nhãn chung của cặp, dữ liệu còn có nhãn riêng do người gán nhãn quan sát
+văn bản và ảnh. Các nhãn riêng này được dùng để chẩn đoán sự bất đồng giữa hai
+phương thức, không thay thế ground truth chung khi huấn luyện mô hình vận hành.
+
 \begin{table}[H]\centering
-\caption{Các trường được sử dụng trong pipeline.}
-\begin{tabularx}{\textwidth}{p{3.5cm}X}
+\caption{Các trường dữ liệu được sử dụng trong pipeline.}
+\begin{tabularx}{\textwidth}{p{3.7cm}X}
 \toprule
-\textbf{Trường} & \textbf{Vai trò}\\
+\textbf{Trường} & \textbf{Ý nghĩa và cách sử dụng}\\
 \midrule
-\code{event\_name} & Chiều phân tích theo thảm họa.\\
-\code{tweet\_id, image\_id} & Khóa định danh và kiểm tra giao nhau split.\\
-\code{tweet\_text, image} & Đầu vào văn bản và đường dẫn ảnh.\\
-\code{label} & Ground truth informative chính thức.\\
-\code{label\_top} & Ground truth humanitarian chung, tám lớp.\\
-\code{label\_text\_*}, \code{label\_image\_*} & Nhãn modality, chỉ dùng chẩn đoán.\\
-\code{multimodal\_agree} & Cờ đồng thuận category text--ảnh.\\
+\code{event\_name} & Tên thảm họa; dùng cho EDA và kiểm tra độ ổn định theo sự kiện.\\
+\code{tweet\_id, image\_id} & Khóa nhận dạng, căn thứ tự cache và kiểm tra giao nhau giữa split.\\
+\code{tweet\_text, image} & Văn bản gốc và đường dẫn ảnh đầu vào.\\
+\code{label} & Nhãn chung chính thức của nhiệm vụ informative.\\
+\code{label\_top} & Nhãn chung chính thức của nhiệm vụ humanitarian tám lớp.\\
+\code{label\_text\_*} & Nhãn chỉ dựa trên văn bản; dùng cho phân tích bất đồng.\\
+\code{label\_image\_*} & Nhãn chỉ dựa trên ảnh; dùng cho phân tích bất đồng.\\
+\code{multimodal\_agree} & Cờ đồng thuận category giữa người gán nhãn text và image.\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\section{Kiểm tra chất lượng và split integrity}
+\section{Hợp nhất annotation và bảo toàn split}
+
+\subsection{Vấn đề khác partition giữa hai task}
+
+CrisisMMD phát hành các file train/dev/test riêng cho từng nhiệm vụ. Partition
+của informative và humanitarian không giống nhau. Nếu chỉ inner join hai file
+cùng tên, nhiều cặp sẽ bị loại vì một mẫu có thể nằm ở train của task này nhưng
+nằm ở dev của task kia. Nếu suy diễn nhãn informative chung từ nhãn
+humanitarian chung, \textbf{2.649/18.082 mẫu} sẽ bị gán sai, tương đương
+14,65\%.
+
+Pipeline giải quyết theo ba bước:
+
+\begin{enumerate}[leftmargin=*]
+  \item chọn partition humanitarian làm ranh giới train/dev/test thống nhất;
+  \item ghép toàn bộ annotation informative thành bảng tra cứu theo cặp
+        \code{tweet\_id, image\_id};
+  \item left join nhãn informative chính thức vào từng partition humanitarian
+        và yêu cầu quan hệ khóa là one-to-one.
+\end{enumerate}
+
+Cách làm này giữ đủ 18.082 dòng, đồng thời hai nhiệm vụ dùng chung một ranh giới
+đánh giá. Quan hệ ``khác \code{not\_humanitarian} thì informative'' chỉ đúng với
+nhãn riêng từng phương thức trong dữ liệu này; dự án không dùng quan hệ đó để
+tạo ground truth chung.
+
+\subsection{Kích thước và phân bố}
+
 \begin{table}[H]\centering
-\caption{Kết quả audit dữ liệu và hàng đánh giá leakage-safe.}
+\caption{Kích thước và chất lượng cơ bản sau khi hợp nhất.}
 \begin{tabular}{lrrr}
 \toprule
 \textbf{Chỉ số} & \textbf{Train} & \textbf{Dev} & \textbf{Test}\\
 \midrule
-Số dòng gốc & 13.608 & 2.237 & 2.237\\
+Số cặp tweet--ảnh & 13.608 & 2.237 & 2.237\\
 Giá trị thiếu & 0 & 0 & 0\\
-Trùng cặp tweet--ảnh & 0 & 0 & 0\\
+Trùng cặp tweet--ảnh trong split & 0 & 0 & 0\\
 Đường dẫn ảnh thiếu & 0 & 0 & 0\\
-Số lớp humanitarian & 8 & 8 & 8\\
-Hàng evaluation leakage-safe & 13.608 & 2.189 & 2.169\\
+Số lớp humanitarian quan sát được & 8 & 8 & 8\\
+Hàng qua bộ lọc exact-duplicate & 13.608 & 2.189 & 2.169\\
+Hàng qua bộ lọc robustness & 13.608 & 2.078 & 2.032\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Không có tweet ID, image ID hay cặp ID giao nhau giữa split. Tuy nhiên SHA-256 phát hiện
-43 hash ảnh chung train--dev, 46 hash chung train--test và 21 hash chung dev--test. Có thêm
-một text đã làm sạch trùng giữa train với mỗi split đánh giá. Evaluation mask loại 48 hàng
-dev và 68 hàng test đã xuất hiện ở split trước. Trên toàn corpus có 17.777 hash ảnh duy nhất,
-tương ứng 305 hàng ảnh lặp.
+Trong train, informative có 8.338 mẫu và not-informative có 5.270 mẫu. Độ mất
+cân bằng nghiêm trọng hơn ở task tám lớp: \code{not\_humanitarian} có 5.260 mẫu,
+trong khi \code{missing\_or\_found\_people} chỉ có 24 mẫu, chênh lệch khoảng
+\textbf{219:1}. Accuracy vì vậy không đủ phản ánh khả năng phát hiện lớp hiếm;
+thiết kế đánh giá phải bổ sung Macro-F1, F2 và kết quả theo từng lớp.
 
-Trên đĩa có 18.104 file: 18.082 ảnh hợp lệ được annotation tham chiếu và 22 file metadata
-\code{.\_*} từ macOS. Không annotation nào trỏ đến 22 file này.
+\section{Kiểm soát trùng lặp và rò rỉ dữ liệu}
 
-\section{Phân bố nhãn train}
-Informative chính thức có 8.338 mẫu informative và 5.270 not-informative. Với humanitarian,
-\code{not\_humanitarian} có 5.260 mẫu, trong khi \code{missing\_or\_found\_people} chỉ
-có 24 mẫu, tỉ lệ \textbf{219:1}. Vì vậy pipeline dùng class weight khi thuật toán hỗ trợ và
-chọn model bằng F2/Macro-F1.
+\subsection{Rò rỉ dữ liệu là gì?}
 
-\section{Tiền xử lý văn bản}
-Văn bản được chuyển chữ thường, bỏ URL, mention, HTML entity, bỏ ký tự đặc biệt nhưng giữ
-nội dung hashtag, sau đó chuẩn hóa khoảng trắng. TF--IDF dùng tối đa 2.000 đặc trưng,
-unigram--bigram và stopword tiếng Anh. Vectorizer chỉ fit train; dev/test chỉ transform.
+Rò rỉ dữ liệu xảy ra khi quá trình huấn luyện tiếp cận thông tin mà trong sử dụng
+thực tế chỉ xuất hiện ở tương lai hoặc thuộc tập đánh giá. Khi đó, chỉ số test có
+thể cao nhưng không phản ánh khả năng tổng quát hóa. Với mạng xã hội, chỉ kiểm
+tra ID là chưa đủ: hai bài đăng khác ID vẫn có thể dùng cùng một ảnh hoặc cùng
+nội dung sau khi bỏ URL và mention.
 
-\section{Tiền xử lý ảnh và kiểm tra cache}
-Ảnh được mở bằng Pillow, chuyển RGB, resize \(224\times224\), sau đó đưa qua CLIP
-ViT-B/32 tiền huấn luyện với trọng số được giữ cố định. CLIP chỉ đóng vai trò bộ trích
-đặc trưng; các vector đầu ra được chuẩn hóa \(L_2\) trước khi huấn luyện classifier.
-Cache có kích thước:
+Dự án kiểm tra bốn mức:
+
+\begin{enumerate}[leftmargin=*]
+  \item giao nhau của \code{tweet\_id}, \code{image\_id} và cặp ID;
+  \item trùng ảnh chính xác bằng SHA-256;
+  \item trùng văn bản sau bước làm sạch;
+  \item gần trùng bằng perceptual hash cho ảnh và độ tương tự ngữ nghĩa/từ vựng
+        cho văn bản.
+\end{enumerate}
+
+Không có ID hoặc cặp ID giao nhau giữa các split. Tuy nhiên, SHA-256 phát hiện
+43 hash ảnh chung train--dev, 46 hash chung train--test và 21 hash chung
+dev--test. Có một văn bản sau làm sạch trùng giữa train với dev và một văn bản
+trùng giữa train với test. Trên toàn bộ corpus, 18.082 dòng chỉ tạo ra 17.777
+hash ảnh duy nhất, tức 305 lần lặp ngoài ảnh đại diện đầu tiên.
+
+\subsection{Hai mặt nạ đánh giá}
+
+\begin{description}[leftmargin=3.8cm,style=nextline]
+  \item[Canonical mask] Loại một dòng dev/test nếu ảnh SHA-256 hoặc văn bản đã
+        làm sạch của nó đã xuất hiện ở split trước. Đây là bộ lọc tự động có
+        tiêu chí xác định và được dùng trong quy trình chọn mô hình ban đầu.
+  \item[Robustness mask] Bắt đầu từ canonical mask, sau đó loại thêm các cặp gần
+        trùng đã được duyệt theo từng cặp. Ảnh ứng viên dùng pHash DCT 64-bit
+        với khoảng cách Hamming không quá 4; văn bản dùng kết hợp cosine của
+        CLIP text embedding và TF--IDF ký tự/từ. Mặt nạ này dùng để kiểm tra độ
+        bền của kết luận, không tự động coi mọi ứng viên là bản sao.
+\end{description}
+
+Sau duyệt cặp, robustness mask loại thêm 111 dòng dev và 137 dòng test so với
+canonical mask. Việc báo cáo cả kết quả canonical và robustness giúp phân biệt
+hai câu hỏi: mô hình hoạt động thế nào trên split đã làm sạch bản sao chính xác,
+và kết luận còn giữ được hay không khi loại cả những bản sao gần.
+
+\section{Tiền xử lý và feature engineering văn bản}
+
+\subsection{Làm sạch tweet}
+
+Tweet chứa nhiều token phục vụ nền tảng hơn là nội dung: URL rút gọn, mention,
+HTML entity và dấu câu. Hàm làm sạch thực hiện lần lượt:
+
+\begin{enumerate}[leftmargin=*]
+  \item chuyển chữ thường;
+  \item bỏ HTML entity, URL và \code{@mention};
+  \item bỏ ký hiệu \code{\#} nhưng giữ từ khóa hashtag;
+  \item chỉ giữ chữ cái Latin, chữ số và khoảng trắng;
+  \item gộp nhiều khoảng trắng liên tiếp.
+\end{enumerate}
+
+Ví dụ:
+
+\begin{center}
+\begin{tabularx}{0.94\textwidth}{p{2cm}X}
+\toprule
+\textbf{Trước} & \code{URGENT:\ Flood\ waters\ rising!\ @Police\ https://t.co/x\ \#Harvey}\\
+\textbf{Sau} & \code{urgent\ flood\ waters\ rising\ harvey}\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Giữ nội dung hashtag là quyết định có chủ đích vì tên thảm họa hoặc chủ đề cứu
+trợ thường nằm trong hashtag. Ngược lại, bỏ URL và mention giúp giảm số token
+chỉ xuất hiện một lần. Giới hạn của quy tắc hiện tại là loại emoji, dấu tiếng
+nước ngoài và không xử lý mỉa mai; đây là sự đánh đổi để có một pipeline đơn
+giản, có thể kiểm tra và phù hợp với corpus chủ yếu bằng tiếng Anh.
+
+\subsection{TF--IDF}
+
+Classifier không nhận chuỗi ký tự trực tiếp. TF--IDF chuyển mỗi văn bản thành
+vector thưa, trong đó một chiều tương ứng với một từ hoặc cặp từ. Trọng số của
+term \(t\) trong document \(d\) được mô tả bởi:
+
 \[
-(13.608,512),\quad(2.237,512),\quad(2.237,512).
+\operatorname{tfidf}(t,d)
+=\operatorname{tf}(t,d)\times
+\log\left(\frac{N+1}{\operatorname{df}(t)+1}\right)+1,
 \]
-Audit xác nhận độ lệch chuẩn khoảng 0,04418, norm trung bình bằng 1, không có vector zero và
-metadata \code{tweet\_id/image\_id} khớp thứ tự annotation ở cả ba split.
+
+trong đó \(\operatorname{tf}(t,d)\) phản ánh số lần term xuất hiện,
+\(\operatorname{df}(t)\) là số văn bản chứa term và \(N\) là số văn bản train.
+Trực giác là một từ xuất hiện nhiều trong một tweet nhưng hiếm trên toàn corpus
+sẽ mang nhiều thông tin phân biệt hơn từ phổ biến ở mọi tweet.
+
+Các cấu hình thực tế của vectorizer là:
+
+\begin{itemize}[leftmargin=*]
+  \item tối đa 2.000 đặc trưng có thứ tự theo thống kê của tập train;
+  \item unigram và bigram, tức một từ và hai từ liên tiếp;
+  \item stopword tiếng Anh của scikit-learn;
+  \item chuẩn hóa \(L_2\) mặc định cho từng vector.
+\end{itemize}
+
+Bigram giúp phân biệt các cụm như \code{power\ outage}, \code{missing\ people}
+hoặc \code{need\ shelter}, trong khi unigram giữ độ phủ khi câu ngắn. Giới hạn
+2.000 chiều giảm chi phí và nhiễu so với giữ toàn bộ từ vựng, nhưng có thể bỏ
+sót term hiếm. Vectorizer \textbf{chỉ fit trên train}; dev và test chỉ gọi
+\code{transform}. Nếu fit trên toàn corpus, tần suất tài liệu của dev/test sẽ
+đi vào IDF và gây rò rỉ nhẹ nhưng có thật.
+
+\section{Tiền xử lý và feature engineering ảnh}
+
+\subsection{Từ pixel đến vector đặc trưng}
+
+Ảnh có hàng trăm nghìn giá trị pixel, quá nhiều để các classifier cổ điển học
+trực tiếp trên 13.608 mẫu train. Dự án sử dụng CLIP ViT-B/32
+\cite{clip2021} như một \textbf{bộ trích đặc trưng tiền huấn luyện}. Các khái
+niệm cần phân biệt:
+
+\begin{description}[leftmargin=4.4cm,style=nextline]
+  \item[Tiền huấn luyện] Mô hình CLIP đã được tác giả gốc học trước trên lượng
+        lớn cặp ảnh--văn bản, trước khi dự án này sử dụng nó.
+  \item[Transfer learning] Tri thức hình ảnh đã học được chuyển sang bài toán
+        CrisisMMD thay vì huấn luyện mạng sâu từ đầu.
+  \item[Frozen feature extractor] Trọng số CLIP được giữ nguyên; dự án chỉ chạy
+        forward pass để lấy vector. Không có gradient và không cập nhật CLIP.
+  \item[Fine-tuning] Là cập nhật một phần hoặc toàn bộ trọng số mô hình tiền
+        huấn luyện bằng dữ liệu đích. \textbf{Dự án không fine-tune CLIP}.
+\end{description}
+
+Trong ViT-B/32, ảnh \(224\times224\) được chia thành các patch \(32\times32\).
+Mỗi patch được biến thành một token và đi qua Transformer để tổng hợp quan hệ
+giữa các vùng ảnh. CLIP được học bằng mục tiêu tương phản: đưa vector của ảnh
+gần vector của mô tả phù hợp và xa mô tả không phù hợp. Vì vậy embedding thường
+chứa thông tin ngữ nghĩa cao hơn màu hoặc histogram đơn giản.
+
+\subsection{Quy trình trích xuất thực tế}
+
+Mỗi ảnh được:
+
+\begin{enumerate}[leftmargin=*]
+  \item mở bằng Pillow, chuyển về ba kênh RGB và resize \(224\times224\);
+  \item đưa qua bộ xử lý chính thức của CLIP và forward pass ở chế độ
+        \code{eval} trong \code{torch.no\_grad()};
+  \item lấy projected image embedding 512 chiều;
+  \item chuẩn hóa \(L_2\):
+        \(\hat{\mathbf{x}}=\mathbf{x}/\lVert\mathbf{x}\rVert_2\);
+  \item lưu cache theo đúng thứ tự \code{tweet\_id, image\_id}.
+\end{enumerate}
+
+Chuẩn hóa \(L_2\) đưa mọi vector lên mặt cầu đơn vị, giúp khoảng cách và tích vô
+hướng phản ánh hướng ngữ nghĩa thay vì độ lớn tùy ý. Cache có shape
+\((13.608,512)\), \((2.237,512)\), \((2.237,512)\) cho train/dev/test. Audit
+cho thấy norm trung bình bằng 1, độ lệch chuẩn toàn ma trận khoảng 0,04418,
+không có vector zero và metadata khớp thứ tự annotation.
 
 \begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{image_gallery.png}
 \caption{Ảnh train đại diện cho tám lớp humanitarian chung.}
 \end{figure}
 
-\begin{insight}[Kết luận GĐ0--GĐ1]
-Dữ liệu và ảnh thật đã đủ; nhãn official được join đúng; processed CSV và embedding cache
-khớp thứ tự; evaluation có mask chống duplicate xuyên split. Vì vậy GĐ0 và GĐ1 chỉ được
-coi là hoàn thành sau audit này, không dựa vào việc file ``đã tồn tại''.
-\end{insight}
+\subsection{Lý do giữ CLIP cố định}
+
+Giữ CLIP cố định phù hợp với phạm vi dự án vì:
+
+\begin{itemize}[leftmargin=*]
+  \item mục tiêu học phần là so sánh các thuật toán phân lớp và xây dựng DSS,
+        không phải thiết kế mạng sâu;
+  \item 13.608 mẫu train và các lớp hiếm rất nhỏ làm fine-tuning toàn mạng có
+        nguy cơ overfit;
+  \item embedding được tính một lần, sau đó cùng một không gian đặc trưng được
+        dùng để so sánh công bằng sáu classifier;
+  \item chi phí huấn luyện và triển khai thấp hơn, kết quả dễ tái lập hơn.
+\end{itemize}
+
+Đánh đổi là đặc trưng không được điều chỉnh riêng cho ảnh thảm họa. Kết quả của
+nhánh ảnh vì vậy phải được hiểu là ``classifier trên đặc trưng CLIP cố định'',
+không phải thành tích của một CLIP đã được huấn luyện cho CrisisMMD.
+
+\section{Tổng hợp đặc trưng đầu vào mô hình}
+
+\begin{table}[H]\centering
+\caption{Đặc trưng được tạo và nơi chúng được sử dụng.}
+\begin{tabularx}{\textwidth}{p{2.4cm}p{3.3cm}p{2.4cm}X}
+\toprule
+\textbf{Nguồn} & \textbf{Biểu diễn} & \textbf{Kích thước} & \textbf{Vai trò}\\
+\midrule
+Tweet & TF--IDF word 1--2 gram & 2.000, vector thưa &
+Đầu vào sáu classifier văn bản cho hai task.\\
+Ảnh & CLIP ViT-B/32 frozen embedding & 512, vector đặc &
+Đầu vào sáu classifier ảnh cho hai task.\\
+Xác suất mô hình & Vector xác suất đã căn lớp & 2 hoặc 8 &
+Đầu vào Late Fusion và conflict score.\\
+Từ khóa nghiệp vụ & Cờ xuất hiện trong tweet đã làm sạch & một số cờ nhị phân &
+Tín hiệu bổ sung cho Risk Score, không dùng để thay đổi ground truth.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Như vậy, feature engineering của dự án không phải là một bước trang trí trước
+mô hình. Nó quyết định loại thông tin mà classifier có thể nhìn thấy, chi phí
+tính toán, nguy cơ rò rỉ và khả năng giải thích. Chương tiếp theo sử dụng chính
+các biểu diễn này để phân tích cấu trúc dữ liệu trước khi huấn luyện.
