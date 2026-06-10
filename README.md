@@ -1,156 +1,134 @@
-# Multimodal Disaster Response DSS
+# Hệ hỗ trợ quyết định ứng phó thảm họa đa phương thức
 
-Decision support system for filtering, classifying, prioritizing, and routing
-disaster-related social-media posts using CrisisMMD v2.0 text and images.
+[![Repository preflight](https://github.com/dafiiscoding/ml-dss/actions/workflows/repository-preflight.yml/badge.svg)](https://github.com/dafiiscoding/ml-dss/actions/workflows/repository-preflight.yml)
 
-## Current pipeline
+Đồ án Nhóm 29, học phần **Hệ hỗ trợ quyết định**, Đại học Bách khoa
+Hà Nội. Hệ thống sử dụng văn bản và hình ảnh từ CrisisMMD v2.0 để lọc tin
+hữu ích, phân loại nhu cầu nhân đạo, tính mức ưu tiên, phân luồng xử lý và
+đưa các trường hợp bất đồng đa phương thức vào hàng đợi duyệt thủ công.
+
+## Dành cho người chấm
+
+| Nội dung | Liên kết |
+|---|---|
+| **Báo cáo PDF 34 trang** | [BAO_CAO_NHOM_29.pdf](BAO_CAO_NHOM_29.pdf) |
+| **Hướng dẫn chấm và bản đồ minh chứng** | [INSTRUCTOR.md](INSTRUCTOR.md) |
+| Notebook EDA đã chạy | [notebooks/02_eda.ipynb](notebooks/02_eda.ipynb) |
+| Notebook mô hình đã chạy | [notebooks/03_modeling.ipynb](notebooks/03_modeling.ipynb) |
+| Ảnh chụp dashboard | [reports/figures/screenshots](reports/figures/screenshots) |
+| Kết quả định lượng | [reports/metrics](reports/metrics) |
+| Tiến độ và kết luận kiểm toán | [docs/PROGRESS.md](docs/PROGRESS.md) |
+| Khai báo sử dụng AI | [docs/ai_usage_declaration.md](docs/ai_usage_declaration.md) |
+
+Người đọc có thể đánh giá báo cáo, notebook đã thực thi, bảng kết quả và
+screenshot mà **không cần tải bộ ảnh 1,8 GB hoặc chạy lại CLIP**.
+
+## Pipeline
 
 ```text
-CrisisMMD annotations/images
-  -> text cleaning + TF-IDF
-  -> CLIP image embeddings
-  -> six-model comparison on dev
-  -> tuned late fusion
+CrisisMMD annotations + images
+  -> làm sạch văn bản + TF-IDF
+  -> CLIP image embedding 512 chiều
+  -> so sánh 6 mô hình cổ điển trên dev
+  -> late fusion text/image
   -> Risk Score / Priority / Routing / Manual Review
   -> Streamlit dashboard
 ```
 
-The project joins the official informative target into the humanitarian master
-split. Models are fitted on train, selected/tuned on dev, and reported once on
-test. Dev/test metrics exclude rows whose exact image hash or cleaned text
-already appeared in an earlier split.
+Pipeline join nhãn informative chính thức theo `(tweet_id, image_id)`, thay vì
+suy diễn từ nhãn humanitarian. Mô hình được fit trên train, chọn và tune trên
+dev đã loại rò rỉ, sau đó chỉ báo cáo một lần trên test leakage-safe.
 
-`data/processed/robust_evaluation_mask.csv` additionally excludes visually
-verified image near-duplicates and manually reviewed text near-copies. It is
-kept separate from the canonical mask for robustness/sensitivity reporting.
+## Kết quả chính
 
-## Verified results
-
-| Task | Best final system | Test result |
+| Bài toán | Hệ thống | Kết quả test |
 |---|---|---:|
-| Informative filtering | Late Fusion | Accuracy = 0.7072; F1 = 0.8079; F2 = 0.9035 |
-| Informative dummy | Always informative | F2 = 0.8939; MCC = 0 |
-| Humanitarian 8-class | Late Fusion | Macro-F1 = 0.4005 |
-| Humanitarian dummy | Train majority | Macro-F1 = 0.0686 |
-| Manual Review | Capacity-constrained conflict rule | Precision = 0.7536 |
-| Robust sensitivity | Locked Late Fusion | F2 = 0.9006; Macro-F1 = 0.3908 |
+| Lọc informative | Late Fusion | Accuracy 0,7072; F1 0,8079; F2 0,9035 |
+| Baseline informative | Luôn dự báo informative | F2 0,8939; MCC 0 |
+| Humanitarian 8 lớp | Late Fusion | Macro-F1 0,4005 |
+| Baseline humanitarian | Lớp đa số train | Macro-F1 0,0686 |
+| Manual Review | Luật conflict có giới hạn công suất | Precision 0,7536 |
+| Robust sensitivity | Giữ nguyên model và threshold | F2 0,9006; Macro-F1 0,3908 |
 
-F2 is not interpreted alone: the always-informative dummy is only 0.0096 below
-fusion because the positive rate is 62.75%.
+F2 của informative không được diễn giải riêng lẻ vì baseline luôn dự báo
+informative đã đạt 0,8939. Trên 2.000 bootstrap phân tầng của robust test,
+khoảng tin cậy 95% cho mức tăng F2 so với baseline là `[0,0032; 0,0161]`.
+Lợi ích có tính nhất quán nhưng độ lớn thực tế nhỏ.
 
-The robust row is a no-retuning sensitivity check after 137 additional,
-pairwise-verified near-duplicate test rows are excluded. Canonical test results
-remain the primary reported results.
+## Cấu trúc chính
 
-On 2,000 stratified bootstrap resamples of the robust test set, informative F2
-has a 95% interval of `[0.8938, 0.9068]`; its paired gain over the
-always-informative dummy is `[0.0032, 0.0161]`. The gain is positive under the
-row-bootstrap assumption but remains small in practical magnitude.
+```text
+app/                 Dashboard Streamlit
+src/                 Loader, tiền xử lý, model, fusion và DSS
+scripts/             Audit, đánh giá, tái tạo và kiểm tra bản nộp
+notebooks/           Notebook EDA và modeling đã có output
+reports/latex/       Nguồn XeLaTeX và PDF biên dịch
+reports/metrics/     Metrics, baseline, robustness và DSS audit
+reports/figures/     Hình báo cáo và screenshot dashboard
+docs/                Dữ liệu, tiến độ, AI declaration và thông tin nhóm
+tests/               Unit/integration tests
+```
 
-## Setup
+## Chạy dashboard
+
+Môi trường đã xác minh: Python 3.14.2.
 
 ```powershell
 pip install -r requirements.txt
+streamlit run app/streamlit_app.py
 ```
 
-The verified environment uses Python 3.14.2. `.python-version` records this
-version for tools that support it.
+URL local sau khi chạy: `http://localhost:8501`
 
-Raw CrisisMMD files and generated model/embedding binaries are intentionally
-excluded from Git. See [`docs/DATA.md`](docs/DATA.md) for the source, expected
-layout, and rebuild procedure.
+Đây không phải liên kết public. Bản GitHub cung cấp screenshot và notebook đã
+thực thi để người chấm duyệt không cần khởi động dashboard.
 
-Expected raw-data layout:
+Dữ liệu CrisisMMD thô và model/embedding sinh ra không đưa lên Git vì kích
+thước. Xem nguồn, cấu trúc thư mục và cách tái tạo tại
+[docs/DATA.md](docs/DATA.md).
 
-```text
-data/raw/
-  datasplit/crisismmd_datasplit_all/*.tsv
-  CrisisMMD_v2.0/data_image/...
+## Kiểm thử và tái tạo
+
+Kiểm thử nhanh phần code:
+
+```powershell
+python -m unittest discover -s tests -v
+python -m scripts.submission_preflight
 ```
 
-## Rebuild
-
-The full command exports normalized splits, audits exact and near duplicates,
-refreshes CLIP metadata, trains six text/image classifiers, tunes fusion on
-dev, builds dashboard cache, executes both notebooks, and runs integration:
+Tái tạo toàn bộ pipeline khi đã có dữ liệu:
 
 ```powershell
 python -m scripts.run_all
 ```
 
-Existing CLIP embeddings are reused unless their `.npy` files are removed.
+Trạng thái nghiệm thu hiện tại:
 
-## Run and verify
+- 37 unit tests pass.
+- Hai notebook execute với 0 lỗi.
+- 6/6 Streamlit entrypoint AppTest không có exception.
+- DSS audit và integration bằng ảnh thật pass.
+- Báo cáo XeLaTeX 34 trang, không có overfull/undefined warning.
 
-```powershell
-python -m unittest discover -s tests -v
-python -m scripts.audit_data
-python -m scripts.audit_near_duplicate_images
-python -m scripts.build_image_duplicate_review_artifacts
-python -m scripts.review_near_duplicate_images
-python -m scripts.audit_near_duplicate_texts
-python -m scripts.review_near_duplicate_texts
-python -m scripts.build_robust_evaluation_mask
-python -m scripts.evaluate_baselines
-python -m src.evaluate_fusion
-python -m scripts.evaluate_robustness
-python -m scripts.evaluate_stability
-python -m scripts.audit_dss
-python -m src.test_integration
-streamlit run app/streamlit_app.py
-```
+## Hoàn tất thông tin nhóm
 
-Dashboard URL: `http://localhost:8501`
-
-## Finalize the submission
-
-Edit only `docs/team_info.json`, then run:
+Chỉ cần điền đúng thông tin thực tế trong
+[docs/team_info.json](docs/team_info.json), sau đó chạy:
 
 ```powershell
 python -m scripts.finalize_submission
-```
-
-Before team information is complete, the GitHub-safe file set can still be
-checked with:
-
-```powershell
-python -m scripts.apply_team_info
-python -m scripts.submission_preflight
-```
-
-GitHub Actions runs a lightweight repository preflight. The complete 37-test
-ML/DSS suite requires the locally downloaded CrisisMMD corpus and generated
-model caches, so it is verified locally rather than pretending to run without
-its required inputs.
-
-## Publish to GitHub
-
-Create an empty GitHub repository, then connect and push:
-
-```powershell
-git remote add origin https://github.com/<account>/<repository>.git
-git push -u origin main
-```
-
-After filling `docs/team_info.json`, finalize and publish the last update:
-
-```powershell
-python -m scripts.finalize_submission
-git add docs/team_info.json docs/contribution_log.md `
-  reports/latex/chapters/team_info.tex reports/latex/main.pdf
+git add .
 git commit -m "Finalize team information"
 git push
 ```
 
-## Main artifacts
+Lệnh hoàn tất sẽ đồng bộ bìa, phụ lục phân công, contribution log, biên dịch
+PDF và cập nhật `BAO_CAO_NHOM_29.pdf` ở thư mục gốc.
 
-- `notebooks/02_eda.ipynb`: executed EDA, K-Means, Apriori, image audit, CLIP t-SNE.
-- `notebooks/03_modeling.ipynb`: leakage-safe model comparison and fusion evidence.
-- `reports/metrics/`: generated metrics and tuning outputs.
-- `reports/figures/screenshots/`: browser-verified dashboard evidence.
-- `reports/latex/main.pdf`: Vietnamese report.
-- `docs/PROGRESS.md`: phase-by-phase completion status.
-- `docs/FINAL_HANDOFF.md`: final QA and the remaining identity-only fields.
+## Giới hạn được công khai
 
-Raw images and generated model binaries are intentionally not suitable for Git
-because of their size. Reproduce them with the commands above.
+- Risk Score và Priority là policy prototype vì CrisisMMD không có ground
+  truth ưu tiên vận hành; dự án không tuyên bố chúng tối ưu thống kê.
+- Robust bootstrap theo hàng không thay thế kiểm thử leave-one-event-out.
+- Các lớp hiếm như `missing_or_found_people` còn rất ít mẫu test.
+- Thông tin và phân công của ba thành viên còn lại phải do nhóm cung cấp thật.

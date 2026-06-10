@@ -19,7 +19,9 @@ FORBIDDEN_PREFIXES = (
 )
 FORBIDDEN_SUFFIXES = (".npy", ".pkl", ".tar.gz")
 REQUIRED_FILES = (
+    "INSTRUCTOR.md",
     "README.md",
+    "BAO_CAO_NHOM_29.pdf",
     "requirements.txt",
     "docs/team_info.json",
     "notebooks/02_eda.ipynb",

@@ -16,6 +16,10 @@
 - DSS audit và integration với ảnh thật pass.
 - `reports/latex/main.pdf`: 34 trang, XeLaTeX hai lượt, không có
   overfull hoặc undefined warning.
+- `BAO_CAO_NHOM_29.pdf`: bản báo cáo đồng bộ đặt ngay tại thư mục gốc để
+  người chấm truy cập trực tiếp.
+- `INSTRUCTOR.md`: bản đồ tiêu chí, artefact và lộ trình kiểm tra dành cho
+  giảng viên/người chấm.
 - Canonical model/config không bị retune bởi robust analysis.
 
 ## Chỉ còn cần nhóm cung cấp
@@ -35,13 +39,15 @@ python -m scripts.finalize_submission
 ```
 
 Lệnh này đồng bộ bìa, phụ lục, contribution log, biên dịch PDF hai lượt và
-chạy preflight GitHub ở chế độ final.
+chạy preflight GitHub ở chế độ final. Bản PDF sau biên dịch được sao chép tự
+động thành `BAO_CAO_NHOM_29.pdf` ở thư mục gốc.
 
 Sau đó commit và push:
 
 ```powershell
 git add docs/team_info.json docs/contribution_log.md `
-  reports/latex/chapters/team_info.tex reports/latex/main.pdf
+  reports/latex/chapters/team_info.tex reports/latex/main.pdf `
+  BAO_CAO_NHOM_29.pdf
 git commit -m "Finalize team information"
 git push
 ```
