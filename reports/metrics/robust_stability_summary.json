@@ -1,16 +1,16 @@
 {
   "method": "2000 deterministic stratified bootstrap resamples on the locked robust test set; no fitting or retuning.",
   "informative_f2_95_ci": [
-    0.8938214017343107,
-    0.9067698624585067
+    0.8960286816446491,
+    0.9069768285562901
   ],
   "humanitarian_macro_f1_95_ci": [
     0.3635992483339116,
     0.4208046507346924
   ],
   "informative_f2_gain_vs_dummy_95_ci": [
-    0.003187559063116489,
-    0.016136019787312498
+    0.0053948389734549684,
+    0.01634298588509592
   ],
   "humanitarian_macro_f1_gain_vs_dummy_95_ci": [
     0.29361342267834817,

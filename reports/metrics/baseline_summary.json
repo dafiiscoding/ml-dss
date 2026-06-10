@@ -102,7 +102,7 @@
   "interpretation": {
     "warning": "F2 strongly rewards recall. The always-informative baseline must be shown beside the final system.",
     "always_informative_test_f2": 0.8939,
-    "fusion_test_f2": 0.9035,
-    "absolute_f2_gain_over_dummy": 0.0096
+    "fusion_test_f2": 0.9045,
+    "absolute_f2_gain_over_dummy": 0.0106
   }
 }

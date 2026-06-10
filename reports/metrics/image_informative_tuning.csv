@@ -1,0 +1,11 @@
+Parameters,Accuracy,Precision,Recall,F1,F2,Selected
+"{""n_neighbors"": 41, ""weights"": ""distance""}",0.7565,0.789,0.8301,0.809,0.8216,True
+"{""n_neighbors"": 41, ""weights"": ""uniform""}",0.7556,0.7887,0.8287,0.8082,0.8204,False
+"{""n_neighbors"": 25, ""weights"": ""uniform""}",0.7524,0.7864,0.8257,0.8056,0.8176,False
+"{""n_neighbors"": 25, ""weights"": ""distance""}",0.7506,0.7854,0.8235,0.804,0.8156,False
+"{""n_neighbors"": 15, ""weights"": ""uniform""}",0.7542,0.7915,0.8206,0.8058,0.8146,False
+"{""n_neighbors"": 15, ""weights"": ""distance""}",0.7538,0.7909,0.8206,0.8055,0.8145,False
+"{""n_neighbors"": 9, ""weights"": ""uniform""}",0.7478,0.7849,0.8184,0.8013,0.8115,False
+"{""n_neighbors"": 9, ""weights"": ""distance""}",0.7483,0.7863,0.8169,0.8013,0.8106,False
+"{""n_neighbors"": 5, ""weights"": ""uniform""}",0.7455,0.7874,0.8088,0.798,0.8044,False
+"{""n_neighbors"": 5, ""weights"": ""distance""}",0.7446,0.7875,0.8066,0.7969,0.8027,False

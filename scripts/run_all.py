@@ -41,6 +41,7 @@ def main():
     from src.train_text_model import train_text_models
     from src.train_image_model import train_image_models
     from src.data_loader import export_processed_splits
+    from src.tune_selected_models import tune_selected_models
     from src.evaluate_fusion import evaluate
     from scripts.evaluate_baselines import evaluate as evaluate_baselines
     from scripts.evaluate_robustness import evaluate as evaluate_robustness
@@ -61,29 +62,30 @@ def main():
     from scripts.audit_dss import build as audit_dss
     from scripts.build_eda_artifacts import build as build_eda_artifacts
 
-    _run("1/20 Export normalized splits", export_processed_splits)
-    _run("2/20 Cache CLIP image embeddings", lambda: cache_main(None))
-    _run("3/20 Audit data and exact duplicates", audit)
-    _run("4/20 Audit perceptual near-duplicate images", audit_near_images)
-    _run("5/20 Build image review diagnostics/sheets", build_image_review_artifacts)
-    _run("6/20 Review near-duplicate image candidates", review_near_images)
-    _run("7/20 Audit semantic near-duplicate texts", audit_near_texts)
-    _run("8/20 Review near-duplicate text candidates", review_near_texts)
-    _run("9/20 Build robust evaluation mask", build_robust_mask)
-    _run("10/20 Build reusable EDA artifacts", build_eda_artifacts)
-    _run("11/20 Train + compare TEXT models", lambda: train_text_models())
-    _run("12/20 Train + compare IMAGE models", lambda: train_image_models())
-    _run("13/20 Tune and evaluate fusion", evaluate)
-    _run("14/20 Evaluate dummy baselines", evaluate_baselines)
-    _run("15/20 Evaluate locked-config robustness", evaluate_robustness)
-    _run("16/20 Bootstrap/event/class stability", evaluate_stability)
-    _run("17/20 Build dashboard cache", build_dashboard_data)
-    _run("18/20 Audit DSS rules and policy sensitivity", audit_dss)
-    _run("19/20 Rebuild evidence notebooks", lambda: (
+    _run("1/21 Export normalized splits", export_processed_splits)
+    _run("2/21 Cache CLIP image embeddings", lambda: cache_main(None))
+    _run("3/21 Audit data and exact duplicates", audit)
+    _run("4/21 Audit perceptual near-duplicate images", audit_near_images)
+    _run("5/21 Build image review diagnostics/sheets", build_image_review_artifacts)
+    _run("6/21 Review near-duplicate image candidates", review_near_images)
+    _run("7/21 Audit semantic near-duplicate texts", audit_near_texts)
+    _run("8/21 Review near-duplicate text candidates", review_near_texts)
+    _run("9/21 Build robust evaluation mask", build_robust_mask)
+    _run("10/21 Build reusable EDA artifacts", build_eda_artifacts)
+    _run("11/21 Train + compare TEXT models", lambda: train_text_models())
+    _run("12/21 Train + compare IMAGE models", lambda: train_image_models())
+    _run("13/21 Tune selected classifier families", tune_selected_models)
+    _run("14/21 Tune and evaluate fusion", evaluate)
+    _run("15/21 Evaluate dummy baselines", evaluate_baselines)
+    _run("16/21 Evaluate locked-config robustness", evaluate_robustness)
+    _run("17/21 Bootstrap/event/class stability", evaluate_stability)
+    _run("18/21 Build dashboard cache", build_dashboard_data)
+    _run("19/21 Audit DSS rules and policy sensitivity", audit_dss)
+    _run("20/21 Rebuild evidence notebooks", lambda: (
         _script(os.path.join("scripts", "build_eda_nb.py")),
         _script(os.path.join("scripts", "build_modeling_nb.py")),
     ))
-    _run("20/20 Integration test", run_integration_test)
+    _run("21/21 Integration test", run_integration_test)
     print("\n[ALL DONE] Sync pipeline complete. Check notebooks/, models/, reports/metrics/.")
 
 

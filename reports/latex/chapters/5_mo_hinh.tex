@@ -1,13 +1,209 @@
-\chapter{Mô hình, Late Fusion và tầng quyết định}
+\chapter{Mô hình dự báo, hợp nhất và chính sách DSS}
+
+\section{Bài toán học có giám sát}
+
+Học có giám sát sử dụng các cặp \((\mathbf{x}_i,y_i)\), trong đó
+\(\mathbf{x}_i\) là vector đặc trưng và \(y_i\) là nhãn đã biết, để học hàm
+\(f(\mathbf{x})\) dự báo nhãn cho mẫu mới. Dự án có bốn bài toán con:
+
+\begin{enumerate}[leftmargin=*]
+  \item TF--IDF \(\rightarrow\) informative;
+  \item TF--IDF \(\rightarrow\) humanitarian category;
+  \item CLIP image embedding \(\rightarrow\) informative;
+  \item CLIP image embedding \(\rightarrow\) humanitarian category.
+\end{enumerate}
+
+Cùng sáu họ thuật toán được so sánh ở cả hai phương thức. Cách làm này tách hai
+câu hỏi: biểu diễn nào chứa tín hiệu hữu ích, và thuật toán nào khai thác biểu
+diễn đó tốt hơn. Nó cũng tránh quy toàn bộ kết quả nhánh ảnh cho CLIP: CLIP chỉ
+tạo đặc trưng; classifier phía sau mới được huấn luyện trên CrisisMMD.
+
+\section{Sáu thuật toán phân lớp}
+
+\subsection{Logistic Regression}
+
+Mặc dù có tên ``regression'', Logistic Regression là mô hình phân lớp. Với bài
+toán nhị phân, mô hình tính:
+
+\[
+P(y=1\mid\mathbf{x})=\sigma(\mathbf{w}^{T}\mathbf{x}+b),
+\qquad
+\sigma(z)=\frac{1}{1+e^{-z}}.
+\]
+
+Vector trọng số \(\mathbf{w}\) cho biết mỗi đặc trưng đẩy log-odds về lớp nào.
+Với tám lớp, phiên bản đa lớp dùng softmax để tạo một phân bố xác suất tổng bằng
+1. Logistic Regression phù hợp với TF--IDF và embedding vì học biên quyết định
+tuyến tính, huấn luyện nhanh và xuất xác suất trực tiếp. Giới hạn là quan hệ
+giữa đặc trưng và log-odds bị giả định tuyến tính; tương tác phức tạp không được
+tự động khám phá.
+
+\subsection{Decision Tree}
+
+Decision Tree chia không gian đặc trưng bằng chuỗi điều kiện dạng
+``đặc trưng \(j\) có lớn hơn ngưỡng \(c\) hay không''. Mỗi phép chia được chọn
+để giảm độ hỗn tạp, thường đo bằng Gini:
+
+\[
+G=1-\sum_{k=1}^{K}p_k^2,
+\]
+
+với \(p_k\) là tỷ lệ lớp \(k\) trong một nút. Cây dễ giải thích bằng đường đi từ
+gốc tới lá và có thể mô tả quan hệ phi tuyến. Tuy nhiên, cây đơn lẻ có phương
+sai cao, dễ học chi tiết ngẫu nhiên; trên TF--IDF 2.000 chiều, nhiều phép chia
+trên term hiếm làm cây đặc biệt dễ overfit. Dự án giới hạn
+\code{max\_depth=20} ở vòng so sánh ban đầu.
+
+\subsection{Naive Bayes}
+
+Naive Bayes áp dụng định lý Bayes:
+
+\[
+P(y\mid\mathbf{x})\propto P(y)\prod_j P(x_j\mid y),
+\]
+
+và giả định các đặc trưng độc lập có điều kiện khi biết lớp. Giả định này
+``ngây thơ'' nhưng thường hiệu quả với văn bản. Multinomial Naive Bayes được
+dùng cho TF--IDF không âm; Gaussian Naive Bayes được dùng cho embedding đặc,
+với giả định mỗi chiều gần phân phối chuẩn trong từng lớp. Ưu điểm là nhanh,
+ổn định ở dữ liệu nhiều chiều. Nhược điểm là giả định độc lập/chuẩn hóa hiếm khi
+đúng hoàn toàn và xác suất có thể quá tự tin.
+
+\subsection{k-Nearest Neighbors}
+
+k-NN không học một công thức tham số. Khi có mẫu mới, thuật toán tìm \(k\) mẫu
+train gần nhất rồi bỏ phiếu. Với distance weighting, láng giềng gần có trọng số
+lớn hơn. Trên embedding ảnh đã chuẩn hóa \(L_2\), khoảng cách Euclidean và cosine
+có quan hệ đơn điệu:
+
+\[
+\lVert\hat{\mathbf{x}}-\hat{\mathbf{z}}\rVert_2^2
+=2-2\cos(\hat{\mathbf{x}},\hat{\mathbf{z}}).
+\]
+
+k-NN phù hợp để kiểm tra cấu trúc lân cận trong không gian CLIP. Trên TF--IDF
+thưa, ``lời nguyền số chiều'' làm nhiều điểm có khoảng cách gần tương tự nhau,
+dẫn đến kết quả yếu. Chi phí dự báo cũng cao vì phải so sánh với tập train và
+model phải lưu đặc trưng train.
+
+\subsection{Support Vector Machine}
+
+SVM tuyến tính tìm siêu phẳng \(\mathbf{w}^{T}\mathbf{x}+b=0\) có biên lớn giữa
+các lớp. Trực giác của biên lớn là không chỉ phân đúng mẫu train mà còn giữ
+khoảng cách với các mẫu gần ranh giới. Tham số \(C\) điều khiển đánh đổi:
+\(C\) lớn phạt lỗi train mạnh hơn, còn \(C\) nhỏ chấp nhận thêm lỗi để có biên
+đều hơn \cite{cortes1995}.
+
+SVM tuyến tính thường mạnh trên TF--IDF vì xử lý tốt không gian nhiều chiều và
+thưa. Bản thân \code{LinearSVC} tạo decision score, không tạo xác suất. Dự án
+bọc mô hình bằng lớp \texttt{CalibratedClassifier}\allowbreak\texttt{CV} với
+sigmoid và ba fold nội bộ để
+tạo \code{predict\_proba} cho Late Fusion. Calibration này chỉ dùng dữ liệu
+train, không dùng dev/test.
+
+\subsection{Random Forest}
+
+Random Forest là ensemble của nhiều Decision Tree. Mỗi cây học trên một bootstrap
+sample và chỉ xét một tập con đặc trưng ở mỗi nút; dự báo cuối là bỏ phiếu hoặc
+trung bình xác suất \cite{breiman2001}. Hai nguồn ngẫu nhiên làm các cây bớt
+tương quan, từ đó giảm phương sai so với một cây đơn. Dự án dùng 200 cây và
+\code{balanced\_subsample}. Đánh đổi là model lớn hơn, giải thích khó hơn cây
+đơn và có thể không tận dụng không gian TF--IDF tuyến tính tốt bằng SVM.
+
+\section{Mất cân bằng lớp và trọng số}
+
+Với \(K\) lớp, scikit-learn đặt trọng số cân bằng xấp xỉ:
+
+\[
+w_k=\frac{n}{K\,n_k},
+\]
+
+trong đó \(n_k\) là số mẫu lớp \(k\). Lớp hiếm nhận trọng số lỗi lớn hơn trong
+hàm mục tiêu. Logistic Regression, Decision Tree, SVM và Random Forest sử dụng
+class weight tương ứng; Naive Bayes và k-NN giữ cơ chế gốc.
+
+Class weight không tạo thêm thông tin. Nó chỉ thay đổi chi phí sai số, thường
+tăng Recall lớp hiếm nhưng có thể giảm Precision. Với lớp missing chỉ có 24 mẫu
+train, không thể suy luận rằng class weight đã giải quyết thiếu dữ liệu; kết quả
+theo lớp vẫn phải được báo cáo.
+
+\section{Các chỉ số đánh giá}
+
+\subsection{Nhị phân informative}
+
+Gọi TP là informative dự báo đúng, FP là not-informative bị báo nhầm, FN là
+informative bị bỏ sót và TN là not-informative dự báo đúng:
+
+\[
+\operatorname{Precision}=\frac{TP}{TP+FP},\qquad
+\operatorname{Recall}=\frac{TP}{TP+FN}.
+\]
+
+F1 là trung bình điều hòa của Precision và Recall. F\(_\beta\) tổng quát:
+
+\[
+F_\beta=(1+\beta^2)
+\frac{\operatorname{Precision}\operatorname{Recall}}
+{\beta^2\operatorname{Precision}+\operatorname{Recall}}.
+\]
+
+Dự án dùng \(F_2\), tức Recall có trọng số lớn hơn Precision vì bỏ sót thông tin
+khẩn cấp được xem là tốn kém hơn chuyển nhầm một bài cho bước kiểm tra. Tuy
+nhiên, khi informative chiếm đa số, classifier luôn dự báo informative cũng có
+F2 cao. Vì vậy F2 phải đi cùng Accuracy, Balanced Accuracy, F1 và Matthews
+Correlation Coefficient (MCC). Balanced Accuracy lấy trung bình Recall của hai
+lớp; MCC bằng 0 với dự báo hằng và chỉ cao khi cả bốn ô confusion matrix hợp lý.
+
+\subsection{Tám lớp humanitarian}
+
+Accuracy bị chi phối bởi lớp lớn. Macro-F1 tính F1 riêng cho từng lớp rồi lấy
+trung bình không trọng số:
+
+\[
+\operatorname{MacroF1}=\frac{1}{K}\sum_{k=1}^{K}F1_k.
+\]
+
+Do đó mỗi lớp hiếm có tiếng nói ngang lớp lớn. Weighted-F1 bổ sung góc nhìn theo
+tần suất thực tế. Tiêu chí chọn model là Macro-F1; báo cáo đồng thời Accuracy,
+Weighted-F1 và bảng từng lớp.
 
 \section{Thiết kế thực nghiệm}
-Sáu model được fit trên 13.608 train rows. Model tốt nhất, trọng số fusion và threshold
-được chọn trên 2.189 dev rows leakage-safe. Test 2.169 rows chỉ dùng báo cáo cuối. Text,
-ảnh và fusion cùng dự báo nhãn chính thức; modality label chỉ dùng chẩn đoán.
 
-\section{So sánh sáu model trên dev}
+\subsection{Vai trò của train, dev và test}
+
+\begin{table}[H]\centering
+\caption{Ranh giới sử dụng dữ liệu trong thực nghiệm.}
+\begin{tabularx}{\textwidth}{p{2.2cm}p{2.4cm}X}
+\toprule
+\textbf{Split} & \textbf{Số hàng sạch} & \textbf{Mục đích}\\
+\midrule
+Train & 13.608 & Fit TF--IDF, classifier và calibration nội bộ.\\
+Dev & 2.189 & Chọn họ model, siêu tham số, trọng số fusion và threshold.\\
+Test & 2.169 & Đánh giá cuối sau khi mọi lựa chọn đã khóa.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+``Model parameter'' là trọng số học từ train, chẳng hạn \(\mathbf{w}\) của
+Logistic Regression. ``Hyperparameter'' là cấu hình do người thiết kế chọn,
+chẳng hạn \(C\), \(k\), độ sâu cây hoặc số cây. Dùng test để chọn
+hyperparameter sẽ biến test thành dev và làm kết quả lạc quan. Dự án vì vậy dùng
+quy trình ba vòng:
+
+\begin{enumerate}[leftmargin=*]
+  \item so sánh sáu họ thuật toán trên dev với cấu hình chung;
+  \item chỉ tune họ thắng của mỗi bài toán trên dev;
+  \item khóa model, tune fusion trên dev và đánh giá đúng một lần trên test.
+\end{enumerate}
+
+Đây không phải nested cross-validation đầy đủ; vì vậy vẫn có rủi ro thích nghi
+với một dev split. Để giảm rủi ro, lưới tuning nhỏ, được xác định trước và kết
+quả còn được hậu kiểm trên robust test không tune lại.
+
+\section{Vòng 1: so sánh sáu thuật toán}
+
 \begin{table}[H]\centering\scriptsize
-\caption{Text informative, chọn theo F2.}
+\caption{Text informative trên dev, chọn theo F2.}
 \begin{tabular}{lrrrrr}
 \toprule
 \textbf{Model} & \textbf{Acc.} & \textbf{Prec.} & \textbf{Recall} & \textbf{F1} & \textbf{F2}\\
@@ -23,7 +219,7 @@ Random Forest & .7195 & .7457 & .8324 & .7867 & .8135\\
 \end{table}
 
 \begin{table}[H]\centering\scriptsize
-\caption{Text humanitarian, chọn theo Macro-F1.}
+\caption{Text humanitarian trên dev, chọn theo Macro-F1.}
 \begin{tabular}{lrrrrr}
 \toprule
 \textbf{Model} & \textbf{Acc.} & \textbf{Macro-P} & \textbf{Macro-R} &
@@ -40,7 +236,7 @@ Random Forest & .4947 & .2921 & .2571 & .2626 & .4734\\
 \end{table}
 
 \begin{table}[H]\centering\scriptsize
-\caption{Image informative trên CLIP, chọn theo F2.}
+\caption{Image informative trên embedding CLIP, chọn theo F2.}
 \begin{tabular}{lrrrrr}
 \toprule
 \textbf{Model} & \textbf{Acc.} & \textbf{Prec.} & \textbf{Recall} & \textbf{F1} & \textbf{F2}\\
@@ -56,7 +252,7 @@ Random Forest & .7478 & .7949 & .8007 & .7978 & .7996\\
 \end{table}
 
 \begin{table}[H]\centering\scriptsize
-\caption{Image humanitarian trên CLIP, chọn theo Macro-F1.}
+\caption{Image humanitarian trên embedding CLIP, chọn theo Macro-F1.}
 \begin{tabular}{lrrrrr}
 \toprule
 \textbf{Model} & \textbf{Acc.} & \textbf{Macro-P} & \textbf{Macro-R} &
@@ -72,59 +268,126 @@ Random Forest & .5706 & \textbf{.5433} & .2760 & .2795 & .5262\\
 \end{tabular}
 \end{table}
 
-k-NN thất bại trên TF--IDF thưa nhưng cạnh tranh trên embedding ảnh. SVM có F2 tốt cho
-text informative. Với bài toán tám lớp, Logistic Regression không có Accuracy cao nhất
-nhưng có Macro-F1 tốt nhất do cân bằng lớp hiếm tốt hơn; đây là lý do chọn metric trước
-khi nhìn kết quả.
+k-NN yếu rõ trên TF--IDF nhưng cạnh tranh trên CLIP embedding, phù hợp với phân
+tích về khoảng cách ở trên. Ở bài toán tám lớp, model có Accuracy cao nhất
+không nhất thiết có Macro-F1 cao nhất. Việc định nghĩa tiêu chí trước khi xem
+kết quả ngăn lựa chọn metric thuận lợi sau thực nghiệm.
 
-\section{Đối chứng dummy baseline}
-Test leakage-safe có 62,75\% mẫu informative. Vì F2 nhấn mạnh Recall, bộ phân loại luôn
-dự báo informative đã đạt F2 0,8939 dù Balanced Accuracy chỉ 0,5 và MCC bằng 0.
+\section{Vòng 2: tuning classifier}
+
+Tuning là tìm hyperparameter trong một lưới hữu hạn, không phải cập nhật CLIP.
+Chỉ bốn họ thắng vòng 1 được tune để hạn chế số phép thử. Với task đa lớp,
+Macro-F1 chênh không quá 0,001 được coi là hòa; khi đó ưu tiên Weighted-F1 rồi
+Accuracy. Quy tắc này tránh chọn một cấu hình chỉ vì vài dự báo lớp cực hiếm làm
+Macro-F1 dao động.
+
 \begin{table}[H]\centering\small
-\caption{Đối chứng informative trên test leakage-safe.}
-\begin{tabular}{lrrrrrr}
+\caption{Không gian tuning và cấu hình được chọn trên dev.}
+\begin{tabularx}{\textwidth}{p{2.8cm}p{2.6cm}Xp{2.2cm}}
 \toprule
-\textbf{Hệ thống} & \textbf{Acc.} & \textbf{Balanced Acc.} &
-\textbf{F1} & \textbf{F2} & \textbf{MCC} & \textbf{Avg. Precision}\\
+\textbf{Task} & \textbf{Họ model} & \textbf{Lưới} & \textbf{Kết quả}\\
 \midrule
-Always informative & .6275 & .5000 & .7711 & .8939 & .0000 & .6275\\
-Late Fusion & .7072 & .6136 & .8079 & .9035 & .3602 & .8921\\
+Text informative & Linear SVM &
+\(C\in\{0{,}05;0{,}1;0{,}3;1;3\}\) &
+\(C=3\), F2=.8548\\
+Text humanitarian & Logistic Regression &
+\(C\in\{0{,}05;0{,}1;0{,}3;1;3;10\}\) &
+\(C=1\), Macro-F1=.3297\\
+Image informative & k-NN &
+\(k\in\{5,9,15,25,41\}\), uniform/distance &
+\(k=41\), distance, F2=.8216\\
+Image humanitarian & Logistic Regression &
+\(C\in\{0{,}05;0{,}1;0{,}3;1;3;10\}\) &
+\(C=1\), Macro-F1=.3637\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+SVM text tăng F2 dev từ .8511 lên .8548. k-NN ảnh tăng từ .8146 lên .8216.
+Hai model tám lớp giữ \(C=1\); lưới tuning đã được chạy nhưng không tìm thấy
+cấu hình khác tốt hơn đủ rõ. Đây là kết quả hợp lệ: tuning là kiểm định lựa
+chọn, không bảo đảm luôn tạo cải thiện.
+
+\section{Vòng 3: xác suất, Late Fusion và conflict}
+
+\subsection{Căn chỉnh xác suất}
+
+Late Fusion kết hợp đầu ra sau khi mỗi nhánh đã dự báo. Với informative:
+
+\[
+p_{\mathrm{fused}}
+=\alpha p_{\mathrm{text}}+(1-\alpha)p_{\mathrm{image}},
+\qquad
+\hat y=\mathbb{1}[p_{\mathrm{fused}}\ge\tau].
+\]
+
+Với humanitarian, mỗi model tạo vector tám xác suất. Pipeline căn cột theo cùng
+thứ tự lớp, điền 0 nếu một model thiếu lớp, rồi tính:
+
+\[
+\mathbf{q}_{\mathrm{fused}}
+=\beta\mathbf{q}_{\mathrm{text}}
++(1-\beta)\mathbf{q}_{\mathrm{image}}.
+\]
+
+Trên dev, grid search chọn \(\alpha=0{,}70\), \(\tau=0{,}38\) cho informative
+và \(\beta=0{,}55\) cho humanitarian. Text nhận trọng số lớn hơn nhưng ảnh vẫn
+đóng góp 30--45\%. Fusion là late fusion, không phải nối raw feature; ưu điểm là
+hai nhánh có thể dùng classifier khác nhau và dễ quan sát đóng góp từng nhánh.
+Nhược điểm là trung bình tuyến tính không học tương tác phức tạp.
+
+\subsection{Conflict score và Manual Review}
+
+Mức bất đồng informative là
+\(|p_{\mathrm{text}}-p_{\mathrm{image}}|\). Với category, dự án dùng total
+variation distance:
+
+\[
+C_{\mathrm{cat}}=\frac{1}{2}\sum_{k=1}^{8}
+\left|q_{\mathrm{text},k}-q_{\mathrm{image},k}\right|.
+\]
+
+Conflict score là giá trị lớn hơn giữa hai đại lượng. Ngưỡng 0,54 được chọn trên
+dev để tối đa F1 phát hiện cờ bất đồng trong khi tỷ lệ review không vượt 25\%.
+Đây là tối ưu có ràng buộc công suất: ngưỡng quá thấp tăng Recall nhưng làm hàng
+review quá tải; ngưỡng quá cao bỏ qua nhiều xung đột.
+
+\section{Kết quả cuối trên canonical test}
+
+\subsection{Informative và đối chứng hằng}
+
+\begin{table}[H]\centering\scriptsize
+\caption{Informative trên 2.169 hàng test sạch.}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+\textbf{Hệ thống} & \textbf{Thr.} & \textbf{Acc.} & \textbf{Bal. Acc.} &
+\textbf{Prec.} & \textbf{Recall} & \textbf{F1} & \textbf{F2} & \textbf{MCC}\\
+\midrule
+Always informative & -- & .6275 & .5000 & .6275 & 1.0000 & .7711 & .8939 & .0000\\
+Text-only & .38 & .6823 & .5792 & .6675 & .9838 & .7954 & .8987 & .2904\\
+Image-only & .20 & .6773 & .5759 & .6662 & .9735 & .7910 & .8913 & .2660\\
+\textbf{Late Fusion} & .38 & \textbf{.6948} & \textbf{.5944} & \textbf{.6755} &
+.9882 & \textbf{.8025} & \textbf{.9045} & \textbf{.3325}\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Chênh lệch F2 chỉ 0,0096. Giá trị của fusion ở task này phải được nhìn đồng thời qua
-Accuracy tăng 0,0797, F1 tăng 0,0368, Balanced Accuracy và MCC dương; không dùng F2 riêng
-lẻ làm headline chất lượng.
+Always-informative đạt F2 .8939 vì Recall bằng 1. Fusion chỉ tăng F2 thêm
+.0106, nhưng đồng thời tăng Accuracy .0673, F1 .0314, Balanced Accuracy và MCC.
+Do đó giá trị của fusion không được trình bày chỉ bằng F2. Image-only có Average
+Precision .8999, cao hơn text .7968, nhưng threshold ưu tiên Recall làm Accuracy
+hai nhánh gần nhau; điều này cho thấy chất lượng xếp hạng và quyết định tại một
+ngưỡng là hai khái niệm khác nhau.
 
-Với humanitarian, majority baseline luôn dự báo \code{not\_humanitarian}, đạt Accuracy
-0,3785 nhưng Macro-F1 chỉ 0,0686. Fusion đạt Macro-F1 0,4005, cho thấy khả năng phân biệt
-tám lớp vượt baseline rõ hơn nhiều.
-
-\section{Late Fusion trên test}
-Dev chọn informative text/image \(=0,70/0,30\), threshold 0,38; category dùng
-\(0,55/0,45\).
-\begin{table}[H]\centering\small
-\caption{Informative trên test leakage-safe.}
-\begin{tabular}{lrrrrrr}
-\toprule
-\textbf{Hệ thống} & \textbf{Threshold} & \textbf{Acc.} & \textbf{Prec.} &
-\textbf{Recall} & \textbf{F1} & \textbf{F2}\\
-\midrule
-Text-only & .34 & .6745 & .6619 & .9838 & .7914 & .8966\\
-Image-only & .20 & .6754 & .6643 & .9758 & .7905 & .8921\\
-\textbf{Late Fusion} & .38 & \textbf{.7072} & \textbf{.6867} & .9809 &
-\textbf{.8079} & \textbf{.9035}\\
-\bottomrule
-\end{tabular}
-\end{table}
+\subsection{Humanitarian tám lớp}
 
 \begin{table}[H]\centering\small
-\caption{Humanitarian trên test leakage-safe.}
+\caption{Humanitarian trên 2.169 hàng test sạch.}
 \begin{tabular}{lrrr}
 \toprule
 \textbf{Hệ thống} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{Weighted-F1}\\
 \midrule
+Majority baseline & .3785 & .0686 & .2079\\
 Text-only & .4481 & .3260 & .4693\\
 Image-only & .5440 & .3646 & .5695\\
 \textbf{Late Fusion} & \textbf{.5569} & \textbf{.4005} & \textbf{.5776}\\
@@ -132,14 +395,12 @@ Image-only & .5440 & .3646 & .5695\\
 \end{tabular}
 \end{table}
 
-Fusion cải thiện Accuracy/F1 informative và Macro-F1 tám lớp. Lợi thế F2 informative so
-với dummy nhỏ, trong khi lợi thế humanitarian so với majority baseline rõ hơn. Điều này
-hỗ trợ giữ ảnh như bằng chứng bổ sung, nhưng không đủ để kết luận hệ thống tốt đồng đều ở
-mọi lớp.
+Ảnh mạnh hơn text ở task tám lớp, và fusion tiếp tục tăng Macro-F1 .0359 so với
+image-only. Điều này là bằng chứng thực nghiệm để giữ nhánh ảnh, nhưng không có
+nghĩa ảnh luôn đáng tin hơn text ở mọi lớp hoặc mọi sự kiện.
 
-\section{Phân tích theo lớp}
 \begin{table}[H]\centering\scriptsize
-\caption{Late Fusion humanitarian theo lớp trên test sạch.}
+\caption{Late Fusion humanitarian theo lớp trên canonical test.}
 \begin{tabular}{lrrrr}
 \toprule
 \textbf{Lớp} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Support}\\
@@ -156,118 +417,115 @@ not humanitarian & .7507 & .6200 & .6791 & 821\\
 \end{tabular}
 \end{table}
 
-Missing/found chỉ có 5 mẫu test sạch và F1 0,0714; vehicle damage có 18 mẫu và F1 0,2169.
-Đây là giới hạn trọng yếu: các lớp sinh tử/hiếm chưa đủ bằng chứng để tự động hóa quyết định.
+F1 của missing/found chỉ .0714 với 5 mẫu; vehicle damage chỉ .2169 với 18 mẫu.
+Các lớp này chưa đủ bằng chứng để tự động điều động nguồn lực. Recall tương đối
+cao ở vài lớp hiếm đi cùng Precision rất thấp, nghĩa là hệ thống bắt được thêm
+ca thật bằng cách tạo nhiều cảnh báo nhầm.
 
 \section{Hậu kiểm robustness và độ bất định}
-Canonical mask chỉ loại exact duplicate theo ảnh/text đã xuất hiện ở split trước. Sau
-review từng cặp, robust mask loại thêm 137 test rows near-duplicate đã xác minh, còn
-2.032 rows. Toàn bộ model, trọng số fusion và threshold được giữ nguyên; không fit, chọn
-hay tune lại trên robust rows.
+
+Robustness mask loại thêm 137 hàng test gần trùng đã duyệt, còn 2.032 hàng.
+Model, fusion và threshold được giữ nguyên, không tune lại.
 
 \begin{table}[H]\centering\small
-\caption{Độ nhạy metric khi chuyển từ canonical sang robust test.}
+\caption{Độ nhạy khi chuyển từ canonical sang robust test.}
 \begin{tabular}{lrrr}
 \toprule
 \textbf{Metric} & \textbf{Canonical} & \textbf{Robust} & \textbf{Chênh lệch}\\
 \midrule
-Informative Accuracy & .7072 & .7018 & -.0055\\
-Informative F1 & .8079 & .8029 & -.0050\\
-Informative F2 & .9035 & .9006 & -.0029\\
-Informative MCC & .3602 & .3592 & -.0010\\
+Informative Accuracy & .6948 & .6900 & -.0048\\
+Informative F1 & .8025 & .7978 & -.0047\\
+Informative F2 & .9045 & .9016 & -.0029\\
+Informative MCC & .3325 & .3340 & +.0015\\
 Humanitarian Macro-F1 & .4005 & .3908 & -.0097\\
 Humanitarian Weighted-F1 & .5776 & .5789 & +.0013\\
-Manual Review F1 & .4687 & .4665 & -.0021\\
+Manual Review F1 & .4585 & .4558 & -.0027\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Kết quả không phụ thuộc mạnh vào các near-duplicate đã xác nhận. Macro-F1 giảm nhiều hơn
-các metric khác vì robust test chỉ còn 28 mẫu injured/dead, 4 missing/found và 15 vehicle
-damage; thay đổi vài dự báo làm F1 lớp hiếm dao động rõ.
+Kết luận tổng thể không phụ thuộc mạnh vào các near-duplicate đã xác nhận.
+Macro-F1 nhạy hơn vì robust test chỉ còn 28 injured/dead, 4 missing/found và
+15 vehicle damage.
 
-Bootstrap phân tầng 2.000 lần trên robust test cho kết quả:
+Bootstrap phân tầng 2.000 lần trên robust test cho:
+
 \begin{table}[H]\centering\small
 \caption{Khoảng tin cậy percentile 95\%, cấu hình đã khóa.}
 \begin{tabular}{lrrr}
 \toprule
 \textbf{Đại lượng} & \textbf{Ước lượng} & \textbf{CI thấp} & \textbf{CI cao}\\
 \midrule
-Informative F2 & .9006 & .8938 & .9068\\
-F2 gain so với always-informative & .0100 & .0032 & .0161\\
+Informative F2 & .9016 & .8960 & .9070\\
+F2 gain so với always-informative & .0110 & .0054 & .0163\\
 Humanitarian Macro-F1 & .3908 & .3636 & .4208\\
 Macro-F1 gain so với majority & .3208 & .2936 & .3508\\
-Manual Review F1 & .4665 & .4370 & .4962\\
+Manual Review F1 & .4558 & .4251 & .4868\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Paired F2 gain có CI không chứa 0 dưới giả định lấy mẫu độc lập theo hàng, nhưng độ lớn
-thực tiễn chỉ khoảng 0,01. Đây không phải bằng chứng tổng quát hóa sang một thảm họa chưa
-từng thấy, vì các hàng trong cùng event có thể tương quan.
+CI của gain không chứa 0 dưới giả định lấy mẫu độc lập theo hàng. Tuy nhiên,
+row-bootstrap không mô phỏng một thảm họa hoàn toàn mới và nhiều tweet trong
+cùng event có thể tương quan. Informative F2 theo event nằm trong
+.8205--.9243; humanitarian Macro-F1 trên các lớp hiện diện nằm trong
+.3458--.4615. Đây là bằng chứng về domain shift còn lại.
 
-\begin{figure}[H]\centering
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\textwidth]{robust_bootstrap_intervals.png}
-\caption{CI bootstrap trên robust test.}
-\end{subfigure}
-\hfill
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\textwidth]{robust_event_stability.png}
-\caption{Macro-F1 theo event.}
-\end{subfigure}
-\caption{Độ bất định tổng thể và biến động theo thảm họa.}
-\end{figure}
+\section{Từ dự báo đến chính sách DSS}
 
-Informative F2 theo event nằm trong khoảng 0,8377--0,9270, thấp nhất ở
-\code{srilanka\_floods}. Humanitarian Macro-F1 tính trên các lớp hiện diện nằm trong
-0,3458--0,4615, thấp nhất ở \code{iraq\_iran\_earthquake} chỉ có 61 rows. Ba lớp
-injured/dead, missing/found và vehicle damage vẫn dưới 30 mẫu; không có lớp support đủ
-lớn nào dịch F1 quá 0,05 giữa canonical và robust mask.
+\subsection{Risk Score}
 
-\section{Manual Review}
-Conflict score là giá trị lớn hơn giữa chênh lệch informative và total-variation distance
-của hai phân bố tám lớp. Ngưỡng 0,54 được chọn trên dev với capacity tối đa 25\%. Trên test:
-review rate 25,63\%, Precision 0,7536, Recall 0,3401, F1 0,4687. Hệ thống ưu tiên xung đột
-mạnh thay vì đẩy mọi trường hợp cho người.
+Classifier tạo xác suất và category, nhưng dữ liệu không có nhãn Priority.
+Risk Score do đó là một chính sách minh bạch, không phải một model đã được
+chứng minh tối ưu:
 
-\section{Risk Score và routing}
-Risk Score là chính sách minh bạch:
 \[
 \begin{aligned}
-\operatorname{Risk}={}&0,40S_{\mathrm{informative}}
-+0,25S_{\mathrm{severity}}\\
-&+0,20S_{\mathrm{keyword}}
-+0,15(S_{\mathrm{severity}}\times C_{\mathrm{category}}).
+\operatorname{Risk}={}&0{,}40S_{\mathrm{informative}}
++0{,}25S_{\mathrm{severity}}\\
+&+0{,}20S_{\mathrm{keyword}}
++0{,}15(S_{\mathrm{severity}}\times C_{\mathrm{category}}).
 \end{aligned}
 \]
-Confidence được nhân severity để một dự báo rất chắc chắn là \code{not\_humanitarian}
-không làm tăng risk. Ngưỡng 0--39/40--69/70--100 ánh xạ Low/Medium/High. Tám category có
-routing đầy đủ đến Emergency, Relief, Infrastructure, Coordination hoặc No Action.
 
-CrisisMMD không có ground truth Priority. Vì vậy trọng số và threshold trên là giả định chính
-sách, không phải optimum học được. Sensitivity trên 2.169 test rows:
+\(S_{\mathrm{informative}}\) là xác suất fusion theo thang 0--100;
+\(S_{\mathrm{severity}}\) đến từ bảng trọng số category công khai;
+\(S_{\mathrm{keyword}}\) phản ánh từ khóa khẩn cấp; và
+\(C_{\mathrm{category}}\) là độ tin cậy category. Nhân confidence với severity
+tránh trường hợp rất chắc chắn rằng bài đăng là not-humanitarian lại làm tăng
+risk. Các ngưỡng 0--39, 40--69 và 70--100 tạo Low, Medium, High.
+
+\subsection{Routing, override và sensitivity}
+
+Tám category đều có một đội nhận mặc định. Khi conflict vượt 0,54, Supervisor
+được thêm song song. Một case High không bị hạ mức hoặc chặn phản ứng chỉ vì
+cần review; ví dụ critical conflict được chuyển
+\code{Supervisor + Emergency Team}.
+
 \begin{table}[H]\centering\small
-\caption{Độ nhạy của số lượng case theo policy threshold.}
-\begin{tabular}{lrrrr}
+\caption{Độ nhạy của Priority theo ngưỡng trên 2.169 hàng test sạch.}
+\begin{tabular}{lrrrrr}
 \toprule
 \textbf{Policy} & \textbf{Low max} & \textbf{Medium max} &
-\textbf{Medium cases} & \textbf{High cases}\\
+\textbf{Low} & \textbf{Medium} & \textbf{High}\\
 \midrule
-Sensitive & 29 & 59 & 1.174 & 346\\
-Current & 39 & 69 & 1.338 & 55\\
-Strict & 49 & 79 & 968 & 2\\
+Sensitive & 29 & 59 & 651 & 1.186 & 332\\
+Current & 39 & 69 & 769 & 1.351 & 49\\
+Strict & 49 & 79 & 1.212 & 955 & 2\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Khi conflict cao, Low được nâng lên Medium; High giữ nguyên High. Supervisor review song
-song với đội phản ứng gốc, ví dụ \code{Supervisor + Emergency Team}, tránh lỗi hạ mức hoặc
-chặn phản ứng khẩn cấp.
+Sau override conflict, cấu hình hiện tại có 624 Low, 1.496 Medium và 49 High;
+539 case được Manual Review, tương đương 24,85\%. Chênh lệch lớn giữa ba policy
+cho thấy Priority phụ thuộc mạnh vào lựa chọn tổ chức. Muốn xác nhận trọng số
+và ngưỡng cần dữ liệu nghiệp vụ như mức ưu tiên do chuyên gia gán, thời gian
+phản ứng và chi phí của false negative/false positive.
 
-\begin{insight}[Kết luận GĐ3--GĐ4]
-GĐ3 hoàn thành vì có đủ bốn bảng so sánh sáu model, dummy baseline, lựa chọn trên dev,
-test sạch, fusion, robustness, confusion/per-class analysis. GĐ4 hoàn thành ở mức prototype vì routing phủ tám lớp,
-Manual Review có capacity, scenario test bảo toàn High Priority và sensitivity công khai
-tính phụ thuộc chính sách. Risk Score chưa được xác nhận bằng ground truth ưu tiên thực tế.
+\begin{insight}[Phạm vi kết luận]
+Các classifier, fusion và conflict detector đã được đánh giá trên nhãn có sẵn.
+Risk Score, Priority và Routing là nguyên mẫu chính sách có công thức, scenario
+test và sensitivity analysis, nhưng chưa có ground truth để khẳng định tối ưu.
+Hệ thống phù hợp hỗ trợ sàng lọc và điều phối sơ bộ; chưa phù hợp tự động ra
+quyết định sinh tử.
 \end{insight}

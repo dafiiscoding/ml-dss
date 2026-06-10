@@ -1,4 +1,4 @@
 policy,low_max,medium_max,low_cases,medium_cases,high_cases
-sensitive,29,59,649,1174,346
-current,39,69,776,1338,55
-strict,49,79,1199,968,2
+sensitive,29,59,651,1186,332
+current,39,69,769,1351,49
+strict,49,79,1212,955,2

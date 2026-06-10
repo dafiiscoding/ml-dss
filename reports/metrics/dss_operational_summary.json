@@ -4,11 +4,11 @@
   "routing_categories_covered": 8,
   "evaluation_rows": 2169,
   "priority_counts": {
-    "Medium": 1493,
-    "Low": 621,
-    "High": 55
+    "Medium": 1496,
+    "Low": 624,
+    "High": 49
   },
-  "manual_review_cases": 556,
-  "manual_review_rate": 0.2563,
-  "high_priority_review_cases": 24
+  "manual_review_cases": 539,
+  "manual_review_rate": 0.2485,
+  "high_priority_review_cases": 22
 }

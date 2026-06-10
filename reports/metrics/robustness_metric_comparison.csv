@@ -1,24 +1,24 @@
 Task,Metric,Canonical,Robust,Delta
-Informative Fusion,Accuracy,0.707238,0.701772,-0.005467
-Informative Fusion,Balanced Accuracy,0.613592,0.614263,0.000671
-Informative Fusion,Precision,0.686728,0.67989,-0.006839
-Informative Fusion,Recall,0.980896,0.980143,-0.000753
-Informative Fusion,F1,0.807867,0.802863,-0.005004
-Informative Fusion,F2,0.903492,0.900598,-0.002894
-Informative Fusion,MCC,0.360224,0.359228,-0.000996
-Informative Fusion,Average Precision,0.892082,0.889288,-0.002793
+Informative Fusion,Accuracy,0.69479,0.689961,-0.00483
+Informative Fusion,Balanced Accuracy,0.594369,0.596492,0.002122
+Informative Fusion,Precision,0.67554,0.669359,-0.006181
+Informative Fusion,Recall,0.988244,0.987292,-0.000952
+Informative Fusion,F1,0.802506,0.797818,-0.004688
+Informative Fusion,F2,0.904506,0.901639,-0.002866
+Informative Fusion,MCC,0.332469,0.333963,0.001494
+Informative Fusion,Average Precision,0.891343,0.887594,-0.003749
 Humanitarian Fusion,Accuracy,0.556939,0.557579,0.00064
 Humanitarian Fusion,Macro F1,0.400466,0.390816,-0.00965
 Humanitarian Fusion,Weighted F1,0.577619,0.578878,0.001259
-Manual Review,Accuracy,0.56201,0.564469,0.002458
-Manual Review,Balanced Accuracy,0.596943,0.597406,0.000463
-Manual Review,Precision,0.753597,0.752918,-0.000679
-Manual Review,Recall,0.340097,0.337991,-0.002106
-Manual Review,F1,0.46868,0.466546,-0.002134
-Manual Review,F2,0.38202,0.379859,-0.002162
-Manual Review,MCC,0.219972,0.222261,0.002289
-Manual Review,Average Precision,0.710638,0.70779,-0.002848
-Manual Review,Review Rate,0.256339,0.252953,-0.003387
+Manual Review,Accuracy,0.557861,0.560531,0.002671
+Manual Review,Balanced Accuracy,0.593802,0.594548,0.000746
+Manual Review,Precision,0.753247,0.754032,0.000786
+Manual Review,Recall,0.329545,0.326638,-0.002908
+Manual Review,F1,0.458498,0.45582,-0.002678
+Manual Review,F2,0.371319,0.3684,-0.002919
+Manual Review,MCC,0.215044,0.218328,0.003284
+Manual Review,Average Precision,0.709213,0.705774,-0.003439
+Manual Review,Review Rate,0.248502,0.244094,-0.004407
 Informative Baseline - Prior / majority,Accuracy,0.6275,0.6196,-0.0079
 Informative Baseline - Prior / majority,Balanced Accuracy,0.5,0.5,0.0
 Informative Baseline - Prior / majority,Precision,0.6275,0.6196,-0.0079

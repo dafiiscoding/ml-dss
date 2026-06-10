@@ -1,0 +1,97 @@
+{
+  "protocol": {
+    "family_selection": "six-model comparison on canonical dev",
+    "hyperparameter_selection": "canonical dev only",
+    "final_evaluation": "canonical test once after selection",
+    "multiclass_tie_tolerance": 0.001,
+    "clip": "frozen feature extractor; no CLIP fine-tuning"
+  },
+  "evaluation_rows": {
+    "train": 13608,
+    "val": 2189,
+    "test": 2169
+  },
+  "tasks": {
+    "text_informative": {
+      "selected_parameters": {
+        "C": 3.0
+      },
+      "selection_metric": "F2",
+      "dev_metrics": {
+        "Accuracy": 0.713111,
+        "Precision": 0.713536,
+        "Recall": 0.899265,
+        "F1": 0.795706,
+        "F2": 0.854767
+      },
+      "test_metrics": {
+        "Accuracy": 0.705394,
+        "Precision": 0.708912,
+        "Recall": 0.900073,
+        "F1": 0.793137,
+        "F2": 0.854016
+      }
+    },
+    "text_humanitarian": {
+      "selected_parameters": {
+        "C": 1.0
+      },
+      "selection_metric": "Macro F1",
+      "dev_metrics": {
+        "Accuracy": 0.464139,
+        "Macro Precision": 0.314513,
+        "Macro Recall": 0.409502,
+        "Macro F1": 0.329705,
+        "Weighted F1": 0.487451
+      },
+      "test_metrics": {
+        "Accuracy": 0.448133,
+        "Macro Precision": 0.311488,
+        "Macro Recall": 0.416941,
+        "Macro F1": 0.326043,
+        "Weighted F1": 0.469272
+      }
+    },
+    "image_informative": {
+      "selected_parameters": {
+        "n_neighbors": 41,
+        "weights": "distance"
+      },
+      "selection_metric": "F2",
+      "dev_metrics": {
+        "Accuracy": 0.75651,
+        "Precision": 0.788959,
+        "Recall": 0.830147,
+        "F1": 0.809029,
+        "F2": 0.821569
+      },
+      "test_metrics": {
+        "Accuracy": 0.771323,
+        "Precision": 0.803509,
+        "Recall": 0.841293,
+        "F1": 0.821967,
+        "F2": 0.833455
+      }
+    },
+    "image_humanitarian": {
+      "selected_parameters": {
+        "C": 1.0
+      },
+      "selection_metric": "Macro F1",
+      "dev_metrics": {
+        "Accuracy": 0.535404,
+        "Macro Precision": 0.360343,
+        "Macro Recall": 0.476752,
+        "Macro F1": 0.363699,
+        "Weighted F1": 0.565337
+      },
+      "test_metrics": {
+        "Accuracy": 0.54403,
+        "Macro Precision": 0.366219,
+        "Macro Recall": 0.446324,
+        "Macro F1": 0.364564,
+        "Weighted F1": 0.569498
+      }
+    }
+  }
+}

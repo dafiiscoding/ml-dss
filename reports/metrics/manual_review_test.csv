@@ -1,10 +1,10 @@
 ,Test
-Accuracy,0.562
-Balanced Accuracy,0.5969
-Precision,0.7536
-Recall,0.3401
-F1,0.4687
-F2,0.382
-MCC,0.22
-Average Precision,0.7106
-Review Rate,0.2563
+Accuracy,0.5579
+Balanced Accuracy,0.5938
+Precision,0.7532
+Recall,0.3295
+F1,0.4585
+F2,0.3713
+MCC,0.215
+Average Precision,0.7092
+Review Rate,0.2485

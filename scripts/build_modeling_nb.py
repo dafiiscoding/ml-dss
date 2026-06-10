@@ -25,11 +25,13 @@ Protocol:
 
 1. Dùng nhãn informative chính thức, join theo `(tweet_id, image_id)`.
 2. Fit sáu model trên train.
-3. Chọn model, trọng số fusion và threshold trên dev leakage-safe.
-4. Báo cáo một lần trên test leakage-safe.
-5. Text/image/fusion dùng cùng ground truth chung.
-6. Luôn đối chiếu dummy baseline; không diễn giải F2 riêng lẻ.
-7. Robust mask và bootstrap chỉ là hậu kiểm với cấu hình đã khóa, không tune lại.""")
+3. Chọn họ model rồi tune siêu tham số trên dev leakage-safe.
+4. Chọn trọng số fusion và threshold trên dev.
+5. Báo cáo một lần trên test leakage-safe.
+6. Text/image/fusion dùng cùng ground truth chung.
+7. Luôn đối chiếu dummy baseline; không diễn giải F2 riêng lẻ.
+8. Robust mask và bootstrap chỉ là hậu kiểm với cấu hình đã khóa, không tune lại.
+9. CLIP là frozen feature extractor; không fine-tune CLIP.""")
 
 code("""import json, os, sys
 sys.path.insert(0, os.path.abspath(".."))
@@ -87,7 +89,33 @@ plt.tight_layout()
 plt.savefig(os.path.join(FIGURES_DIR, "model_validation_comparison.png"), bbox_inches="tight")
 plt.show()""")
 
-md("## 2. Dummy baseline và kết quả cuối trên test leakage-safe")
+md("## 2. Tuning classifier trên dev")
+code("""tuning_files = {
+    "Text - informative": "text_informative_tuning.csv",
+    "Text - humanitarian": "text_humanitarian_tuning.csv",
+    "Image - informative": "image_informative_tuning.csv",
+    "Image - humanitarian": "image_humanitarian_tuning.csv",
+}
+for title, filename in tuning_files.items():
+    table = pd.read_csv(os.path.join(METRICS, filename))
+    print("\\n", title)
+    display(table)
+with open(os.path.join(METRICS, "tuned_model_summary.json"), encoding="utf-8") as f:
+    tuned_summary = json.load(f)
+tuned_summary""")
+
+md("""**Kết quả tuning.**
+
+- Text informative: Linear SVM chọn `C=3`, F2 dev tăng từ 0,8511 lên 0,8548.
+- Text humanitarian: Logistic Regression giữ `C=1`. `C=3` chỉ nhỉnh
+  Macro-F1 dưới 0,001 nhưng Weighted-F1 thấp hơn, nên quy tắc hòa chọn cấu hình
+  bảo thủ.
+- Image informative: k-NN chọn `k=41`, `weights=distance`, F2 dev tăng từ
+  0,8146 lên 0,8216.
+- Image humanitarian: Logistic Regression giữ `C=1`.
+- Đây là tuning classifier cổ điển; trọng số CLIP không thay đổi.""")
+
+md("## 3. Dummy baseline và kết quả cuối trên test leakage-safe")
 code("""binary = pd.read_csv(os.path.join(METRICS, "fusion_informative_test.csv"))
 category = pd.read_csv(os.path.join(METRICS, "fusion_humanitarian_test.csv"))
 review = pd.read_csv(os.path.join(METRICS, "manual_review_test.csv"))
@@ -130,16 +158,16 @@ plt.show()""")
 md("""**Diễn giải có đối chứng.**
 
 - Dummy luôn dự báo `informative` đã đạt F2 = 0,8939 vì positive rate là
-  62,75%. Late Fusion đạt 0,9035, chỉ hơn 0,0096 F2; không được dùng F2 riêng
+  62,75%. Late Fusion đạt 0,9045, chỉ hơn 0,0106 F2; không được dùng F2 riêng
   làm bằng chứng hệ thống mạnh.
-- Giá trị của informative fusion rõ hơn ở Accuracy 0,7072 so với 0,6275, F1
-  0,8079 so với 0,7711, Balanced Accuracy 0,6136 và MCC 0,3602.
+- Giá trị của informative fusion rõ hơn ở Accuracy 0,6948 so với 0,6275, F1
+  0,8025 so với 0,7711, Balanced Accuracy 0,5944 và MCC 0,3325.
 - Với humanitarian, majority baseline Macro-F1 chỉ 0,0686 trong khi fusion đạt
   0,4005. Đây là bằng chứng mạnh hơn cho giá trị phân loại tám lớp.
 - Ảnh tạo mức cải thiện rõ hơn ở nhiệm vụ tám lớp; text đóng vai trò lớn hơn
   trong informative với trọng số dev-tuned 0,70/0,30.""")
 
-md("## 3. Phân tích theo lớp và lỗi")
+md("## 4. Phân tích theo lớp và lỗi")
 code("""class_report = pd.read_csv(
     os.path.join(METRICS, "fusion_humanitarian_classification_report.csv"),
     index_col=0,
@@ -168,7 +196,7 @@ và F1 = 0,0714; `vehicle_damage` có 18 mẫu và F1 = 0,2169. Macro-F1 phản 
 đúng điểm yếu này. Hệ thống chưa đủ bằng chứng để tự động hóa quyết định sinh
 tử cho lớp hiếm; các case đó cần người xác minh.""")
 
-md("## 4. Robustness: near-duplicate, bootstrap, event và class")
+md("## 5. Robustness: near-duplicate, bootstrap, event và class")
 code("""robust_comparison = pd.read_csv(
     os.path.join(METRICS, "robustness_metric_comparison.csv")
 )
@@ -223,29 +251,29 @@ plt.show()""")
 md("""**Diễn giải hậu kiểm.**
 
 - Sau khi loại thêm 137 test rows near-duplicate đã xác minh, informative F2
-  giảm từ 0,9035 xuống 0,9006; humanitarian Macro-F1 giảm từ 0,4005 xuống
+  giảm từ 0,9045 xuống 0,9016; humanitarian Macro-F1 giảm từ 0,4005 xuống
   0,3908. Cấu hình không được tune lại.
-- Trên 2.000 bootstrap phân tầng, F2 robust có CI 95% [0,8938; 0,9068].
-  Paired F2 gain so với always-informative là 0,0100, CI [0,0032; 0,0161]:
+- Trên 2.000 bootstrap phân tầng, F2 robust có CI 95% [0,8960; 0,9070].
+  Paired F2 gain so với always-informative là 0,0110, CI [0,0054; 0,0163]:
   khác 0 theo giả định row-bootstrap nhưng độ lớn thực tiễn nhỏ.
 - Humanitarian Macro-F1 robust có CI [0,3636; 0,4208], gain so với majority
   baseline có CI [0,2936; 0,3508], là bằng chứng mạnh hơn.
-- Theo event, informative F2 thấp nhất ở Sri Lanka floods (0,8377);
+- Theo event, informative F2 thấp nhất ở Sri Lanka floods (0,8205);
   humanitarian Macro-F1 thấp nhất ở Iraq-Iran earthquake (0,3458, 61 rows).
   Đây là tín hiệu domain shift, không phải ước lượng deployment chắc chắn.
 - Ba lớp injured/dead, missing/found và vehicle damage vẫn có support dưới 30.
   Không có lớp support đủ lớn nào dịch F1 quá 0,05 giữa hai mask.""")
 
-md("## 5. Manual Review")
+md("## 6. Manual Review")
 code("""print("Conflict threshold:", fusion_config["manual_review"]["conflict_threshold"])
 print("Dev capacity:", fusion_config["manual_review"]["max_review_rate_on_dev"])
 display(review)""")
 
 md("""Ngưỡng conflict được chọn trên dev với capacity 25%. Trên test, review
-rate là 25,63%, precision 0,7536 và recall 0,3401. Đây là trade-off vận hành:
+rate là 24,85%, precision 0,7532 và recall 0,3295. Đây là trade-off vận hành:
 hàng đợi tập trung vào xung đột mạnh, không cố thu hồi toàn bộ xung đột.""")
 
-md("## 6. Kiểm tra logic Risk Score và routing")
+md("## 7. Kiểm tra logic Risk Score và routing")
 code("""scenarios = pd.read_csv(os.path.join(METRICS, "dss_scenarios.csv"))
 sensitivity = pd.read_csv(
     os.path.join(METRICS, "dss_threshold_sensitivity.csv")
@@ -263,9 +291,10 @@ High được review song song với Emergency Team và không bị hạ xuống
 Bảng sensitivity cho thấy số case High thay đổi mạnh khi policy đổi, do đó
 ngưỡng phải được trung tâm vận hành phê duyệt.""")
 
-md("""## 7. Kết luận nghiệm thu
+md("""## 8. Kết luận nghiệm thu
 
 - Mô hình: có so sánh đủ sáu thuật toán ở bốn nhánh/task.
+- Tuning: có lưới siêu tham số, quy tắc hòa và test chỉ dùng sau khi khóa.
 - Evaluation: tách train/dev/test và loại duplicate hash xuyên split.
 - Fusion: trọng số và threshold chọn trên dev, test chỉ dùng báo cáo.
 - Baseline: có dummy đối chứng; F2 informative không được diễn giải độc lập.
