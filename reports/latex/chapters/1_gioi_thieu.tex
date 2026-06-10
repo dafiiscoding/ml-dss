@@ -1,51 +1,171 @@
 \chapter{Giới thiệu bài toán}
 
-\section{Bối cảnh và tính cấp thiết}
-Khi thảm họa tự nhiên xảy ra (lũ lụt, bão, động đất, cháy rừng), mạng xã hội trở thành kênh
-thông tin hiện trường nhanh nhất nhưng cũng \textbf{nhiễu nhất}: lẫn lộn giữa lời kêu cứu thật,
-tin tức, cảm xúc cá nhân và tin giả. Trung tâm điều phối cứu nạn rơi vào tình trạng
-\emph{quá tải thông tin}, không thể đọc thủ công hàng vạn bài đăng mỗi giờ; bỏ sót một bài đăng
-khẩn cấp (người bị thương, mắc kẹt) có thể trả giá bằng sinh mạng. Do đó cần một hệ thống
-\textbf{tự động lọc, phân loại và phân luồng} thông tin cứu trợ dựa trên cả văn bản và hình ảnh.
+\section{Bối cảnh thực tế}
 
-\section{Đối tượng sử dụng và quyết định cần hỗ trợ}
+Trong những giờ đầu của một trận lũ, bão, động đất hoặc cháy rừng, thông tin
+thường xuất hiện trên mạng xã hội trước khi được tổng hợp đầy đủ trong các báo
+cáo chính thức. Người dân có thể đăng lời kêu cứu, vị trí đường bị chặn, hình
+ảnh công trình sập, nhu cầu lương thực hoặc thông tin về hoạt động tình nguyện.
+Nguồn dữ liệu này có giá trị vì nhanh và gần hiện trường, nhưng đồng thời cũng
+rất khó sử dụng trực tiếp:
+
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Ban điều phối trung tâm:} phân bổ nguồn lực tổng thể.
-  \item \textbf{Đội phản ứng khẩn cấp / Hạ tầng / Cứu trợ:} tiếp nhận thông tin đã phân luồng.
-  \item \textbf{Giám sát viên (Supervisor):} kiểm duyệt mẫu nghi mâu thuẫn/tin giả.
+  \item số lượng bài đăng tăng nhanh hơn khả năng đọc thủ công;
+  \item văn bản ngắn, có URL, hashtag, viết tắt và nhiều nội dung không liên
+        quan đến cứu trợ;
+  \item một bài đăng có thể chứa cả văn bản và ảnh nhưng hai nguồn bằng chứng
+        không nhất thiết nói cùng một nội dung;
+  \item thông tin thường thiếu vị trí chính xác, có thể được đăng lại hoặc dùng
+        lại một ảnh cũ;
+  \item chi phí của các loại sai khác nhau: bỏ sót một lời kêu cứu có thể
+        nghiêm trọng hơn việc chuyển nhầm một bài đăng ít khẩn cấp cho người
+        kiểm tra.
 \end{itemize}
-Hệ thống trả lời \textbf{5 câu hỏi quyết định}: (1) bài đăng có đáng chú ý không?
-(2) thuộc danh mục thảm họa nào? (3) mức ưu tiên? (4) phân về đội nào? (5) có cần kiểm duyệt thủ công?
 
-\section{Mục tiêu và phạm vi}
-Mục tiêu của dự án là xây dựng một nguyên mẫu DSS có thể: (i) xử lý toàn bộ 18.082 cặp
-tweet--ảnh CrisisMMD; (ii) so sánh tối thiểu sáu thuật toán phân lớp; (iii) phát hiện tin
-informative với đánh giá đa chỉ số và dummy baseline; (iv) phân loại 8 nhóm humanitarian
-để định tuyến; và
-(v) chuyển xác suất dự báo thành Risk Score, Priority, đội tiếp nhận và cờ Manual Review.
+Vấn đề của trung tâm điều phối không đơn thuần là ``gán nhãn đúng cho một
+tweet''. Người điều phối cần quyết định \emph{bài nào phải được chú ý trước,
+vấn đề thuộc nhóm nào, đội nào nên tiếp nhận và trường hợp nào cần con người
+xác minh}. Vì vậy, sản phẩm phù hợp phải là một \textbf{hệ hỗ trợ quyết định}
+(Decision Support System -- DSS), trong đó mô hình học máy chỉ là một thành
+phần tạo bằng chứng đầu vào cho quyết định.
 
-Phạm vi là dữ liệu tiếng Anh đã gán nhãn của bảy thảm họa năm 2017. Hệ thống không tự
-thu thập dữ liệu thời gian thực, không suy diễn tọa độ GPS và không tự động điều động lực
-lượng ngoài đời. Đầu ra là khuyến nghị hỗ trợ người ra quyết định, luôn cần con người chịu
-trách nhiệm cuối cùng.
+\section{Bài toán ra quyết định}
 
-\section{Câu hỏi nghiên cứu và tiêu chí thành công}
+Đơn vị phân tích của dự án là một bài đăng gồm nội dung văn bản và một ảnh
+đính kèm. Với mỗi bài đăng, hệ thống hỗ trợ năm quyết định liên tiếp:
+
 \begin{enumerate}[leftmargin=*]
-  \item Văn bản, ảnh và late fusion khác nhau thế nào khi cùng dự báo một ground truth?
-  \item Các lớp hiếm có được nhận diện đủ tốt để tự động hóa hay phải giữ human-in-the-loop?
-  \item Mâu thuẫn text--ảnh có thể tạo một hàng đợi kiểm duyệt nằm trong giới hạn năng lực không?
-  \item Kết quả dự báo được chuyển thành priority/routing ra sao mà vẫn minh bạch về giả định?
+  \item \textbf{Sàng lọc:} bài đăng có chứa thông tin hữu ích cho ứng phó thảm
+        họa hay chỉ là nội dung không liên quan?
+  \item \textbf{Phân loại nhu cầu:} thông tin thuộc nhóm thương vong, người
+        mất tích, hạ tầng, người bị ảnh hưởng, cứu trợ/quyên góp hay một nhóm
+        khác?
+  \item \textbf{Xếp mức ưu tiên:} bài đăng nên nằm ở mức Low, Medium hay High
+        trong hàng đợi xử lý?
+  \item \textbf{Phân luồng:} nhóm phản ứng nào nên tiếp nhận bài đăng?
+  \item \textbf{Kiểm duyệt:} bằng chứng có đủ nhất quán để dùng trực tiếp hay
+        cần một giám sát viên xem lại?
 \end{enumerate}
-Tiêu chí lựa chọn là F2 cho informative và Macro-F1 cho tám lớp, nhưng kết luận cuối phải
-đối chiếu dummy baseline và đọc đồng thời Accuracy, F1, Balanced Accuracy và MCC. Tiêu chí
-hệ thống gồm: split sạch, routing phủ đủ tám lớp, Manual Review có capacity, dashboard chạy
-được và mọi kết luận trong báo cáo truy về artifact thực thi.
 
-\section{Đóng góp chính}
+Năm quyết định có quan hệ phụ thuộc. Nếu bài đăng bị đánh giá là không hữu ích,
+việc phân luồng cứu hộ không còn nhiều ý nghĩa. Nếu bài đăng được xếp vào nhóm
+thương vong nhưng hai phương thức mâu thuẫn mạnh, hệ thống vẫn phải cảnh báo
+đội khẩn cấp đồng thời yêu cầu người giám sát kiểm tra; không được tự động hạ
+mức ưu tiên chỉ vì mô hình chưa chắc chắn.
+
+\section{Người sử dụng và nhu cầu thông tin}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Người sử dụng, quyết định và thông tin cần thiết.}
+\begin{tabularx}{\textwidth}{p{3.2cm}p{4.6cm}X}
+\toprule
+\textbf{Người sử dụng} & \textbf{Quyết định cần hỗ trợ} &
+\textbf{Thông tin hệ thống cung cấp}\\
+\midrule
+Ban điều phối & Ưu tiên nguồn lực và theo dõi khối lượng sự vụ &
+Số bài theo mức ưu tiên, sự kiện, nhóm nhu cầu và đội tiếp nhận\\
+Đội khẩn cấp & Xác định trường hợp liên quan sinh mạng cần kiểm tra trước &
+Nhãn thương vong/mất tích, điểm rủi ro, nội dung gốc và cảnh báo mâu thuẫn\\
+Đội hạ tầng & Lập danh sách đường, cầu, điện nước hoặc phương tiện bị hư hỏng &
+Nhãn hạ tầng/phương tiện, thứ tự ưu tiên và bài đăng gốc\\
+Đội cứu trợ & Điều phối lương thực, nơi trú ẩn, tình nguyện và quyên góp &
+Nhãn người bị ảnh hưởng/cứu trợ, mức ưu tiên và khối lượng theo sự kiện\\
+Giám sát viên & Xác minh trường hợp không nhất quán hoặc thiếu tin cậy &
+Xác suất từng nhánh, conflict score, ảnh, văn bản và lý do cần review\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Bảng trên cho thấy cùng một dự báo phải được trình bày khác nhau tùy người dùng.
+Một nhà nghiên cứu quan tâm đến F1 hoặc confusion matrix, trong khi điều phối
+viên cần hàng đợi có thể sắp xếp và hành động đề xuất. DSS phải nối được hai
+góc nhìn này.
+
+\section{Ví dụ xuyên suốt}
+
+Giả sử hệ thống nhận được bài đăng:
+
+\begin{quote}
+\emph{``Urgent! People are trapped after the bridge collapsed in rising flood
+water. Need rescue now.''}
+\end{quote}
+
+kèm một ảnh đường ngập. Hệ thống không đi thẳng từ câu chữ tới lệnh điều động.
+Quá trình xử lý được chia thành các bước có thể kiểm tra:
+
 \begin{enumerate}[leftmargin=*]
-  \item Quy trình DSS 3 tầng end-to-end trên dữ liệu thật, gắn phân tích với quyết định cụ thể.
-  \item Phát hiện và sửa lỗi suy diễn nhãn informative làm sai 2.649/18.082 mẫu.
-  \item Phát hiện ảnh trùng xuyên split và tạo evaluation mask theo SHA-256.
-  \item So sánh hệ thống sáu thuật toán phân lớp của môn học cho bài toán mất cân bằng.
-  \item Khai thác tín hiệu \emph{mâu thuẫn đa phương thức} có nhãn thật để thiết kế luật kiểm duyệt.
+  \item làm sạch văn bản và chuyển văn bản thành vector TF--IDF;
+  \item dùng CLIP tiền huấn luyện, với trọng số giữ nguyên, để chuyển ảnh thành
+        vector đặc trưng 512 chiều;
+  \item các bộ phân loại riêng cho văn bản và ảnh tạo xác suất informative và
+        xác suất của tám nhóm humanitarian;
+  \item Late Fusion kết hợp hai tập xác suất bằng trọng số được chọn trên tập
+        dev;
+  \item tầng DSS kết hợp xác suất, mức nghiêm trọng của nhóm, từ khóa khẩn cấp
+        và độ tin cậy để tạo Risk Score;
+  \item Risk Score và nhóm humanitarian được chuyển thành Priority, đội tiếp
+        nhận và cờ Manual Review.
 \end{enumerate}
+
+Ví dụ này thể hiện ranh giới quan trọng: mô hình dự báo cung cấp bằng chứng,
+còn quy tắc DSS chuyển bằng chứng thành một đề xuất hành động. Quyết định cuối
+cùng vẫn thuộc về con người.
+
+\section{Mục tiêu của dự án}
+
+Mục tiêu tổng quát là xây dựng và đánh giá một nguyên mẫu DSS đa phương thức
+có khả năng chuyển dữ liệu mạng xã hội thành thông tin hỗ trợ điều phối cứu
+trợ. Các mục tiêu cụ thể gồm:
+
+\begin{enumerate}[leftmargin=*]
+  \item sử dụng toàn bộ dữ liệu CrisisMMD v2.0, gồm 18.082 cặp tweet--ảnh;
+        bảo toàn cách chia train/dev/test thống nhất;
+  \item mô tả, làm sạch và kiểm soát chất lượng dữ liệu, đặc biệt là nhãn sai
+        khi join, mất cân bằng và bản sao xuyên split;
+  \item so sánh sáu thuật toán phân lớp cổ điển trên hai phương thức và hai
+        nhiệm vụ dự báo;
+  \item đánh giá việc kết hợp văn bản--ảnh so với từng phương thức đơn lẻ và
+        so với baseline đơn giản;
+  \item xây dựng tầng quyết định gồm Risk Score, Priority, Routing và Manual
+        Review với giả định được công khai;
+  \item cung cấp dashboard để người sử dụng xem tổng quan, kiểm tra mô hình,
+        thử một trường hợp và xử lý hàng đợi ưu tiên.
+\end{enumerate}
+
+\section{Câu hỏi nghiên cứu}
+
+\begin{enumerate}[leftmargin=*]
+  \item Văn bản và hình ảnh đóng góp khác nhau như thế nào khi dự báo cùng
+        ground truth đa phương thức?
+  \item Late Fusion có cải thiện chất lượng so với text-only, image-only và
+        dummy baseline hay không?
+  \item Mất cân bằng lớp và sự khác biệt giữa các thảm họa ảnh hưởng thế nào
+        tới khả năng nhận diện các nhóm hiếm?
+  \item Có thể sử dụng bất đồng text--ảnh để tạo một hàng đợi kiểm duyệt nằm
+        trong năng lực xử lý của con người hay không?
+  \item Làm thế nào chuyển kết quả dự báo thành khuyến nghị ưu tiên và phân
+        luồng mà không nhầm chính sách heuristic với kết quả đã học từ dữ liệu?
+\end{enumerate}
+
+\section{Phạm vi và giới hạn}
+
+Dự án sử dụng dữ liệu tiếng Anh của bảy thảm họa trong năm 2017. Hệ thống
+không thu thập bài đăng thời gian thực, không xác minh danh tính người đăng,
+không trích xuất chính xác tọa độ và không tự động điều động lực lượng ngoài
+đời. Risk Score và Priority không có ground truth tương ứng trong CrisisMMD;
+do đó chúng được xem là \textbf{chính sách vận hành thử nghiệm}, được kiểm tra
+bằng kịch bản và phân tích độ nhạy chứ không được tuyên bố là tối ưu thống kê.
+
+Sản phẩm hướng tới sàng lọc và tổ chức thông tin. Các nhóm có số mẫu rất thấp,
+đặc biệt người mất tích và hư hỏng phương tiện, luôn cần con người kiểm tra
+trước khi dùng cho quyết định có hậu quả lớn.
+
+\section{Cấu trúc báo cáo}
+
+Các chương tiếp theo lần lượt trình bày nền tảng DSS; dữ liệu và cách tạo đặc
+trưng; cơ sở các phương pháp; EDA; thiết kế thực nghiệm và kết quả mô hình;
+Late Fusion và tầng quyết định; dashboard; khuyến nghị, giới hạn và hướng phát
+triển. Phụ lục chứa phân công, khai báo sử dụng công cụ hỗ trợ, siêu tham số
+và bảng tự đánh giá theo hướng dẫn học phần.
