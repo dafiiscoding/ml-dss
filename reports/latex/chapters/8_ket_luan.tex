@@ -1,25 +1,58 @@
 \chapter{Kết luận và hướng phát triển}
 
 \section{Kết luận}
-Dự án đã thay dữ liệu synthetic bằng CrisisMMD thật, sửa lỗi nhãn informative 2.649 mẫu,
-kiểm soát duplicate xuyên split và xây dựng quy trình tái lập từ EDA đến quyết định. Sáu
-thuật toán được so sánh trên dev sạch. Informative fusion đạt Accuracy 0,7072, F1 0,8079
-và F2 0,9035, nhưng F2 chỉ hơn always-positive baseline 0,0096. Humanitarian fusion đạt
-Macro-F1 0,4005 so với majority baseline 0,0686 trên test sạch. Giá trị chính không chỉ
-là dự báo nhãn, mà là chuyển kết quả thành hàng đợi, mức ưu
-tiên, đội tiếp nhận và cơ chế human-in-the-loop có giới hạn năng lực rõ ràng.
 
-Hậu kiểm loại thêm near-duplicate đã xác minh cho F2 0,9006 và Macro-F1 0,3908 mà không
-tune lại. Bootstrap cho thấy F2 gain so với dummy có CI 95\% [0,0032; 0,0161], tức khác
-0 theo giả định row-bootstrap nhưng vẫn nhỏ về thực tiễn. Biến động theo event và support
-rất thấp ở ba lớp khẩn cấp cho thấy hệ thống phù hợp hỗ trợ sàng lọc, chưa phù hợp tự động
-ra quyết định sinh tử.
+Dự án xây dựng một hệ hỗ trợ quyết định đa phương thức trên 18.082 cặp
+tweet--ảnh CrisisMMD. Quy trình gồm hợp nhất nhãn chính thức, kiểm soát duplicate,
+EDA train-only, TF--IDF, CLIP frozen embedding, so sánh sáu classifier, tuning
+trên dev, Late Fusion, Risk Score, Routing, Manual Review và dashboard.
+
+Với informative, Late Fusion đạt Accuracy .6948, F1 .8025 và F2 .9045 trên
+canonical test. F2 chỉ hơn always-informative .0106, nên kết luận được đặt trên
+nhiều metric thay vì một chỉ số. Với humanitarian, fusion đạt Macro-F1 .4005,
+cao hơn majority baseline .0686 và từng nhánh đơn lẻ. Robust test giữ F2 .9016
+và Macro-F1 .3908 mà không tune lại; bootstrap cho thấy kết luận tổng thể ổn
+định, nhưng lớp hiếm và biến động theo event còn lớn.
+
+Đóng góp quan trọng nhất không phải một Accuracy cao, mà là cách chuyển kết quả
+mô hình thành một quyết định có giới hạn: công thức Risk công khai, routing đủ
+tám lớp, review theo conflict dưới capacity, và con người giữ quyền xác minh.
+Ranh giới giữa dự báo đã được đánh giá và Priority chưa có ground truth được
+trình bày rõ.
+
+\section{Hạn chế}
+
+\begin{itemize}[leftmargin=*]
+  \item Dữ liệu chỉ phản ánh bảy thảm họa năm 2017 và chưa đại diện mạng xã hội
+        hiện tại hoặc ngôn ngữ ngoài tiếng Anh.
+  \item Split chứa nhiều event ở cả train và test; chưa đo tổng quát hóa tới
+        một event hoàn toàn chưa thấy.
+  \item Ba lớp khẩn cấp có support rất thấp; metric riêng lớp có CI rộng.
+  \item CLIP được giữ cố định, không thích nghi riêng cho ảnh thảm họa.
+  \item Dữ liệu thiếu vị trí đáng tin, độ xác thực nguồn và kết quả xử lý thực địa.
+  \item Risk Score/Priority là policy giả định, không phải optimum học được.
+  \item Cloud prototype chưa có authentication, audit log và kiểm thử tải.
+\end{itemize}
 
 \section{Hướng phát triển}
-\begin{itemize}[leftmargin=*]
-  \item Tích hợp NER trích xuất địa danh để định vị người kêu cứu.
-  \item Crawl dữ liệu thời gian thực; hiệu chỉnh xác suất (calibration).
-  \item Thay TF-IDF bằng embedding ngôn ngữ; tinh chỉnh trọng số fusion theo lớp.
-  \item Thu thập ground truth Priority và chi phí xử lý để học/tối ưu policy Risk Score.
-  \item Leave-one-event-out hoặc group split theo event để đánh giá domain shift nghiêm ngặt hơn.
-\end{itemize}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Đánh giá theo event chưa thấy:} dùng leave-one-event-out hoặc
+        group split để đo domain shift nghiêm ngặt hơn.
+  \item \textbf{Bổ sung dữ liệu lớp hiếm:} thu thập và thẩm định thêm case
+        injured, missing và vehicle; cân nhắc active learning với chuyên gia.
+  \item \textbf{Trích xuất vị trí:} dùng Named Entity Recognition, geocoding và
+        xác minh địa danh để biến tweet thành thông tin có thể điều phối.
+  \item \textbf{Hiệu chỉnh xác suất:} đánh giá reliability diagram, Brier score
+        và calibration error trước khi dùng xác suất cho policy.
+  \item \textbf{Học policy từ nghiệp vụ:} thu Priority do chuyên gia gán, thời
+        gian phản ứng và chi phí sai số để tối ưu Risk/threshold.
+  \item \textbf{Fusion thích nghi:} thử trọng số theo category hoặc gating model,
+        nhưng phải giữ test độc lập và so với late-fusion tuyến tính.
+  \item \textbf{Giám sát production:} thêm authentication, audit log, drift
+        monitor, latency/error telemetry và quy trình human override.
+\end{enumerate}
+
+Hướng phát triển ưu tiên dữ liệu và kiểm định chính sách trước khi tăng độ phức
+tạp mô hình. Một DSS đáng tin không chỉ cần dự báo tốt hơn mà còn phải chứng minh
+được khi nào nên sử dụng, khi nào cần dừng và ai chịu trách nhiệm quyết định.

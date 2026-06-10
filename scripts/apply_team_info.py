@@ -107,12 +107,12 @@ def render_tex(data):
 
 def render_log(data):
     lines = [
-        "# Contribution Log",
+        "# Bảng phân công nhóm",
         "",
-        "Generated from `docs/team_info.json` by "
+        "Được đồng bộ từ `docs/team_info.json` bằng lệnh "
         "`python -m scripts.apply_team_info`.",
         "",
-        "| Member | Student ID | Actual responsibility | Contribution share |",
+        "| Thành viên | MSSV | Công việc chính | Tỷ lệ đóng góp |",
         "|---|---|---|---|",
     ]
     for member in data["members"]:

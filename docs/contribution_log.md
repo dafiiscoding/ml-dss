@@ -1,8 +1,8 @@
-# Contribution Log
+# Bảng phân công nhóm
 
-Generated from `docs/team_info.json` by `python -m scripts.apply_team_info`.
+Được đồng bộ từ `docs/team_info.json` bằng lệnh `python -m scripts.apply_team_info`.
 
-| Member | Student ID | Actual responsibility | Contribution share |
+| Thành viên | MSSV | Công việc chính | Tỷ lệ đóng góp |
 |---|---|---|---|
 | Đoàn Danh Long | 20237354 | Chưa cung cấp | Chưa cung cấp |
 | Vũ Quang Vinh | 20237408 | Chưa cung cấp | Chưa cung cấp |

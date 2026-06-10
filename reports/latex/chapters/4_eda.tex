@@ -1,59 +1,172 @@
-\chapter{Phân tích khám phá dữ liệu và insight}
+\chapter{Phân tích khám phá dữ liệu}
 
-\noindent EDA phục vụ thiết kế chỉ dùng 13.608 mẫu train. Notebook
-\code{02\_eda.ipynb} đã execute, có output nhúng và không có cell lỗi.
+\section{Mục đích và nguyên tắc EDA}
 
-\section{Phân bố nhãn}
+Exploratory Data Analysis (EDA) là quá trình dùng thống kê mô tả và trực quan
+để hiểu cấu trúc dữ liệu trước khi xây mô hình. EDA không chỉ nhằm tạo biểu đồ;
+nó phải trả lời các câu hỏi có ảnh hưởng tới thiết kế:
+
+\begin{itemize}[leftmargin=*]
+  \item nhãn có mất cân bằng hay không;
+  \item phân bố có thay đổi giữa các sự kiện hay không;
+  \item văn bản và ảnh có chứa tín hiệu quan sát được nào;
+  \item có cấu trúc cụm hoặc luật đồng xuất hiện nào;
+  \item hai phương thức thường đồng thuận hay mâu thuẫn;
+  \item các quan sát trên dẫn tới quyết định kỹ thuật nào.
+\end{itemize}
+
+EDA phục vụ lựa chọn phương pháp chỉ sử dụng \textbf{13.608 mẫu train}. Nếu xem
+phân bố nhãn hoặc pattern của test rồi điều chỉnh model, test sẽ tham gia gián
+tiếp vào thiết kế. Kiểm kê file và kiểm tra duplicate được phép bao phủ toàn
+corpus vì đó là kiểm soát tính toàn vẹn đầu vào, không phải tìm pattern để tối
+ưu model.
+
+\section{Phân bố nhãn và hệ quả}
+
 \begin{figure}[H]\centering
 \includegraphics[width=0.92\textwidth]{label_distribution.png}
 \caption{Phân bố informative và humanitarian trên train.}
 \end{figure}
 
-Informative chiếm 61,27\%, nhưng humanitarian mất cân bằng 219:1. Các lớp cần phản ứng
-sinh tử lại hiếm nhất. Suy luận hợp lệ là Accuracy có thể che lỗi lớp hiếm; quyết định
-tương ứng là F2, Macro-F1 và human-in-the-loop. Không suy luận rằng lớp hiếm sẽ được dự báo
-tốt chỉ nhờ class weight.
+Informative chiếm 61,27\% train. Đây là mức lệch vừa phải nhưng đủ làm
+always-informative có Recall và F2 cao. Ở task humanitarian, lớp
+not-humanitarian có 5.260 mẫu trong khi missing/found chỉ có 24 mẫu, chênh
+\textbf{219:1}. Ba hệ quả trực tiếp là:
+
+\begin{enumerate}[leftmargin=*]
+  \item không chọn model chỉ bằng Accuracy;
+  \item sử dụng class weight khi thuật toán hỗ trợ;
+  \item báo cáo Macro-F1, confusion matrix và F1 theo lớp.
+\end{enumerate}
+
+Từ phân bố không thể kết luận lớp hiếm sẽ dự báo kém trong mọi trường hợp, nhưng
+có thể kết luận ước lượng metric của lớp đó có độ bất định lớn và một vài dự báo
+có thể làm F1 thay đổi mạnh.
 
 \section{Khác biệt theo sự kiện}
+
 \begin{figure}[H]\centering
 \includegraphics[width=0.92\textwidth]{event_distribution.png}
 \caption{Số mẫu và cơ cấu humanitarian theo sự kiện trên train.}
 \end{figure}
 
-Sri Lanka floods có 69,3\% \code{not\_humanitarian}, còn Iraq--Iran earthquake chỉ 22,8\%.
-Mexico earthquake có 27,9\% rescue/donation. Đây là bằng chứng về thay đổi phân bố theo
-sự kiện. Dashboard vì vậy cung cấp filter event; khi triển khai sang thảm họa mới cần
-theo dõi drift và hiệu chỉnh lại, thay vì dùng metric năm 2017 như bảo đảm cố định.
+Sri Lanka floods có 69,29\% not-humanitarian, trong khi Iraq--Iran earthquake
+chỉ 22,76\%. Mexico earthquake có 27,95\% rescue/donation; Iraq--Iran có
+13,57\% injured/dead, cao hơn rõ rệt các cơn bão. Đây là
+\textit{distribution shift theo sự kiện}: quan hệ giữa event và tỷ lệ nhãn
+không đồng nhất.
 
-\section{Text Mining}
-Tweet informative và not-informative có số từ trung bình gần như nhau: 11,75 và 11,68.
-Do đó độ dài không phải feature đủ mạnh; nội dung TF--IDF quan trọng hơn.
+EDA chưa chứng minh model sẽ thất bại trên event mới, vì tất cả event vẫn xuất
+hiện trong train/dev/test. Tuy nhiên, nó chỉ ra rằng metric gộp có thể che khác
+biệt từng thảm họa. Vì vậy dashboard có bộ lọc event và phần đánh giá sau này
+báo cáo độ ổn định theo event. Một đánh giá nghiêm ngặt hơn trong tương lai là
+leave-one-event-out: giữ toàn bộ một thảm họa ngoài train.
+
+\section{Khám phá văn bản}
+
+Tweet có trung bình 117,48 ký tự và 11,72 từ sau làm sạch. Số từ trung bình của
+informative là 11,75, gần như bằng 11,68 của not-informative.
+
 \begin{figure}[H]\centering
 \includegraphics[width=0.92\textwidth]{text_length_distribution.png}
 \caption{Phân bố độ dài và token nổi bật trên train.}
 \end{figure}
 
-\section{K-Means}
+Sự gần nhau của độ dài cho thấy một rule kiểu ``tweet dài thì informative''
+không có cơ sở. Nội dung từ và cụm từ mới là tín hiệu phù hợp cho TF--IDF. Các
+token nổi bật còn phản ánh tên địa điểm, cứu trợ, thiệt hại và bối cảnh sự kiện;
+vì thế khi clustering theo chủ đề, dự án loại thêm tên event và token nền tảng
+như \code{rt}, \code{amp}, \code{http} để tránh cụm chỉ tái hiện nguồn dữ liệu.
+
+\section{K-Means cho khám phá chủ đề}
+
+\subsection{Khái niệm và hàm mục tiêu}
+
+Clustering là học không giám sát: thuật toán không nhìn nhãn humanitarian mà
+nhóm các điểm giống nhau. K-Means tìm \(K\) tâm cụm
+\(\boldsymbol{\mu}_1,\ldots,\boldsymbol{\mu}_K\) để tối thiểu hóa tổng bình
+phương khoảng cách trong cụm:
+
+\[
+J=\sum_{i=1}^{n}
+\left\|\mathbf{x}_i-\boldsymbol{\mu}_{c_i}\right\|_2^2.
+\]
+
+Thuật toán lặp hai bước: gán mỗi điểm vào tâm gần nhất, rồi cập nhật tâm bằng
+trung bình các điểm được gán. K-Means nhanh và dễ đọc top term từ centroid,
+nhưng phải chọn \(K\), nhạy với khởi tạo và giả định cụm gần dạng cầu trong
+không gian khoảng cách \cite{macqueen1967}.
+
+Dự án dùng TF--IDF tối đa 2.000 unigram/bigram, \code{min\_df=3}, mười lần
+khởi tạo và random seed 42. Sweep \(K=2,\ldots,12\) được thực hiện trên cùng
+một mẫu 8.000 dòng train để các giá trị so sánh được.
+
+\subsection{Silhouette và kết quả}
+
+Silhouette của điểm \(i\) là:
+
+\[
+s(i)=\frac{b(i)-a(i)}{\max\{a(i),b(i)\}},
+\]
+
+trong đó \(a(i)\) là khoảng cách trung bình tới điểm cùng cụm và \(b(i)\) là
+khoảng cách trung bình nhỏ nhất tới một cụm khác. Giá trị gần 1 cho thấy điểm
+nằm gọn trong cụm; gần 0 cho thấy các cụm chồng lấn; âm cho thấy có thể gán sai.
+
 \begin{figure}[H]\centering
 \begin{subfigure}{0.48\textwidth}
   \includegraphics[width=\textwidth]{kmeans_silhouette_sweep.png}
-  \caption{Silhouette với \(k=2,\ldots,12\).}
+  \caption{Silhouette với \(K=2,\ldots,12\).}
 \end{subfigure}
 \begin{subfigure}{0.48\textwidth}
   \includegraphics[width=\textwidth]{kmeans_clusters.png}
-  \caption{Cụm \(k=8\) và nhãn thật.}
+  \caption{Crosstab \(K=8\) với nhãn thật.}
 \end{subfigure}
 \caption{Phân cụm TF--IDF trên train.}
 \end{figure}
 
-Silhouette chỉ 0,014--0,024 và tăng nhẹ đến biên khảo sát, không có elbow rõ. \(k=8\) được
-giữ để đối chiếu taxonomy tám lớp, không được xem là số cụm tối ưu. Một số cụm có chủ đề
-relief/Puerto Rico/power, nhưng crosstab vẫn trộn nhiều nhãn. Kết luận: clustering hữu ích
-cho khám phá chủ đề, không đủ ổn định để routing.
+Silhouette chỉ khoảng 0,014--0,024 và tăng nhẹ tới biên khảo sát, không có điểm
+gãy rõ. Với \(K=8\), silhouette là 0,021. \(K=8\) được giữ để đối chiếu với
+taxonomy tám lớp, \textbf{không phải} vì dữ liệu chứng minh tám cụm là tối ưu.
 
-\section{Apriori}
-Sau khi loại transaction trùng nghĩa hashtag/từ thường, các luật mạnh còn lại phản ánh
-context sự kiện:
+Top term cho thấy một số chủ đề có nghĩa như storm/surge, relief effort,
+help victims, Puerto Rico/power và rescue. Tuy nhiên, mỗi cụm vẫn chứa nhiều
+nhãn humanitarian. Kết luận hợp lệ là K-Means hữu ích để duyệt chủ đề và phát
+hiện nhóm nội dung; nó không đủ ổn định để thay classifier hoặc routing.
+
+\section{Apriori và luật kết hợp}
+
+\subsection{Từ tweet thành transaction}
+
+Association analysis tìm các item thường xuất hiện cùng nhau. Mỗi tweet được
+chuyển thành một ``giỏ'' gồm từ khóa khủng hoảng và hashtag. Chỉ transaction có
+ít nhất hai item được giữ. Nếu một từ đã xuất hiện dưới dạng hashtag, phiên bản
+không có dấu \# bị bỏ để tránh luật hiển nhiên như
+\(\{\#earthquake\}\Rightarrow\{earthquake\}\).
+
+Apriori dựa trên tính chất: nếu một itemset không đủ phổ biến, mọi superset của
+nó cũng không thể đủ phổ biến. Nhờ vậy thuật toán loại sớm nhiều ứng viên
+\cite{agrawal1994}. Ba đại lượng chính là:
+
+\[
+\operatorname{support}(A\Rightarrow B)=P(A\cup B),
+\]
+\[
+\operatorname{confidence}(A\Rightarrow B)=P(B\mid A)
+=\frac{P(A\cup B)}{P(A)},
+\]
+\[
+\operatorname{lift}(A\Rightarrow B)
+=\frac{P(A\cup B)}{P(A)P(B)}.
+\]
+
+Lift bằng 1 tương ứng đồng xuất hiện như kỳ vọng nếu độc lập; lớn hơn 1 cho thấy
+liên kết dương. Support trong phân tích này được tính trên tập transaction đã
+giữ, không phải toàn bộ 13.608 tweet. Ngưỡng dùng là support 0,005 và confidence
+0,25; 20 luật lift cao nhất được lưu.
+
+\subsection{Kết quả và cách diễn giải}
+
 \begin{table}[H]\centering\small
 \caption{Một số luật Apriori trên train.}
 \begin{tabular}{llrrr}
@@ -68,50 +181,79 @@ context sự kiện:
 \bottomrule
 \end{tabular}
 \end{table}
-Các luật này hỗ trợ filter/drill-down theo sự kiện, nhưng không chứng minh quan hệ nhân quả
-và không thay thế classifier.
 
-\section{EDA ảnh và mâu thuẫn đa phương thức}
+Các luật chủ yếu nối địa danh với sự kiện, phù hợp cho filter và drill-down.
+Lift cao không có nghĩa tiền đề gây ra kết quả; nó cũng có thể cao vì hai hashtag
+cùng được dùng trong một chiến dịch truyền thông nhỏ. Association rules vì vậy
+không dùng để dự báo Priority hay thay classifier.
+
+\section{EDA ảnh và không gian embedding}
+
+Kiểm kê toàn corpus xác nhận 18.082 ảnh annotation hợp lệ, nhiều kích thước và
+mode màu; toàn bộ được chuyển RGB trước CLIP. Gallery theo lớp được lấy từ train
+để kiểm tra trực quan rằng dữ liệu là ảnh thảm họa thật, không phải ô màu hay
+placeholder.
+
 \begin{figure}[H]\centering
-\begin{subfigure}{0.48\textwidth}
-  \includegraphics[width=\textwidth]{multimodal_conflict.png}
-  \caption{Tỉ lệ bất đồng category.}
-\end{subfigure}
-\begin{subfigure}{0.48\textwidth}
-  \includegraphics[width=\textwidth]{tsne_clip.png}
-  \caption{t-SNE CLIP train theo ground truth chung.}
-\end{subfigure}
-\caption{Bằng chứng đa phương thức trên train.}
+\includegraphics[width=\textwidth]{image_gallery.png}
+\caption{Một số ảnh train theo tám lớp humanitarian.}
 \end{figure}
 
-55,0\% mẫu train có category text và ảnh khác nhau. Tỉ lệ ở missing, injured và affected
-lần lượt 91,7\%, 91,0\% và 88,9\%. Điều này \textbf{không chứng minh ảnh sai}; nó chỉ cho
-thấy hai modality thường mang bằng chứng khác nhau. Vì vậy fusion phải tune trên ground
-truth chung và conflict cao được chuyển người duyệt.
+t-SNE là phương pháp giảm chiều phi tuyến, cố gắng bảo toàn lân cận cục bộ khi
+chiếu vector 512 chiều xuống hai chiều \cite{maaten2008}. Hình t-SNE được tạo
+từ 3.000 embedding train, perplexity 30, khởi tạo PCA và seed 42.
 
-t-SNE chỉ là hình chiếu trực quan, không dùng để khẳng định separability. Hiệu quả ảnh được
-đánh giá bằng dev/test ở Chương 5.
+\begin{figure}[H]\centering
+\includegraphics[width=0.82\textwidth]{tsne_clip.png}
+\caption{t-SNE của CLIP embedding train, tô màu theo ground truth chung.}
+\end{figure}
 
-\section{Chuỗi suy luận từ EDA đến thiết kế}
+Một số vùng cục bộ xuất hiện nhưng các lớp chồng lấn mạnh. t-SNE có thể thay đổi
+theo tham số và làm biến dạng khoảng cách toàn cục, nên hình này không chứng minh
+khả năng phân lớp. Giá trị của CLIP phải được xác nhận bằng dev/test ở Chương 5.
+
+\section{Bất đồng đa phương thức}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.86\textwidth]{multimodal_conflict.png}
+\caption{Tỷ lệ nhãn category text và image bất đồng trên train.}
+\end{figure}
+
+55,0\% mẫu train có nhãn category text và ảnh khác nhau. Theo từng lớp, tỷ lệ
+bất đồng là 91,7\% ở missing/found, 91,0\% ở injured/dead, 88,9\% ở affected
+và 87,3\% ở vehicle damage. Not-humanitarian thấp hơn nhưng vẫn đạt 38,2\%.
+
+Các con số không chứng minh text đúng và ảnh sai, vì nhãn riêng chỉ phản ánh
+nội dung nhìn thấy ở từng phương thức. Một tweet có thể nhắc người mất tích
+nhưng dùng ảnh phong cảnh, hoặc ảnh có thiệt hại mà câu chữ chỉ nêu địa danh.
+Suy luận hợp lệ là hai phương thức mang bằng chứng không đồng nhất. Vì vậy:
+
+\begin{enumerate}[leftmargin=*]
+  \item fusion phải được tune trên nhãn chung chính thức;
+  \item không dùng phép ``nếu text khác image thì một bên sai'';
+  \item conflict cao là tín hiệu yêu cầu người kiểm tra, không tự động hạ độ tin
+        cậy của mọi dự báo.
+\end{enumerate}
+
+\section{Từ bằng chứng EDA đến quyết định thiết kế}
+
 \begin{table}[H]\centering\small
-\caption{Bằng chứng, suy luận và quyết định thiết kế.}
-\begin{tabularx}{\textwidth}{p{3.3cm}XX}
+\caption{Chuỗi bằng chứng, suy luận và quyết định.}
+\begin{tabularx}{\textwidth}{p{3.2cm}XX}
 \toprule
 \textbf{Bằng chứng train} & \textbf{Suy luận có giới hạn} & \textbf{Quyết định}\\
 \midrule
-Mất cân bằng 219:1 & Accuracy không đại diện lớp hiếm & F2, Macro-F1, class weight\\
-Event profile khác nhau & Có khả năng domain shift & Filter event, cần recalibration\\
+Mất cân bằng 219:1 & Accuracy che khuất lớp hiếm & F2, Macro-F1, class weight\\
+Event profile khác nhau & Có nguy cơ domain shift & Filter và metric theo event\\
 Độ dài hai lớp gần nhau & Length không đủ phân loại & TF--IDF nội dung\\
-Silhouette thấp & Cụm không đủ cho routing & Clustering chỉ cho EDA\\
+Silhouette rất thấp & Cụm không đủ ổn định cho quyết định & K-Means chỉ cho khám phá\\
 Luật hashtag lift cao & Context sự kiện có cấu trúc & Drill-down phụ trợ\\
 55\% modality bất đồng & Không tin tuyệt đối một nhánh & Tune fusion, Manual Review\\
-Hash ảnh trùng xuyên split & Metric ảnh có thể lạc quan & Evaluation mask SHA-256\\
+Ảnh lặp xuyên split & Metric có thể lạc quan & Canonical/robust mask\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\begin{insight}[Kết luận GĐ2]
-GĐ2 được xem là hoàn thành vì có EDA train-only, kiểm kê ảnh, phân tích theo event/label,
-K-Means có sweep theo \(k\), Apriori đã loại luật hiển nhiên, CLIP visualization và bảng
-insight--decision. Các kết luận đều nêu giới hạn, không biến tương quan thành nhân quả.
-\end{insight}
+EDA vì vậy có giá trị khi nó thay đổi cách đánh giá và kiến trúc. Các kết luận
+trên đều dừng ở mức dữ liệu cho phép; tương quan, hình chiếu hai chiều và luật
+đồng xuất hiện không được diễn giải thành quan hệ nhân quả.

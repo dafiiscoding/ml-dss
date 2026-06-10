@@ -89,8 +89,8 @@ with fusion_tab:
         st.dataframe(dummy_category, hide_index=True, width="stretch")
     st.warning(
         "Always predicting informative already reaches F2 = 0.8939 because "
-        "62.75% of the safe test set is positive. Fusion reaches 0.9035, a "
-        "gain of only 0.0096 F2. Use Accuracy, F1, Balanced Accuracy and MCC "
+        "62.75% of the safe test set is positive. Fusion reaches 0.9045, a "
+        "gain of only 0.0106 F2. Use Accuracy, F1, Balanced Accuracy and MCC "
         "alongside F2."
     )
 

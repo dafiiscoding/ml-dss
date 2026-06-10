@@ -9,9 +9,9 @@
 - Dependencies cloud: `app/requirements.txt`
 - Không cần Secrets.
 
-Bản cloud dùng các CSV, metrics, figures và năm model inference đã đóng gói
-trong Git. Corpus ảnh CrisisMMD 1,8 GB và các embedding `.npy` không được tải
-lên repository.
+Bản cloud dùng các CSV, metrics, figures, một TF-IDF vectorizer và bốn
+classifier inference đã đóng gói trong Git. Corpus ảnh CrisisMMD 1,8 GB và các
+embedding `.npy` không được tải lên repository.
 
 ## Kiểm tra trước khi deploy
 
@@ -48,7 +48,7 @@ https://ml-dss-group29.streamlit.app
 
 ## Hành vi của bản online
 
-- Overview, EDA, Model Evaluation và Priority Queue đọc artefact thật đã lưu.
+- Overview, EDA, Model Evaluation và Priority Queue đọc dữ liệu và kết quả đã lưu.
 - Single Case mặc định chạy text-only, nên không phải tải CLIP khi vừa mở app.
 - Khi người dùng upload ảnh lần đầu, server tải
   `openai/clip-vit-base-patch32` rồi mới trích đặc trưng. Lần đầu sẽ chậm hơn.

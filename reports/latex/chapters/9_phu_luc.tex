@@ -1,47 +1,83 @@
 \appendix
 \chapter{Phụ lục}
 
-\section{Khai báo sử dụng AI}
-Dự án sử dụng Claude và OpenAI Codex để hỗ trợ lập kế hoạch, refactor code, dựng notebook,
-soạn LaTeX và rà lỗi. AI không được dùng làm bằng chứng thay cho kết quả chạy. Nhóm kiểm chứng
-bằng annotation thật, join nhãn chính thức, hash audit, dev/test tách biệt, notebook execute,
-unit test, bootstrap robustness, integration test, Streamlit AppTest và screenshot trình duyệt. Các lỗi quan trọng
-do audit phát hiện gồm suy diễn sai 2.649 nhãn informative, duplicate ảnh xuyên split và lỗi
-logic hạ High Priority khi conflict; tất cả đã được sửa và có test hồi quy.
+\section{Khai báo sử dụng công cụ AI}
 
-\section{Bảng tự chấm tham khảo}
+Theo yêu cầu công khai công cụ hỗ trợ, nhóm có sử dụng Claude và OpenAI Codex
+để gợi ý cấu trúc, hỗ trợ rà soát mã nguồn, kiểm thử và biên tập diễn đạt.
+Nhóm chịu trách nhiệm lựa chọn phương pháp, chạy chương trình, kiểm tra kết quả
+với dữ liệu CrisisMMD, đối chiếu metric và xác nhận nội dung báo cáo. Nội dung
+do công cụ sinh ra không được xem là bằng chứng nếu không có kết quả thực thi
+hoặc nguồn tham khảo tương ứng.
+
+\section{Bảng tự đánh giá}
+
 \begin{table}[H]\centering\small
+\caption{Tự đánh giá theo các nhóm tiêu chí của bài tập.}
 \begin{tabularx}{\textwidth}{XrrX}
 \toprule
-\textbf{Tiêu chí} & \textbf{Tối đa} & \textbf{Tự chấm} & \textbf{Minh chứng}\\
+\textbf{Tiêu chí} & \textbf{Tối đa} & \textbf{Tự đánh giá} & \textbf{Căn cứ}\\
 \midrule
-Hiểu bài toán & 15 & 14 & Chương 1, câu hỏi quyết định\\
-Dữ liệu/tiền xử lý & 15 & 15 & Nhãn official, SHA-256, embedding audit\\
-EDA/insight & 20 & 19 & Train-only, event, K sweep, Apriori, conflict\\
-Mô hình/hệ thống & 20 & 19 & 24 lượt model, fusion, bootstrap, per-class, DSS tests\\
-Khuyến nghị & 15 & 13 & Chương 6, capacity và policy sensitivity\\
-Báo cáo/minh chứng & 10 & 9 & PDF, notebook, screenshot, traceability\\
-Tổ chức nhóm & 5 & 1 & Thiếu ba tên, MSSV và minh chứng cá nhân\\
+Hiểu bài toán và quyết định & 15 & 14 & Chương 1--2, stakeholder và năm quyết định\\
+Dữ liệu và tiền xử lý & 15 & 15 & Nhãn chính thức, feature engineering, leakage audit\\
+EDA và insight & 20 & 19 & Train-only, event, K sweep, Apriori, ảnh, conflict\\
+Mô hình và DSS & 20 & 18 & Sáu model, tuning, fusion, robustness, policy test\\
+Diễn giải và khuyến nghị & 15 & 14 & Chương 6, capacity, giới hạn bằng chứng\\
+Báo cáo và minh chứng & 10 & 9 & PDF, notebook có output, dashboard, metrics\\
+Tổ chức nhóm & 5 & 2 & Đã có danh sách; phân công/tỷ lệ cần nhóm xác nhận\\
 \midrule
-\textbf{Tổng} & \textbf{100} & \textbf{90} & Chưa tính là bản nộp cuối\\
+\textbf{Tổng} & \textbf{100} & \textbf{91} & Không tự chấm tối đa ở phần chưa hoàn tất\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\section{Siêu tham số chính}
-TF--IDF có 2.000 đặc trưng, n-gram (1,2). Logistic Regression dùng trọng số lớp
-cân bằng, tối đa 2.000 vòng lặp; Decision Tree sâu tối đa 20;
-k-NN dùng \(k=15\); Linear SVM được calibration 3-fold; Random Forest có 200 cây và
-balanced subsample. K-Means thử \(k=2,\ldots,12\), \(n\_init=10\); \(k=8\) chỉ dùng
-đối chiếu taxonomy. CLIP là \code{openai/clip-vit-base-patch32}.
+\section{Cấu hình và siêu tham số chính}
 
-\section{Kiểm thử và artifact}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\textwidth}{p{3.5cm}X}
+\toprule
+\textbf{Thành phần} & \textbf{Cấu hình đã khóa}\\
+\midrule
+TF--IDF & 2.000 đặc trưng, word n-gram (1,2), stopword tiếng Anh, \(L_2\).\\
+Text informative & Linear SVM \(C=3\), class weight balanced, sigmoid calibration 3-fold.\\
+Text humanitarian & Logistic Regression \(C=1\), class weight balanced.\\
+Image informative & k-NN \(k=41\), distance weighting, Euclidean trên CLIP normalized.\\
+Image humanitarian & Logistic Regression \(C=1\), class weight balanced.\\
+Decision Tree & max depth 20 trong vòng so sánh thuật toán.\\
+Random Forest & 200 cây, balanced subsample.\\
+K-Means & \(K=2,\ldots,12\), \(n\_init=10\); \(K=8\) để đối chiếu taxonomy.\\
+Apriori & min support .005, min confidence .25 trên transaction đã lọc.\\
+CLIP & \code{openai/clip-vit-base-patch32}, frozen, embedding 512 chiều.\\
+Late Fusion & Informative text/image .70/.30, threshold .38; category .55/.45.\\
+Manual Review & Conflict threshold .54, capacity dev tối đa 25\%.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Tệp minh chứng và khả năng tái lập}
+
 \begin{itemize}[leftmargin=*]
-  \item Notebook: \code{notebooks/02\_eda.ipynb}, \code{03\_modeling.ipynb}.
-  \item Data audit: \code{data\_quality\_summary.json}, \code{split\_integrity.csv}.
-  \item Robustness: summary JSON và các bảng bootstrap/event/class trong
+  \item Notebook đã thực thi:
+        \code{notebooks/02\_eda.ipynb} và \code{03\_modeling.ipynb}.
+  \item Kiểm tra dữ liệu:
+        \code{reports/metrics/data\_quality\_summary.json} và
+        \code{data/processed/split\_integrity.csv}.
+  \item Tuning và kết quả:
+        \code{reports/metrics/*\_tuning.csv},
+        \code{tuned\_model\_summary.json} và các bảng fusion.
+  \item Robustness:
+        canonical/robust comparison, bootstrap, event và class stability trong
         \code{reports/metrics/}.
-  \item Metrics: \code{reports/metrics/}; hình và screenshot: \code{reports/figures/}.
-  \item DSS audit: \code{dss\_scenarios.csv}, \code{dss\_threshold\_sensitivity.csv}.
-  \item Tests: 37 unit tests, 6 Streamlit AppTest và integration ảnh thật.
+  \item DSS:
+        \code{dss\_scenarios.csv},
+        \code{dss\_threshold\_sensitivity.csv}.
+  \item Kiểm thử: 41 unit test, 6 Streamlit AppTest và integration ảnh thật.
+  \item Mã nguồn:
+        \url{https://github.com/dafiiscoding/ml-dss}.
 \end{itemize}
+
+\section{Thông tin còn cần nhóm xác nhận}
+
+Tên, MSSV, giảng viên và nhóm đã được điền ở đầu báo cáo. Trước khi nộp chính
+thức, nhóm cần phân công các gói công việc và điền tỷ lệ đóng góp thực tế tại
+\code{docs/team\_info.json}; tổng tỷ lệ của bốn thành viên cần bằng 100\%.

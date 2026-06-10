@@ -49,3 +49,12 @@ slide kiến thức môn học/
 # Local agent instructions/state are kept outside the academic submission.
 AGENTS.md
 CLAUDE.md
+
+# Internal planning notes are not part of the lecturer-facing submission.
+docs/FINAL_HANDOFF.md
+docs/PROGRESS.md
+docs/PROJECT_BLUEPRINT.md
+docs/REPORT_CONCEPT_MAP.md
+docs/ROADMAP.md
+docs/final_report_draft.md
+docs/ai_usage_declaration.md

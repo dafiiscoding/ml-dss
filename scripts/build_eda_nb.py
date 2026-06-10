@@ -21,8 +21,8 @@ def code(source):
 
 md("""# 02 - Phân tích khám phá dữ liệu CrisisMMD
 
-Notebook này là minh chứng thực thi cho GĐ2. EDA phục vụ lựa chọn phương pháp chỉ
-dùng **13.608 mẫu train**; dev/test được giữ ngoài quá trình khám phá. Kiểm kê
+Notebook này trình bày phân tích khám phá có thể tái lập. EDA phục vụ lựa chọn
+phương pháp chỉ dùng **13.608 mẫu train**; dev/test được giữ ngoài quá trình khám phá. Kiểm kê
 chất lượng file vẫn bao phủ toàn bộ corpus vì đây là kiểm tra dữ liệu đầu vào,
 không phải lựa chọn mô hình.
 

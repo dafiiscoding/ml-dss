@@ -1,47 +1,174 @@
-\chapter{Sản phẩm: Dashboard điều phối}
+\chapter{Sản phẩm: Dashboard hỗ trợ điều phối}
 
-\section{Năm trang chức năng}
-Dashboard đọc batch cache trên test nên không chạy lại CLIP cho hàng nghìn ảnh mỗi lần mở.
-Năm trang gồm:
+\section{Vai trò của giao diện trong DSS}
+
+Một DSS chỉ có model nhưng không có giao diện quyết định sẽ khó được sử dụng.
+Dashboard là lớp tương tác giữa dữ liệu, mô hình và người điều phối. Nó không
+chỉ hiển thị Accuracy; nó phải cho phép người dùng:
+
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Overview:} workload, priority, routing và risk distribution trên toàn test batch.
-  \item \textbf{EDA:} train-only statistics, K-Means sweep, Apriori, image audit và conflict.
-  \item \textbf{Model Evaluation:} dev comparison và test leakage-safe/per-class metrics.
-  \item \textbf{Single-Case Demo:} chạy text + ảnh thật hoặc text-only qua toàn pipeline.
-  \item \textbf{Priority Queue:} filter theo priority/team/event/review, inspect và export CSV.
+  \item quan sát workload và phân bố Priority;
+  \item truy vết từ khuyến nghị về xác suất, category và conflict;
+  \item lọc theo event, đội nhận và nhu cầu review;
+  \item thử một trường hợp mới;
+  \item xuất hàng đợi để tiếp tục xử lý.
 \end{itemize}
 
+Streamlit là frontend của prototype. Đây là framework Python tạo giao diện web
+từ widget, biểu đồ và state; trình duyệt là phía hiển thị, còn mã Python chạy ở
+server. Vì vậy dự án không cần thêm React hoặc một frontend riêng để đáp ứng
+luồng sử dụng học thuật. Frontend tách rời chỉ cần khi có API độc lập, phân
+quyền phức tạp, nhiều người dùng đồng thời hoặc yêu cầu giao diện cao hơn.
+
+\section{Năm trang chức năng}
+
+\begin{description}[leftmargin=3.8cm,style=nextline]
+  \item[Overview] Hiển thị số case, Priority, Manual Review, routing team,
+        category và phân bố Risk Score. Bộ lọc event giúp quan sát thay đổi
+        workload giữa các thảm họa.
+  \item[EDA] Trình bày thống kê train-only, phân bố nhãn, K-Means, Apriori,
+        kiểm kê ảnh và bất đồng đa phương thức. Trang này giải thích căn cứ
+        thiết kế, không dùng test để khám phá.
+  \item[Model Evaluation] Hiển thị so sánh sáu model trên dev, tuning,
+        baseline, fusion, robust test và metric từng lớp. Người đọc có thể thấy
+        cả điểm mạnh lẫn lớp yếu.
+  \item[Single-Case Demo] Nhận tweet và ảnh upload. Chế độ text-only cho kết quả
+        nhanh; chế độ text+image chạy CLIP rồi toàn bộ fusion--DSS. Kết quả gồm
+        xác suất, category, conflict, Risk, Priority, team và action.
+  \item[Priority Queue] Cho phép lọc theo Priority, team, event và Manual Review;
+        xem chi tiết từng hàng và tải CSV để bàn giao.
+\end{description}
+
 \begin{figure}[H]\centering
-\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{01_overview_safe.png}\caption{Overview}\end{subfigure}
-\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{02_eda_train_only.png}\caption{EDA train-only}\end{subfigure}
-\caption{Tổng quan vận hành và minh chứng dữ liệu ảnh.}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\textwidth]{01_overview_safe.png}
+\caption{Overview và workload.}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\textwidth]{02_eda_train_only.png}
+\caption{EDA train-only.}
+\end{subfigure}
+\caption{Tổng quan vận hành và căn cứ dữ liệu.}
 \end{figure}
 
 \begin{figure}[H]\centering
-\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{03_model_fusion_safe.png}\caption{Đánh giá test sạch}\end{subfigure}
-\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{05_priority_queue_safe.png}\caption{Priority Queue}\end{subfigure}
-\caption{Đánh giá mô hình và hàng đợi quyết định.}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\textwidth]{03_model_fusion_safe.png}
+\caption{Đánh giá mô hình.}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\textwidth]{05_priority_queue_safe.png}
+\caption{Priority Queue.}
+\end{subfigure}
+\caption{Từ bằng chứng mô hình tới hàng đợi quyết định.}
 \end{figure}
 
-\section{Hướng dẫn chạy và công nghệ}
+\section{Kiến trúc dữ liệu của dashboard}
+
+Dashboard không huấn luyện lại model khi người dùng mở trang. Batch test đã
+được xử lý thành \code{dashboard\_test\_predictions.csv}, gồm xác suất fusion,
+category, Risk Score, Priority, routing và cờ review. Cách cache này:
+
+\begin{itemize}[leftmargin=*]
+  \item giảm thời gian tải trang;
+  \item bảo đảm biểu đồ dùng đúng model đã khóa;
+  \item tách đánh giá hàng loạt khỏi suy luận một trường hợp.
+\end{itemize}
+
+Single-Case Demo tải vectorizer và bốn classifier. Model ảnh được lazy-load:
+chỉ khi người dùng upload ảnh thì PyTorch/Transformers và CLIP mới được nạp.
+Nhờ vậy chế độ text-only khởi động nhanh và cloud không phải tải CLIP ở mọi
+trang.
+
+\section{Công nghệ và lý do lựa chọn}
+
+\begin{table}[H]\centering\small
+\caption{Vai trò của các công nghệ chính.}
+\begin{tabularx}{\textwidth}{p{3.1cm}p{3.3cm}X}
+\toprule
+\textbf{Công nghệ} & \textbf{Định nghĩa/vai trò} & \textbf{Lý do sử dụng}\\
+\midrule
+Python & Ngôn ngữ thực thi pipeline & Hệ sinh thái dữ liệu/ML thống nhất, dễ tái lập.\\
+pandas/NumPy & Bảng dữ liệu và đại số mảng & Join annotation, audit, cache và tính metric.\\
+scikit-learn & Thư viện ML cổ điển & Cung cấp TF--IDF, sáu classifier, metric và API nhất quán.\\
+PyTorch + Transformers & Runtime mô hình tiền huấn luyện & Nạp CLIP và chạy forward pass ảnh.\\
+Streamlit & Framework web bằng Python & Tạo frontend trực tiếp trên cùng logic dự án.\\
+Plotly/Matplotlib & Thư viện trực quan & Biểu đồ tương tác trên app và hình tĩnh cho báo cáo.\\
+Jupyter & Notebook thực thi & Lưu code, output và hình EDA/model trong một tài liệu.\\
+XeLaTeX & Hệ dàn trang báo cáo & Hỗ trợ tiếng Việt, công thức, bảng và PDF nhất quán.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Việc dùng một stack Python giảm nguy cơ giao diện tính lại metric khác backend.
+Đánh đổi là Streamlit không tối ưu cho ứng dụng giao dịch thời gian thực hoặc
+UI tùy biến sâu.
+
+\section{Chạy local và triển khai Streamlit Community Cloud}
+
+\subsection{Chạy local đầy đủ}
+
 \begin{verbatim}
 pip install -r requirements.txt
-python -m scripts.run_all
 streamlit run app/streamlit_app.py
 \end{verbatim}
-Stack chính gồm Python, pandas, scikit-learn, PyTorch/Transformers, CLIP, Streamlit, Plotly,
-Matplotlib/Seaborn, mlxtend và Jupyter. Khi model/embedding đã tồn tại, có thể chạy trực tiếp
-dashboard mà không cần huấn luyện lại.
 
-\section{Vì sao Streamlit là frontend phù hợp}
-Rubric yêu cầu dashboard/app có KPI, biểu đồ, bộ lọc, kết quả mô hình và minh chứng hỗ trợ
-quyết định; không yêu cầu một framework frontend riêng. Streamlit đủ cho prototype học thuật,
-giữ logic Python và artifact thống nhất, giảm rủi ro sai lệch giữa backend và giao diện. React
-hoặc frontend tách rời chỉ cần thiết khi triển khai production, phân quyền nhiều người dùng,
-API độc lập hoặc yêu cầu hiệu năng/giao diện phức tạp hơn.
+Nếu cần tái tạo toàn bộ dữ liệu, embedding và mô hình:
 
-\begin{insight}[Kết luận GĐ5]
-GĐ5 hoàn thành ở mức prototype: năm trang đọc dữ liệu/model thật, không dùng số liệu hard-code,
-AppTest không có exception và browser QA kiểm tra desktop/mobile. Frontend riêng không làm tăng
-giá trị học thuật nếu không giải quyết thêm yêu cầu vận hành.
+\begin{verbatim}
+python -m scripts.run_all
+\end{verbatim}
+
+Lệnh tái tạo đầy đủ cần corpus ảnh CrisisMMD khoảng 1,8 GB và thời gian chạy
+CLIP. Khi model/cache đã có, không cần chạy lại pipeline trước khi mở dashboard.
+
+\subsection{Bundle cloud}
+
+Repository cloud chứa:
+
+\begin{itemize}[leftmargin=*]
+  \item processed train/test cần cho EDA và dashboard;
+  \item vectorizer và bốn classifier đã khóa;
+  \item cấu hình fusion và các bảng metric;
+  \item mã Streamlit cùng requirements CPU.
+\end{itemize}
+
+Raw image corpus và ma trận embedding lớn không được đưa lên Git. Trang EDA đọc
+processed CSV. Single-Case Demo nhận ảnh upload; lần suy luận ảnh đầu tiên tải
+CLIP nên có cold start, còn text-only dùng ngay các model nhỏ.
+
+Cấu hình deploy:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Repository & \code{dafiiscoding/ml-dss}\\
+Branch & \code{main}\\
+Main file & \code{app/streamlit\_app.py}\\
+Python & 3.12\\
+Secrets & Không yêu cầu\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Các bước trên được mô tả chi tiết trong \code{docs/DEPLOY\_STREAMLIT.md}.
+
+\section{Kiểm thử giao diện và giới hạn triển khai}
+
+Sáu entrypoint Streamlit gồm trang chính và năm trang chức năng được chạy bằng
+AppTest trong môi trường cloud Python 3.12. GitHub Actions kiểm tra bundle,
+dependency và text-only inference sau mỗi lần push. Unit test kiểm tra logic
+dữ liệu, duplicate mask, tuning, robustness và DSS; integration test chạy một
+ảnh thật qua CLIP.
+
+Những kiểm thử này chứng minh app khởi động và luồng chính không phát sinh
+exception. Chúng chưa chứng minh khả năng chịu tải nhiều người dùng, bảo mật
+upload, phân quyền, lưu audit log hoặc SLA. Nếu triển khai thực tế cần thêm API,
+authentication, giới hạn file, quét nội dung, logging, giám sát latency và chính
+sách bảo vệ dữ liệu.
+
+\begin{insight}[Phạm vi sản phẩm]
+Dashboard là một prototype DSS có frontend hoàn chỉnh cho học tập và trình diễn:
+người dùng có thể xem bằng chứng, thử ca mới và thao tác hàng đợi. Nó chưa phải
+hệ thống chỉ huy production và không được dùng để tự động điều động nguồn lực.
 \end{insight}

@@ -7,122 +7,111 @@
 - Khoa: Toán - Tin
 - Giảng viên: TS. Lê Hải Hà
 - Nhóm: 29
-- Đề tài: Hệ hỗ trợ quyết định ứng phó thảm họa từ văn bản và hình ảnh
-  mạng xã hội
+- Đề tài: Hệ hỗ trợ quyết định ứng phó thảm họa từ văn bản và hình ảnh mạng xã hội
 
 **Báo cáo chính:** [BAO_CAO_NHOM_29.pdf](BAO_CAO_NHOM_29.pdf)
 
-Thông tin ba thành viên còn lại và phân công thực tế đang để placeholder có
-chủ đích. Nhóm cần điền một lần tại
-[`docs/team_info.json`](docs/team_info.json) trước khi nộp chính thức.
+## Lộ trình đọc
 
-## Lộ trình đọc nhanh
+1. Đọc báo cáo để xem bài toán, cơ sở DSS, dữ liệu, EDA, mô hình và khuyến nghị.
+2. Mở [notebook EDA](notebooks/02_eda.ipynb) để kiểm tra phân tích train-only.
+3. Mở [notebook modeling](notebooks/03_modeling.ipynb) để kiểm tra so sánh sáu
+   model, tuning, baseline, fusion và robustness.
+4. Xem [ảnh dashboard](reports/figures/screenshots) hoặc chạy Streamlit.
+5. Đối chiếu số liệu với [reports/metrics](reports/metrics).
 
-1. Đọc báo cáo PDF để xem bài toán, phương pháp, kết quả và kết luận.
-2. Mở [notebook EDA](notebooks/02_eda.ipynb) để kiểm tra phân tích chạy thật.
-3. Mở [notebook modeling](notebooks/03_modeling.ipynb) để kiểm tra so sánh mô
-   hình, baseline, late fusion và robustness.
-4. Xem [ảnh dashboard](reports/figures/screenshots) nếu không cài dữ liệu/model.
-5. Đối chiếu các con số với [reports/metrics](reports/metrics).
+Không cần tải corpus ảnh để duyệt các kết quả đã lưu.
 
-Thời gian duyệt nhanh toàn bộ minh chứng chính khoảng 15-20 phút và không cần
-tải corpus ảnh CrisisMMD.
+## Bản đồ nội dung
 
-Dashboard là ứng dụng Streamlit chạy local tại `http://localhost:8501` sau khi
-thực hiện lệnh ở phần cuối tài liệu. Đây không phải URL public; screenshot đã
-được lưu để việc chấm trên GitHub không phụ thuộc vào một dịch vụ triển khai.
-
-## Bản đồ tiêu chí và minh chứng
-
-| Nội dung đánh giá | Phần báo cáo | Minh chứng trực tiếp |
+| Nội dung | Báo cáo | Mã hoặc tệp kiểm chứng |
 |---|---|---|
-| Bài toán và quyết định cần hỗ trợ | Chương 1 | `src/decision_rules.py`, dashboard |
-| Cơ sở lý thuyết môn học | Chương 2 | DT, NB, k-NN, SVM, RF, LR, K-Means, Apriori |
-| Dữ liệu và tiền xử lý | Chương 3 | `src/data_loader.py`, `src/preprocessing.py`, data audit |
-| EDA và insight | Chương 4 | `notebooks/02_eda.ipynb`, `reports/figures/` |
-| Feature engineering | Chương 3-5 | TF-IDF n-gram, CLIP 512-D, conflict features |
-| So sánh/tune mô hình | Chương 5-6 | `notebooks/03_modeling.ipynb`, validation CSV |
-| Late fusion đa phương thức | Chương 5-6 | `src/fusion.py`, fusion tuning/test metrics |
-| DSS prescriptive | Chương 5-7 | Risk, Priority, Routing, Manual Review audit |
-| Sản phẩm dashboard | Chương 7 | `app/`, screenshot và Streamlit AppTest |
-| Robustness và leakage | Chương 3, 6 | exact hash, pairwise review, robust mask, bootstrap |
-| Khai báo AI/phân công | Phụ lục | `docs/ai_usage_declaration.md`, contribution log |
+| Bài toán và quyết định | Chương 1–2 | `src/decision_rules.py` |
+| Dữ liệu và split | Chương 3 | `src/data_loader.py`, `scripts/audit_data.py` |
+| Feature engineering | Chương 3 | `src/text_preprocessing.py`, `src/image_preprocessing.py` |
+| EDA, K-Means, Apriori | Chương 4 | `notebooks/02_eda.ipynb`, `src/eda_analysis.py` |
+| Sáu classifier | Chương 5 | `src/modeling.py`, validation CSV |
+| Tuning classifier | Chương 5 | `src/tune_selected_models.py`, tuning CSV |
+| Late Fusion | Chương 5 | `src/evaluate_fusion.py`, `models/fusion_config.json` |
+| Robustness và bootstrap | Chương 5 | `scripts/evaluate_robustness.py`, `evaluate_stability.py` |
+| Khuyến nghị và giới hạn | Chương 6 | metric theo lớp/event và policy sensitivity |
+| Dashboard | Chương 7 | `app/`, screenshot và AppTest |
 
-## Artefact quan trọng
+## Giao thức đánh giá
 
-- Báo cáo: [`BAO_CAO_NHOM_29.pdf`](BAO_CAO_NHOM_29.pdf)
-- Nguồn LaTeX: [`reports/latex`](reports/latex)
-- Tiến độ đã kiểm toán: [`docs/PROGRESS.md`](docs/PROGRESS.md)
-- Mô tả dữ liệu và tái tạo: [`docs/DATA.md`](docs/DATA.md)
-- EDA: [`notebooks/02_eda.ipynb`](notebooks/02_eda.ipynb)
-- Modeling: [`notebooks/03_modeling.ipynb`](notebooks/03_modeling.ipynb)
-- Metrics: [`reports/metrics`](reports/metrics)
-- Hình và dashboard: [`reports/figures`](reports/figures)
-- Unit tests: [`tests`](tests)
-- AI declaration: [`docs/ai_usage_declaration.md`](docs/ai_usage_declaration.md)
+- Master split là humanitarian; nhãn informative chính thức được join theo
+  `(tweet_id, image_id)`.
+- TF-IDF chỉ fit train; CLIP là frozen feature extractor.
+- Sáu họ model được so sánh trên canonical dev.
+- Chỉ họ thắng được tune trên dev.
+- Fusion weight, threshold và conflict capacity được chọn trên dev.
+- Canonical test chỉ dùng sau khi khóa cấu hình.
+- Robust test loại thêm near-duplicate đã duyệt và không tune lại.
+- EDA phục vụ thiết kế chỉ dùng train.
 
-## Kết quả khóa để đối chiếu
+## Kết quả khóa
 
 | Chỉ số | Canonical test | Robust test |
 |---|---:|---:|
-| Informative Accuracy | 0,7072 | 0,7018 |
-| Informative F1 | 0,8079 | 0,8029 |
-| Informative F2 | 0,9035 | 0,9006 |
-| Informative MCC | 0,3602 | 0,3592 |
+| Informative Accuracy | 0,6948 | 0,6900 |
+| Informative F1 | 0,8025 | 0,7978 |
+| Informative F2 | 0,9045 | 0,9016 |
+| Informative MCC | 0,3325 | 0,3340 |
 | Humanitarian Macro-F1 | 0,4005 | 0,3908 |
-| Manual Review F1 | 0,4687 | 0,4665 |
+| Humanitarian Weighted-F1 | 0,5776 | 0,5789 |
+| Manual Review F1 | 0,4585 | 0,4558 |
 
-Các kết quả canonical dùng test đã loại exact duplicate xuyên split. Robust
-test loại thêm các near-duplicate được review theo cặp, không tune lại model,
-trọng số fusion hoặc threshold.
+Baseline informative luôn-positive có F2 0,8939 và MCC 0. Majority baseline
+humanitarian có Macro-F1 0,0686.
 
-## Kiểm soát liêm chính và rò rỉ
+## Dashboard
 
-- Dùng CrisisMMD v2.0 thật, không dùng kết quả synthetic trong báo cáo.
-- Nhãn informative được join từ annotation chính thức theo
-  `(tweet_id, image_id)`.
-- EDA phục vụ quyết định mô hình chỉ dùng train.
-- Fit trên train, chọn/tune trên dev, báo cáo test sau khi khóa cấu hình.
-- Exact image/text duplicate ở split trước bị loại khỏi dev/test metrics.
-- 261 ứng viên ảnh và 16 ứng viên text gần trùng đã được review theo cặp.
-- Robust mask riêng loại 248 hàng được xác nhận; canonical mask không bị sửa
-  hậu nghiệm.
-- Baseline luôn informative và majority-class được đặt cạnh kết quả fusion.
-
-## Kiểm thử đã hoàn thành
-
-- 37 unit tests.
-- Hai notebook execute, 0 lỗi.
-- 6/6 trang/entrypoint Streamlit AppTest, 0 exception.
-- DSS scenario/sensitivity audit pass.
-- Integration test sử dụng ảnh thật pass.
-- XeLaTeX compile hai lượt; PDF 34 trang, không có cảnh báo bố cục nghiêm trọng.
-- GitHub Actions chạy preflight cho bộ file được nộp.
-
-## Chạy kiểm tra
-
-Không có dữ liệu thô vẫn chạy được kiểm tra cấu trúc bản nộp:
-
-```powershell
-python -m scripts.submission_preflight
-```
-
-Khi đã đặt CrisisMMD theo [`docs/DATA.md`](docs/DATA.md):
+Chạy local:
 
 ```powershell
 pip install -r requirements.txt
-python -m unittest discover -s tests -v
-python -m scripts.run_all
 streamlit run app/streamlit_app.py
 ```
 
-## Giới hạn cần lưu ý khi chấm
+URL mặc định: `http://localhost:8501`.
 
-1. Risk Score/Priority là policy prototype minh bạch, chưa có ground truth để
-   chứng minh tối ưu thống kê.
-2. F2 informative chỉ hơn baseline luôn-positive khoảng 0,01; báo cáo không
-   thổi phồng mức tăng này.
-3. Humanitarian Macro-F1 có cải thiện rõ so với majority baseline nhưng ba lớp
-   hiếm còn support thấp.
-4. Bootstrap theo hàng đo bất định trên tập hiện có, không chứng minh khả năng
-   tổng quát sang một thảm họa hoàn toàn mới.
+Deploy Streamlit Community Cloud:
+
+```text
+Repository: dafiiscoding/ml-dss
+Branch: main
+Main file: app/streamlit_app.py
+Python: 3.12
+```
+
+Chi tiết tại [docs/DEPLOY_STREAMLIT.md](docs/DEPLOY_STREAMLIT.md).
+
+## Kiểm thử
+
+- 41 unit tests.
+- Hai notebook thực thi không có cell lỗi.
+- 6/6 entrypoint Streamlit AppTest không có exception.
+- GitHub Actions kiểm tra repository và bundle cloud.
+- Integration test chạy một ảnh thật qua CLIP.
+- XeLaTeX compile hai lượt và kiểm tra cảnh báo bố cục.
+
+Chạy:
+
+```powershell
+python -m pytest -q
+python -m scripts.verify_cloud_bundle
+python -m scripts.test_streamlit_cloud
+python -m scripts.submission_preflight
+```
+
+## Giới hạn cần lưu ý
+
+1. F2 informative chỉ hơn baseline khoảng 0,01; báo cáo không dùng F2 riêng để
+   khẳng định chất lượng.
+2. Humanitarian cải thiện rõ hơn nhưng lớp missing/vehicle có support rất thấp.
+3. Bootstrap theo hàng không thay thế leave-one-event-out.
+4. Priority và Risk Score chưa có ground truth nghiệp vụ.
+5. Streamlit là prototype hỗ trợ quyết định, không phải hệ thống chỉ huy production.
+
+Tên và MSSV đã được điền. Phần công việc và tỷ lệ đóng góp cần nhóm xác nhận
+trước khi chạy `python -m scripts.finalize_submission`.

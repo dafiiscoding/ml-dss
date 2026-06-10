@@ -291,7 +291,7 @@ High được review song song với Emergency Team và không bị hạ xuống
 Bảng sensitivity cho thấy số case High thay đổi mạnh khi policy đổi, do đó
 ngưỡng phải được trung tâm vận hành phê duyệt.""")
 
-md("""## 8. Kết luận nghiệm thu
+md("""## 8. Tóm tắt bằng chứng thực nghiệm
 
 - Mô hình: có so sánh đủ sáu thuật toán ở bốn nhánh/task.
 - Tuning: có lưới siêu tham số, quy tắc hòa và test chỉ dùng sau khi khóa.
