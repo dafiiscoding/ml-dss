@@ -72,10 +72,12 @@ def render_tex(data):
         name = _tex_value(member.get("name"))
         student_id = _tex_value(member.get("student_id"))
         contribution = _tex_value(member.get("contribution"))
-        evidence = _tex_value(member.get("evidence"))
         share = member.get("share_percent")
-        if not _is_missing(share):
-            contribution = f"{contribution} ({_latex_escape(share)}\\%)"
+        share = (
+            r"\MissingMember"
+            if _is_missing(share)
+            else f"{_latex_escape(share)}\\%"
+        )
         display = (
             r"\MissingMember"
             if _is_missing(member.get("name"))
@@ -88,7 +90,7 @@ def render_tex(data):
                 rf"\newcommand{{\Member{word}Id}}{{{student_id}}}",
                 rf"\newcommand{{\Member{word}Display}}{{{display}}}",
                 rf"\newcommand{{\Member{word}Contribution}}{{{contribution}}}",
-                rf"\newcommand{{\Member{word}Evidence}}{{{evidence}}}",
+                rf"\newcommand{{\Member{word}Share}}{{{share}}}",
             ]
         )
     status = (
@@ -110,14 +112,13 @@ def render_log(data):
         "Generated from `docs/team_info.json` by "
         "`python -m scripts.apply_team_info`.",
         "",
-        "| Member | Student ID | Actual responsibility | Evidence |",
+        "| Member | Student ID | Actual responsibility | Contribution share |",
         "|---|---|---|---|",
     ]
     for member in data["members"]:
         contribution = _markdown_value(member.get("contribution"))
         share = member.get("share_percent")
-        if not _is_missing(share):
-            contribution = f"{contribution} ({share}%)"
+        share = "Chưa cung cấp" if _is_missing(share) else f"{share}%"
         lines.append(
             "| "
             + " | ".join(
@@ -125,7 +126,7 @@ def render_log(data):
                     _markdown_value(member.get("name")),
                     _markdown_value(member.get("student_id")),
                     contribution,
-                    _markdown_value(member.get("evidence")),
+                    share,
                 ]
             )
             + " |"

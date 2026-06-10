@@ -67,8 +67,10 @@ nội dung hashtag, sau đó chuẩn hóa khoảng trắng. TF--IDF dùng tối 
 unigram--bigram và stopword tiếng Anh. Vectorizer chỉ fit train; dev/test chỉ transform.
 
 \section{Tiền xử lý ảnh và kiểm tra cache}
-Ảnh được mở bằng Pillow, chuyển RGB, resize \(224\times224\), đưa qua CLIP ViT-B/32 và
-chuẩn hóa \(L_2\). Cache có kích thước:
+Ảnh được mở bằng Pillow, chuyển RGB, resize \(224\times224\), sau đó đưa qua CLIP
+ViT-B/32 tiền huấn luyện với trọng số được giữ cố định. CLIP chỉ đóng vai trò bộ trích
+đặc trưng; các vector đầu ra được chuẩn hóa \(L_2\) trước khi huấn luyện classifier.
+Cache có kích thước:
 \[
 (13.608,512),\quad(2.237,512),\quad(2.237,512).
 \]

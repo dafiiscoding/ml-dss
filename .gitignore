@@ -19,6 +19,13 @@ models/*.pkl
 models/*.csv
 models/_emb_tmp/
 
+# Small inference artifacts required by the public Streamlit deployment.
+!models/text_vectorizer.pkl
+!models/text_inf_clf.pkl
+!models/text_cat_clf.pkl
+!models/image_inf_clf.pkl
+!models/image_cat_clf.pkl
+
 reports/latex/*.aux
 reports/latex/*.log
 reports/latex/*.out

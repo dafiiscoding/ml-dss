@@ -6,8 +6,8 @@ import plotly.express as px
 import streamlit as st
 
 from src.config import FIGURES_DIR, REPORTS_DIR
-from src.data_loader import load_dataset
 from src.eda_analysis import add_text_features, top_tokens
+from src.runtime import load_processed_split
 
 st.set_page_config(page_title="EDA - Disaster Response DSS", layout="wide")
 st.title("Exploratory Data Analysis")
@@ -21,8 +21,7 @@ METRICS_DIR = os.path.join(REPORTS_DIR, "metrics")
 
 @st.cache_data
 def get_data():
-    train, _, _, _ = load_dataset(use_sample_if_missing=False)
-    return add_text_features(train)
+    return add_text_features(load_processed_split("train"))
 
 
 df = get_data()

@@ -17,7 +17,14 @@ FORBIDDEN_PREFIXES = (
     "reports/figures/image_duplicate_review/",
     "slide kiến thức môn học/",
 )
-FORBIDDEN_SUFFIXES = (".npy", ".pkl", ".tar.gz")
+FORBIDDEN_SUFFIXES = (".npy", ".tar.gz")
+ALLOWED_MODEL_BINARIES = {
+    "models/text_vectorizer.pkl",
+    "models/text_inf_clf.pkl",
+    "models/text_cat_clf.pkl",
+    "models/image_inf_clf.pkl",
+    "models/image_cat_clf.pkl",
+}
 REQUIRED_FILES = (
     "INSTRUCTOR.md",
     "README.md",
@@ -28,6 +35,13 @@ REQUIRED_FILES = (
     "notebooks/03_modeling.ipynb",
     "reports/latex/main.pdf",
     "reports/metrics/robustness_summary.json",
+    "models/text_vectorizer.pkl",
+    "models/text_inf_clf.pkl",
+    "models/text_cat_clf.pkl",
+    "models/image_inf_clf.pkl",
+    "models/image_cat_clf.pkl",
+    "scripts/test_streamlit_cloud.py",
+    "scripts/verify_cloud_bundle.py",
     "src/data_loader.py",
     "tests/test_pipeline.py",
 )
@@ -87,6 +101,8 @@ def check(final=False):
             errors.append(f"Forbidden submission path: {normalized}")
         if normalized.endswith(FORBIDDEN_SUFFIXES):
             errors.append(f"Generated binary/cache must not be tracked: {normalized}")
+        if normalized.endswith(".pkl") and normalized not in ALLOWED_MODEL_BINARIES:
+            errors.append(f"Unexpected pickle artifact in submission: {normalized}")
         if size > MAX_FILE_BYTES:
             errors.append(
                 f"File exceeds 50 MiB GitHub safety limit: {normalized}"

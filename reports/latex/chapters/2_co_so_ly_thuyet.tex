@@ -67,8 +67,11 @@ lớp lớn. Ngoài kiểm tra ID, file ảnh được băm SHA-256; dev/test lo
 text đã xuất hiện ở split trước. Do đó metric chính thức không hưởng lợi từ bản sao xuyên split.
 
 \section{CLIP và Late Fusion}
-CLIP ViT-B/32 pretrained tạo vector ảnh 512 chiều, chuẩn hóa \(L_2\). Nhóm không fine-tune
-CLIP và xem nó là bộ trích đặc trưng phụ trợ. Hai nhánh được hợp nhất ở mức xác suất:
+CLIP ViT-B/32 là mô hình đã được tiền huấn luyện trên các cặp văn bản--hình ảnh. Trong
+dự án, toàn bộ trọng số CLIP được giữ nguyên; hệ thống chỉ dùng CLIP để biến mỗi ảnh thành
+vector đặc trưng 512 chiều rồi chuẩn hóa \(L_2\). Phần được huấn luyện trên CrisisMMD là
+các bộ phân loại cổ điển đặt phía trên vector này, không phải bản thân CLIP. Hai nhánh được
+hợp nhất ở mức xác suất:
 \[
 \bm p_{\mathrm{fusion}}=\alpha\bm p_{\mathrm{text}}
  +(1-\alpha)\bm p_{\mathrm{image}}.

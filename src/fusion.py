@@ -62,24 +62,31 @@ def positive_probability(model, features):
     )
 
 
-def load_all_models():
+def load_all_models(include_image=True):
     global _MODELS
-    if not _MODELS:
+    if "vectorizer" not in _MODELS:
         _MODELS["vectorizer"] = TextVectorizerWrapper.load()
-        for key, filename in (
+    for key, filename in (
             ("text_inf_clf", "text_inf_clf.pkl"),
             ("text_cat_clf", "text_cat_clf.pkl"),
+        ):
+        if key not in _MODELS:
+            with open(os.path.join(MODELS_DIR, filename), "rb") as f:
+                _MODELS[key] = pickle.load(f)
+    if include_image:
+        for key, filename in (
             ("image_inf_clf", "image_inf_clf.pkl"),
             ("image_cat_clf", "image_cat_clf.pkl"),
         ):
-            with open(os.path.join(MODELS_DIR, filename), "rb") as f:
-                _MODELS[key] = pickle.load(f)
+            if key not in _MODELS:
+                with open(os.path.join(MODELS_DIR, filename), "rb") as f:
+                    _MODELS[key] = pickle.load(f)
     return _MODELS
 
 
 class MultimodalFusionPredictor:
     def __init__(self):
-        self.models = load_all_models()
+        self.models = load_all_models(include_image=False)
         self.config = load_fusion_config()
         self.categories_list = CANONICAL_CATEGORIES
 
@@ -95,6 +102,7 @@ class MultimodalFusionPredictor:
 
         image_present = bool(image_path)
         if image_present:
+            self.models = load_all_models(include_image=True)
             image_features = extract_image_embeddings(
                 [image_path], base_dir or "", batch_size=1
             )

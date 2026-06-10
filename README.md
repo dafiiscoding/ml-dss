@@ -83,6 +83,26 @@ URL local sau khi chạy: `http://localhost:8501`
 Đây không phải liên kết public. Bản GitHub cung cấp screenshot và notebook đã
 thực thi để người chấm duyệt không cần khởi động dashboard.
 
+### Triển khai Streamlit Community Cloud
+
+Repository đã có bundle cloud riêng, được kiểm tra trên Python 3.12:
+
+```powershell
+python -m scripts.verify_cloud_bundle
+python -m scripts.test_streamlit_cloud
+```
+
+Khi tạo app trên Streamlit Community Cloud, chọn:
+
+```text
+Repository: dafiiscoding/ml-dss
+Branch: main
+Main file: app/streamlit_app.py
+Python: 3.12
+```
+
+Hướng dẫn đầy đủ: [docs/DEPLOY_STREAMLIT.md](docs/DEPLOY_STREAMLIT.md).
+
 Dữ liệu CrisisMMD thô và model/embedding sinh ra không đưa lên Git vì kích
 thước. Xem nguồn, cấu trúc thư mục và cách tái tạo tại
 [docs/DATA.md](docs/DATA.md).
