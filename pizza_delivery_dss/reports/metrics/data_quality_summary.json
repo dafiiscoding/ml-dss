@@ -1,0 +1,48 @@
+{
+  "rows": 1004,
+  "columns": 37,
+  "missing_total": 0,
+  "duplicate_order_ids": 0,
+  "date_min": "2024-01-05 18:30:00",
+  "date_max": "2026-07-07 20:00:00",
+  "years": {
+    "2024": 443,
+    "2025": 373,
+    "2026": 188
+  },
+  "target_distribution": {
+    "False": 794,
+    "True": 210
+  },
+  "delayed_rate": 0.2092,
+  "is_delayed_equals_duration_gt_30": true,
+  "max_delay_formula_error": 0.0,
+  "chronological_last20_rows": 201,
+  "chronological_last20_delayed": 0,
+  "feature_columns": [
+    "toppings_count",
+    "distance_km",
+    "topping_density",
+    "estimated_duration_min",
+    "pizza_complexity",
+    "traffic_impact",
+    "order_hour",
+    "restaurant_name",
+    "location",
+    "pizza_size",
+    "pizza_type",
+    "traffic_level",
+    "payment_method",
+    "is_peak_hour",
+    "is_weekend",
+    "order_month",
+    "payment_category"
+  ],
+  "blocked_leakage_columns": [
+    "delivery_time",
+    "delivery_duration_min",
+    "delivery_efficiency_min_per_km",
+    "delay_min",
+    "restaurant_avg_time"
+  ]
+}

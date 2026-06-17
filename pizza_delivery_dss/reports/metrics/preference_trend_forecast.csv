@@ -1,0 +1,593 @@
+order_period,category,orders,dimension,month_orders,observed_share,month_start,is_partial_month,trend_slope_per_month,trend_p_value,trend_is_significant_0_05,trend_direction,split,forecast_step,forecast_share,method,caveat
+2026-08,01_Small,,pizza_size,,,2026-08-01,False,-0.009028,0.0,True,down,future,1,0.096774,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,01_Small,,pizza_size,,,2026-09-01,False,-0.009028,0.0,True,down,future,2,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,01_Small,,pizza_size,,,2026-10-01,False,-0.009028,0.0,True,down,future,3,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,01_Small,,pizza_size,,,2026-11-01,False,-0.009028,0.0,True,down,future,4,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,01_Small,,pizza_size,,,2026-12-01,False,-0.009028,0.0,True,down,future,5,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,01_Small,,pizza_size,,,2027-01-01,False,-0.009028,0.0,True,down,future,6,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,01_Small,5.0,pizza_size,26.0,0.192308,2024-01-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,01_Small,6.0,pizza_size,30.0,0.2,2024-02-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,01_Small,7.0,pizza_size,32.0,0.21875,2024-03-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,01_Small,6.0,pizza_size,31.0,0.193548,2024-04-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,01_Small,1.0,pizza_size,6.0,0.166667,2024-05-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,01_Small,2.0,pizza_size,11.0,0.181818,2024-06-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,01_Small,6.0,pizza_size,31.0,0.193548,2024-07-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,01_Small,18.0,pizza_size,86.0,0.209302,2024-08-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,01_Small,15.0,pizza_size,75.0,0.2,2024-09-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,01_Small,9.0,pizza_size,44.0,0.204545,2024-10-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,01_Small,6.0,pizza_size,30.0,0.2,2024-11-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,01_Small,8.0,pizza_size,41.0,0.195122,2024-12-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,01_Small,6.0,pizza_size,31.0,0.193548,2025-01-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,01_Small,6.0,pizza_size,28.0,0.214286,2025-02-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,01_Small,7.0,pizza_size,31.0,0.225806,2025-03-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,01_Small,6.0,pizza_size,30.0,0.2,2025-04-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,01_Small,6.0,pizza_size,31.0,0.193548,2025-05-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,01_Small,8.0,pizza_size,50.0,0.16,2025-06-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,01_Small,1.0,pizza_size,11.0,0.090909,2025-07-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,01_Small,3.0,pizza_size,31.0,0.096774,2025-08-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,01_Small,0.0,pizza_size,30.0,0.0,2025-09-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,01_Small,0.0,pizza_size,31.0,0.0,2025-10-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,01_Small,0.0,pizza_size,30.0,0.0,2025-11-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,01_Small,0.0,pizza_size,39.0,0.0,2025-12-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,01_Small,0.0,pizza_size,31.0,0.0,2026-01-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,01_Small,0.0,pizza_size,28.0,0.0,2026-02-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,01_Small,0.0,pizza_size,31.0,0.0,2026-03-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,01_Small,0.0,pizza_size,30.0,0.0,2026-04-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,01_Small,0.0,pizza_size,31.0,0.0,2026-05-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,01_Small,0.0,pizza_size,30.0,0.0,2026-06-01,False,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,01_Small,0.0,pizza_size,7.0,0.0,2026-07-01,True,-0.009028,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,02_Medium,,pizza_size,,,2026-08-01,False,0.009715,4.3e-05,True,up,future,1,0.483871,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,02_Medium,,pizza_size,,,2026-09-01,False,0.009715,4.3e-05,True,up,future,2,0.6,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,02_Medium,,pizza_size,,,2026-10-01,False,0.009715,4.3e-05,True,up,future,3,0.612903,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,02_Medium,,pizza_size,,,2026-11-01,False,0.009715,4.3e-05,True,up,future,4,0.6,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,02_Medium,,pizza_size,,,2026-12-01,False,0.009715,4.3e-05,True,up,future,5,0.615385,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,02_Medium,,pizza_size,,,2027-01-01,False,0.009715,4.3e-05,True,up,future,6,0.612903,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,02_Medium,11.0,pizza_size,26.0,0.423077,2024-01-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,02_Medium,11.0,pizza_size,30.0,0.366667,2024-02-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,02_Medium,13.0,pizza_size,32.0,0.40625,2024-03-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,02_Medium,12.0,pizza_size,31.0,0.387097,2024-04-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,02_Medium,3.0,pizza_size,6.0,0.5,2024-05-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,02_Medium,5.0,pizza_size,11.0,0.454545,2024-06-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,02_Medium,12.0,pizza_size,31.0,0.387097,2024-07-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,02_Medium,30.0,pizza_size,86.0,0.348837,2024-08-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,02_Medium,24.0,pizza_size,75.0,0.32,2024-09-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,02_Medium,15.0,pizza_size,44.0,0.340909,2024-10-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,02_Medium,8.0,pizza_size,30.0,0.266667,2024-11-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,02_Medium,13.0,pizza_size,41.0,0.317073,2024-12-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,02_Medium,8.0,pizza_size,31.0,0.258065,2025-01-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,02_Medium,8.0,pizza_size,28.0,0.285714,2025-02-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,02_Medium,9.0,pizza_size,31.0,0.290323,2025-03-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,02_Medium,9.0,pizza_size,30.0,0.3,2025-04-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,02_Medium,11.0,pizza_size,31.0,0.354839,2025-05-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,02_Medium,15.0,pizza_size,50.0,0.3,2025-06-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,02_Medium,4.0,pizza_size,11.0,0.363636,2025-07-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,02_Medium,15.0,pizza_size,31.0,0.483871,2025-08-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,02_Medium,18.0,pizza_size,30.0,0.6,2025-09-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,02_Medium,19.0,pizza_size,31.0,0.612903,2025-10-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,02_Medium,18.0,pizza_size,30.0,0.6,2025-11-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,02_Medium,24.0,pizza_size,39.0,0.615385,2025-12-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,02_Medium,19.0,pizza_size,31.0,0.612903,2026-01-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,02_Medium,17.0,pizza_size,28.0,0.607143,2026-02-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,02_Medium,18.0,pizza_size,31.0,0.580645,2026-03-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,02_Medium,19.0,pizza_size,30.0,0.633333,2026-04-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,02_Medium,18.0,pizza_size,31.0,0.580645,2026-05-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,02_Medium,19.0,pizza_size,30.0,0.633333,2026-06-01,False,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,02_Medium,4.0,pizza_size,7.0,0.571429,2026-07-01,True,0.009715,4.3e-05,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,03_Large,,pizza_size,,,2026-08-01,False,-0.001821,0.160774,False,down,future,1,0.225806,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,03_Large,,pizza_size,,,2026-09-01,False,-0.001821,0.160774,False,down,future,2,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,03_Large,,pizza_size,,,2026-10-01,False,-0.001821,0.160774,False,down,future,3,0.16129,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,03_Large,,pizza_size,,,2026-11-01,False,-0.001821,0.160774,False,down,future,4,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,03_Large,,pizza_size,,,2026-12-01,False,-0.001821,0.160774,False,down,future,5,0.153846,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,03_Large,,pizza_size,,,2027-01-01,False,-0.001821,0.160774,False,down,future,6,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,03_Large,5.0,pizza_size,26.0,0.192308,2024-01-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,03_Large,7.0,pizza_size,30.0,0.233333,2024-02-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,03_Large,6.0,pizza_size,32.0,0.1875,2024-03-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,03_Large,6.0,pizza_size,31.0,0.193548,2024-04-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,03_Large,1.0,pizza_size,6.0,0.166667,2024-05-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,03_Large,2.0,pizza_size,11.0,0.181818,2024-06-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,03_Large,7.0,pizza_size,31.0,0.225806,2024-07-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,03_Large,21.0,pizza_size,86.0,0.244186,2024-08-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,03_Large,22.0,pizza_size,75.0,0.293333,2024-09-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,03_Large,11.0,pizza_size,44.0,0.25,2024-10-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,03_Large,10.0,pizza_size,30.0,0.333333,2024-11-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,03_Large,12.0,pizza_size,41.0,0.292683,2024-12-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,03_Large,10.0,pizza_size,31.0,0.322581,2025-01-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,03_Large,8.0,pizza_size,28.0,0.285714,2025-02-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,03_Large,8.0,pizza_size,31.0,0.258065,2025-03-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,03_Large,10.0,pizza_size,30.0,0.333333,2025-04-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,03_Large,8.0,pizza_size,31.0,0.258065,2025-05-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,03_Large,18.0,pizza_size,50.0,0.36,2025-06-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,03_Large,4.0,pizza_size,11.0,0.363636,2025-07-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,03_Large,7.0,pizza_size,31.0,0.225806,2025-08-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,03_Large,6.0,pizza_size,30.0,0.2,2025-09-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,03_Large,5.0,pizza_size,31.0,0.16129,2025-10-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,03_Large,6.0,pizza_size,30.0,0.2,2025-11-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,03_Large,6.0,pizza_size,39.0,0.153846,2025-12-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,03_Large,6.0,pizza_size,31.0,0.193548,2026-01-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,03_Large,5.0,pizza_size,28.0,0.178571,2026-02-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,03_Large,6.0,pizza_size,31.0,0.193548,2026-03-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,03_Large,5.0,pizza_size,30.0,0.166667,2026-04-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,03_Large,6.0,pizza_size,31.0,0.193548,2026-05-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,03_Large,5.0,pizza_size,30.0,0.166667,2026-06-01,False,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,03_Large,1.0,pizza_size,7.0,0.142857,2026-07-01,True,-0.001821,0.160774,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,04_XL,,pizza_size,,,2026-08-01,False,0.001134,0.012346,True,up,future,1,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,04_XL,,pizza_size,,,2026-09-01,False,0.001134,0.012346,True,up,future,2,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,04_XL,,pizza_size,,,2026-10-01,False,0.001134,0.012346,True,up,future,3,0.225806,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,04_XL,,pizza_size,,,2026-11-01,False,0.001134,0.012346,True,up,future,4,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,04_XL,,pizza_size,,,2026-12-01,False,0.001134,0.012346,True,up,future,5,0.230769,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,04_XL,,pizza_size,,,2027-01-01,False,0.001134,0.012346,True,up,future,6,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,04_XL,5.0,pizza_size,26.0,0.192308,2024-01-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,04_XL,6.0,pizza_size,30.0,0.2,2024-02-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,04_XL,6.0,pizza_size,32.0,0.1875,2024-03-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,04_XL,7.0,pizza_size,31.0,0.225806,2024-04-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,04_XL,1.0,pizza_size,6.0,0.166667,2024-05-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,04_XL,2.0,pizza_size,11.0,0.181818,2024-06-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,04_XL,6.0,pizza_size,31.0,0.193548,2024-07-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,04_XL,17.0,pizza_size,86.0,0.197674,2024-08-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,04_XL,14.0,pizza_size,75.0,0.186667,2024-09-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,04_XL,9.0,pizza_size,44.0,0.204545,2024-10-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,04_XL,6.0,pizza_size,30.0,0.2,2024-11-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,04_XL,8.0,pizza_size,41.0,0.195122,2024-12-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,04_XL,7.0,pizza_size,31.0,0.225806,2025-01-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,04_XL,6.0,pizza_size,28.0,0.214286,2025-02-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,04_XL,7.0,pizza_size,31.0,0.225806,2025-03-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,04_XL,5.0,pizza_size,30.0,0.166667,2025-04-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,04_XL,6.0,pizza_size,31.0,0.193548,2025-05-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,04_XL,9.0,pizza_size,50.0,0.18,2025-06-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,04_XL,2.0,pizza_size,11.0,0.181818,2025-07-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,04_XL,6.0,pizza_size,31.0,0.193548,2025-08-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,04_XL,6.0,pizza_size,30.0,0.2,2025-09-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,04_XL,7.0,pizza_size,31.0,0.225806,2025-10-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,04_XL,6.0,pizza_size,30.0,0.2,2025-11-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,04_XL,9.0,pizza_size,39.0,0.230769,2025-12-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,04_XL,6.0,pizza_size,31.0,0.193548,2026-01-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,04_XL,6.0,pizza_size,28.0,0.214286,2026-02-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,04_XL,7.0,pizza_size,31.0,0.225806,2026-03-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,04_XL,6.0,pizza_size,30.0,0.2,2026-04-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,04_XL,7.0,pizza_size,31.0,0.225806,2026-05-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,04_XL,6.0,pizza_size,30.0,0.2,2026-06-01,False,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,04_XL,2.0,pizza_size,7.0,0.285714,2026-07-01,True,0.001134,0.012346,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,BBQ Chicken,,pizza_type,,,2026-08-01,False,0.008082,0.0,True,up,future,1,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,BBQ Chicken,,pizza_type,,,2026-09-01,False,0.008082,0.0,True,up,future,2,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,BBQ Chicken,,pizza_type,,,2026-10-01,False,0.008082,0.0,True,up,future,3,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,BBQ Chicken,,pizza_type,,,2026-11-01,False,0.008082,0.0,True,up,future,4,0.166667,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,BBQ Chicken,,pizza_type,,,2026-12-01,False,0.008082,0.0,True,up,future,5,0.230769,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,BBQ Chicken,,pizza_type,,,2027-01-01,False,0.008082,0.0,True,up,future,6,0.225806,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,BBQ Chicken,0.0,pizza_type,26.0,0.0,2024-01-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,BBQ Chicken,0.0,pizza_type,30.0,0.0,2024-02-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,BBQ Chicken,0.0,pizza_type,32.0,0.0,2024-03-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,BBQ Chicken,0.0,pizza_type,31.0,0.0,2024-04-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,BBQ Chicken,0.0,pizza_type,6.0,0.0,2024-05-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,BBQ Chicken,0.0,pizza_type,11.0,0.0,2024-06-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,BBQ Chicken,0.0,pizza_type,31.0,0.0,2024-07-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,BBQ Chicken,0.0,pizza_type,86.0,0.0,2024-08-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,BBQ Chicken,0.0,pizza_type,75.0,0.0,2024-09-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,BBQ Chicken,0.0,pizza_type,44.0,0.0,2024-10-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,BBQ Chicken,0.0,pizza_type,30.0,0.0,2024-11-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,BBQ Chicken,0.0,pizza_type,41.0,0.0,2024-12-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,BBQ Chicken,0.0,pizza_type,31.0,0.0,2025-01-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,BBQ Chicken,0.0,pizza_type,28.0,0.0,2025-02-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,BBQ Chicken,0.0,pizza_type,31.0,0.0,2025-03-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,BBQ Chicken,0.0,pizza_type,30.0,0.0,2025-04-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,BBQ Chicken,0.0,pizza_type,31.0,0.0,2025-05-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,BBQ Chicken,0.0,pizza_type,50.0,0.0,2025-06-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,BBQ Chicken,0.0,pizza_type,11.0,0.0,2025-07-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,BBQ Chicken,0.0,pizza_type,31.0,0.0,2025-08-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,BBQ Chicken,0.0,pizza_type,30.0,0.0,2025-09-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,BBQ Chicken,0.0,pizza_type,31.0,0.0,2025-10-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,BBQ Chicken,5.0,pizza_type,30.0,0.166667,2025-11-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,BBQ Chicken,9.0,pizza_type,39.0,0.230769,2025-12-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,BBQ Chicken,7.0,pizza_type,31.0,0.225806,2026-01-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,BBQ Chicken,6.0,pizza_type,28.0,0.214286,2026-02-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,BBQ Chicken,6.0,pizza_type,31.0,0.193548,2026-03-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,BBQ Chicken,7.0,pizza_type,30.0,0.233333,2026-04-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,BBQ Chicken,6.0,pizza_type,31.0,0.193548,2026-05-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,BBQ Chicken,7.0,pizza_type,30.0,0.233333,2026-06-01,False,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,BBQ Chicken,1.0,pizza_type,7.0,0.142857,2026-07-01,True,0.008082,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Cheese Burst,,pizza_type,,,2026-08-01,False,0.001474,0.06362,False,up,future,1,0.16129,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Cheese Burst,,pizza_type,,,2026-09-01,False,0.001474,0.06362,False,up,future,2,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Cheese Burst,,pizza_type,,,2026-10-01,False,0.001474,0.06362,False,up,future,3,0.225806,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Cheese Burst,,pizza_type,,,2026-11-01,False,0.001474,0.06362,False,up,future,4,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Cheese Burst,,pizza_type,,,2026-12-01,False,0.001474,0.06362,False,up,future,5,0.230769,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Cheese Burst,,pizza_type,,,2027-01-01,False,0.001474,0.06362,False,up,future,6,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Cheese Burst,5.0,pizza_type,26.0,0.192308,2024-01-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Cheese Burst,6.0,pizza_type,30.0,0.2,2024-02-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Cheese Burst,6.0,pizza_type,32.0,0.1875,2024-03-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Cheese Burst,7.0,pizza_type,31.0,0.225806,2024-04-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Cheese Burst,1.0,pizza_type,6.0,0.166667,2024-05-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Cheese Burst,2.0,pizza_type,11.0,0.181818,2024-06-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Cheese Burst,6.0,pizza_type,31.0,0.193548,2024-07-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Cheese Burst,17.0,pizza_type,86.0,0.197674,2024-08-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Cheese Burst,14.0,pizza_type,75.0,0.186667,2024-09-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Cheese Burst,9.0,pizza_type,44.0,0.204545,2024-10-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Cheese Burst,5.0,pizza_type,30.0,0.166667,2024-11-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Cheese Burst,4.0,pizza_type,41.0,0.097561,2024-12-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Cheese Burst,5.0,pizza_type,31.0,0.16129,2025-01-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Cheese Burst,4.0,pizza_type,28.0,0.142857,2025-02-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Cheese Burst,4.0,pizza_type,31.0,0.129032,2025-03-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Cheese Burst,4.0,pizza_type,30.0,0.133333,2025-04-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Cheese Burst,3.0,pizza_type,31.0,0.096774,2025-05-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Cheese Burst,11.0,pizza_type,50.0,0.22,2025-06-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Cheese Burst,2.0,pizza_type,11.0,0.181818,2025-07-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Cheese Burst,5.0,pizza_type,31.0,0.16129,2025-08-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Cheese Burst,6.0,pizza_type,30.0,0.2,2025-09-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Cheese Burst,7.0,pizza_type,31.0,0.225806,2025-10-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Cheese Burst,6.0,pizza_type,30.0,0.2,2025-11-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Cheese Burst,9.0,pizza_type,39.0,0.230769,2025-12-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Cheese Burst,6.0,pizza_type,31.0,0.193548,2026-01-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Cheese Burst,6.0,pizza_type,28.0,0.214286,2026-02-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Cheese Burst,7.0,pizza_type,31.0,0.225806,2026-03-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Cheese Burst,6.0,pizza_type,30.0,0.2,2026-04-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Cheese Burst,7.0,pizza_type,31.0,0.225806,2026-05-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Cheese Burst,6.0,pizza_type,30.0,0.2,2026-06-01,False,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Cheese Burst,2.0,pizza_type,7.0,0.285714,2026-07-01,True,0.001474,0.06362,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Deep Dish,,pizza_type,,,2026-08-01,False,-0.000199,0.548746,False,down,future,1,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Deep Dish,,pizza_type,,,2026-09-01,False,-0.000199,0.548746,False,down,future,2,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Deep Dish,,pizza_type,,,2026-10-01,False,-0.000199,0.548746,False,down,future,3,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Deep Dish,,pizza_type,,,2026-11-01,False,-0.000199,0.548746,False,down,future,4,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Deep Dish,,pizza_type,,,2026-12-01,False,-0.000199,0.548746,False,down,future,5,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Deep Dish,,pizza_type,,,2027-01-01,False,-0.000199,0.548746,False,down,future,6,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Deep Dish,0.0,pizza_type,26.0,0.0,2024-01-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Deep Dish,0.0,pizza_type,30.0,0.0,2024-02-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Deep Dish,0.0,pizza_type,32.0,0.0,2024-03-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Deep Dish,0.0,pizza_type,31.0,0.0,2024-04-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Deep Dish,0.0,pizza_type,6.0,0.0,2024-05-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Deep Dish,0.0,pizza_type,11.0,0.0,2024-06-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Deep Dish,0.0,pizza_type,31.0,0.0,2024-07-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Deep Dish,0.0,pizza_type,86.0,0.0,2024-08-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Deep Dish,0.0,pizza_type,75.0,0.0,2024-09-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Deep Dish,0.0,pizza_type,44.0,0.0,2024-10-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Deep Dish,0.0,pizza_type,30.0,0.0,2024-11-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Deep Dish,2.0,pizza_type,41.0,0.04878,2024-12-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Deep Dish,2.0,pizza_type,31.0,0.064516,2025-01-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Deep Dish,1.0,pizza_type,28.0,0.035714,2025-02-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Deep Dish,1.0,pizza_type,31.0,0.032258,2025-03-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Deep Dish,0.0,pizza_type,30.0,0.0,2025-04-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Deep Dish,0.0,pizza_type,31.0,0.0,2025-05-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Deep Dish,0.0,pizza_type,50.0,0.0,2025-06-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Deep Dish,0.0,pizza_type,11.0,0.0,2025-07-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Deep Dish,0.0,pizza_type,31.0,0.0,2025-08-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Deep Dish,0.0,pizza_type,30.0,0.0,2025-09-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Deep Dish,0.0,pizza_type,31.0,0.0,2025-10-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Deep Dish,0.0,pizza_type,30.0,0.0,2025-11-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Deep Dish,0.0,pizza_type,39.0,0.0,2025-12-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Deep Dish,0.0,pizza_type,31.0,0.0,2026-01-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Deep Dish,0.0,pizza_type,28.0,0.0,2026-02-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Deep Dish,0.0,pizza_type,31.0,0.0,2026-03-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Deep Dish,0.0,pizza_type,30.0,0.0,2026-04-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Deep Dish,0.0,pizza_type,31.0,0.0,2026-05-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Deep Dish,0.0,pizza_type,30.0,0.0,2026-06-01,False,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Deep Dish,0.0,pizza_type,7.0,0.0,2026-07-01,True,-0.000199,0.548746,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Gluten-Free,,pizza_type,,,2026-08-01,False,0.001152,0.389083,False,up,future,1,0.16129,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Gluten-Free,,pizza_type,,,2026-09-01,False,0.001152,0.389083,False,up,future,2,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Gluten-Free,,pizza_type,,,2026-10-01,False,0.001152,0.389083,False,up,future,3,0.225806,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Gluten-Free,,pizza_type,,,2026-11-01,False,0.001152,0.389083,False,up,future,4,0.033333,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Gluten-Free,,pizza_type,,,2026-12-01,False,0.001152,0.389083,False,up,future,5,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Gluten-Free,,pizza_type,,,2027-01-01,False,0.001152,0.389083,False,up,future,6,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Gluten-Free,0.0,pizza_type,26.0,0.0,2024-01-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Gluten-Free,0.0,pizza_type,30.0,0.0,2024-02-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Gluten-Free,0.0,pizza_type,32.0,0.0,2024-03-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Gluten-Free,0.0,pizza_type,31.0,0.0,2024-04-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Gluten-Free,0.0,pizza_type,6.0,0.0,2024-05-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Gluten-Free,0.0,pizza_type,11.0,0.0,2024-06-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Gluten-Free,0.0,pizza_type,31.0,0.0,2024-07-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Gluten-Free,0.0,pizza_type,86.0,0.0,2024-08-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Gluten-Free,0.0,pizza_type,75.0,0.0,2024-09-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Gluten-Free,0.0,pizza_type,44.0,0.0,2024-10-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Gluten-Free,1.0,pizza_type,30.0,0.033333,2024-11-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Gluten-Free,2.0,pizza_type,41.0,0.04878,2024-12-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Gluten-Free,2.0,pizza_type,31.0,0.064516,2025-01-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Gluten-Free,3.0,pizza_type,28.0,0.107143,2025-02-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Gluten-Free,4.0,pizza_type,31.0,0.129032,2025-03-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Gluten-Free,2.0,pizza_type,30.0,0.066667,2025-04-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Gluten-Free,4.0,pizza_type,31.0,0.129032,2025-05-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Gluten-Free,3.0,pizza_type,50.0,0.06,2025-06-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Gluten-Free,1.0,pizza_type,11.0,0.090909,2025-07-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Gluten-Free,5.0,pizza_type,31.0,0.16129,2025-08-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Gluten-Free,6.0,pizza_type,30.0,0.2,2025-09-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Gluten-Free,7.0,pizza_type,31.0,0.225806,2025-10-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Gluten-Free,1.0,pizza_type,30.0,0.033333,2025-11-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Gluten-Free,0.0,pizza_type,39.0,0.0,2025-12-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Gluten-Free,0.0,pizza_type,31.0,0.0,2026-01-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Gluten-Free,0.0,pizza_type,28.0,0.0,2026-02-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Gluten-Free,0.0,pizza_type,31.0,0.0,2026-03-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Gluten-Free,0.0,pizza_type,30.0,0.0,2026-04-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Gluten-Free,0.0,pizza_type,31.0,0.0,2026-05-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Gluten-Free,0.0,pizza_type,30.0,0.0,2026-06-01,False,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Gluten-Free,0.0,pizza_type,7.0,0.0,2026-07-01,True,0.001152,0.389083,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Margarita,,pizza_type,,,2026-08-01,False,0.008791,0.0,True,up,future,1,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Margarita,,pizza_type,,,2026-09-01,False,0.008791,0.0,True,up,future,2,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Margarita,,pizza_type,,,2026-10-01,False,0.008791,0.0,True,up,future,3,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Margarita,,pizza_type,,,2026-11-01,False,0.008791,0.0,True,up,future,4,0.166667,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Margarita,,pizza_type,,,2026-12-01,False,0.008791,0.0,True,up,future,5,0.230769,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Margarita,,pizza_type,,,2027-01-01,False,0.008791,0.0,True,up,future,6,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Margarita,0.0,pizza_type,26.0,0.0,2024-01-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Margarita,0.0,pizza_type,30.0,0.0,2024-02-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Margarita,0.0,pizza_type,32.0,0.0,2024-03-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Margarita,0.0,pizza_type,31.0,0.0,2024-04-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Margarita,0.0,pizza_type,6.0,0.0,2024-05-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Margarita,0.0,pizza_type,11.0,0.0,2024-06-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Margarita,0.0,pizza_type,31.0,0.0,2024-07-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Margarita,0.0,pizza_type,86.0,0.0,2024-08-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Margarita,0.0,pizza_type,75.0,0.0,2024-09-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Margarita,0.0,pizza_type,44.0,0.0,2024-10-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Margarita,0.0,pizza_type,30.0,0.0,2024-11-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Margarita,0.0,pizza_type,41.0,0.0,2024-12-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Margarita,0.0,pizza_type,31.0,0.0,2025-01-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Margarita,0.0,pizza_type,28.0,0.0,2025-02-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Margarita,0.0,pizza_type,31.0,0.0,2025-03-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Margarita,0.0,pizza_type,30.0,0.0,2025-04-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Margarita,0.0,pizza_type,31.0,0.0,2025-05-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Margarita,0.0,pizza_type,50.0,0.0,2025-06-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Margarita,0.0,pizza_type,11.0,0.0,2025-07-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Margarita,0.0,pizza_type,31.0,0.0,2025-08-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Margarita,0.0,pizza_type,30.0,0.0,2025-09-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Margarita,0.0,pizza_type,31.0,0.0,2025-10-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Margarita,5.0,pizza_type,30.0,0.166667,2025-11-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Margarita,9.0,pizza_type,39.0,0.230769,2025-12-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Margarita,6.0,pizza_type,31.0,0.193548,2026-01-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Margarita,6.0,pizza_type,28.0,0.214286,2026-02-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Margarita,7.0,pizza_type,31.0,0.225806,2026-03-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Margarita,6.0,pizza_type,30.0,0.2,2026-04-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Margarita,7.0,pizza_type,31.0,0.225806,2026-05-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Margarita,6.0,pizza_type,30.0,0.2,2026-06-01,False,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Margarita,2.0,pizza_type,7.0,0.285714,2026-07-01,True,0.008791,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Non-Veg,,pizza_type,,,2026-08-01,False,-0.01761,0.0,True,down,future,1,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Non-Veg,,pizza_type,,,2026-09-01,False,-0.01761,0.0,True,down,future,2,0.033333,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Non-Veg,,pizza_type,,,2026-10-01,False,-0.01761,0.0,True,down,future,3,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Non-Veg,,pizza_type,,,2026-11-01,False,-0.01761,0.0,True,down,future,4,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Non-Veg,,pizza_type,,,2026-12-01,False,-0.01761,0.0,True,down,future,5,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Non-Veg,,pizza_type,,,2027-01-01,False,-0.01761,0.0,True,down,future,6,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Non-Veg,10.0,pizza_type,26.0,0.384615,2024-01-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Non-Veg,12.0,pizza_type,30.0,0.4,2024-02-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Non-Veg,13.0,pizza_type,32.0,0.40625,2024-03-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Non-Veg,12.0,pizza_type,31.0,0.387097,2024-04-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Non-Veg,3.0,pizza_type,6.0,0.5,2024-05-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Non-Veg,5.0,pizza_type,11.0,0.454545,2024-06-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Non-Veg,12.0,pizza_type,31.0,0.387097,2024-07-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Non-Veg,31.0,pizza_type,86.0,0.360465,2024-08-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Non-Veg,26.0,pizza_type,75.0,0.346667,2024-09-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Non-Veg,14.0,pizza_type,44.0,0.318182,2024-10-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Non-Veg,10.0,pizza_type,30.0,0.333333,2024-11-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Non-Veg,10.0,pizza_type,41.0,0.243902,2024-12-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Non-Veg,7.0,pizza_type,31.0,0.225806,2025-01-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Non-Veg,7.0,pizza_type,28.0,0.25,2025-02-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Non-Veg,7.0,pizza_type,31.0,0.225806,2025-03-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Non-Veg,9.0,pizza_type,30.0,0.3,2025-04-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Non-Veg,8.0,pizza_type,31.0,0.258065,2025-05-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Non-Veg,10.0,pizza_type,50.0,0.2,2025-06-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Non-Veg,3.0,pizza_type,11.0,0.272727,2025-07-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Non-Veg,6.0,pizza_type,31.0,0.193548,2025-08-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Non-Veg,1.0,pizza_type,30.0,0.033333,2025-09-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Non-Veg,0.0,pizza_type,31.0,0.0,2025-10-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Non-Veg,0.0,pizza_type,30.0,0.0,2025-11-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Non-Veg,0.0,pizza_type,39.0,0.0,2025-12-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Non-Veg,0.0,pizza_type,31.0,0.0,2026-01-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Non-Veg,0.0,pizza_type,28.0,0.0,2026-02-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Non-Veg,0.0,pizza_type,31.0,0.0,2026-03-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Non-Veg,0.0,pizza_type,30.0,0.0,2026-04-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Non-Veg,0.0,pizza_type,31.0,0.0,2026-05-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Non-Veg,0.0,pizza_type,30.0,0.0,2026-06-01,False,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Non-Veg,0.0,pizza_type,7.0,0.0,2026-07-01,True,-0.01761,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Sicilian,,pizza_type,,,2026-08-01,False,0.007914,0.0,True,up,future,1,0.064516,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Sicilian,,pizza_type,,,2026-09-01,False,0.007914,0.0,True,up,future,2,0.166667,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Sicilian,,pizza_type,,,2026-10-01,False,0.007914,0.0,True,up,future,3,0.16129,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Sicilian,,pizza_type,,,2026-11-01,False,0.007914,0.0,True,up,future,4,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Sicilian,,pizza_type,,,2026-12-01,False,0.007914,0.0,True,up,future,5,0.153846,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Sicilian,,pizza_type,,,2027-01-01,False,0.007914,0.0,True,up,future,6,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Sicilian,0.0,pizza_type,26.0,0.0,2024-01-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Sicilian,0.0,pizza_type,30.0,0.0,2024-02-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Sicilian,0.0,pizza_type,32.0,0.0,2024-03-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Sicilian,0.0,pizza_type,31.0,0.0,2024-04-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Sicilian,0.0,pizza_type,6.0,0.0,2024-05-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Sicilian,0.0,pizza_type,11.0,0.0,2024-06-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Sicilian,0.0,pizza_type,31.0,0.0,2024-07-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Sicilian,0.0,pizza_type,86.0,0.0,2024-08-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Sicilian,0.0,pizza_type,75.0,0.0,2024-09-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Sicilian,0.0,pizza_type,44.0,0.0,2024-10-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Sicilian,0.0,pizza_type,30.0,0.0,2024-11-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Sicilian,0.0,pizza_type,41.0,0.0,2024-12-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Sicilian,1.0,pizza_type,31.0,0.032258,2025-01-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Sicilian,0.0,pizza_type,28.0,0.0,2025-02-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Sicilian,0.0,pizza_type,31.0,0.0,2025-03-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Sicilian,1.0,pizza_type,30.0,0.033333,2025-04-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Sicilian,1.0,pizza_type,31.0,0.032258,2025-05-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Sicilian,2.0,pizza_type,50.0,0.04,2025-06-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Sicilian,1.0,pizza_type,11.0,0.090909,2025-07-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Sicilian,2.0,pizza_type,31.0,0.064516,2025-08-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Sicilian,5.0,pizza_type,30.0,0.166667,2025-09-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Sicilian,5.0,pizza_type,31.0,0.16129,2025-10-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Sicilian,6.0,pizza_type,30.0,0.2,2025-11-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Sicilian,6.0,pizza_type,39.0,0.153846,2025-12-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Sicilian,6.0,pizza_type,31.0,0.193548,2026-01-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Sicilian,5.0,pizza_type,28.0,0.178571,2026-02-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Sicilian,6.0,pizza_type,31.0,0.193548,2026-03-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Sicilian,5.0,pizza_type,30.0,0.166667,2026-04-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Sicilian,6.0,pizza_type,31.0,0.193548,2026-05-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Sicilian,5.0,pizza_type,30.0,0.166667,2026-06-01,False,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Sicilian,1.0,pizza_type,7.0,0.142857,2026-07-01,True,0.007914,0.0,True,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Stuffed Crust,,pizza_type,,,2026-08-01,False,-0.000244,0.730075,False,down,future,1,0.032258,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Stuffed Crust,,pizza_type,,,2026-09-01,False,-0.000244,0.730075,False,down,future,2,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Stuffed Crust,,pizza_type,,,2026-10-01,False,-0.000244,0.730075,False,down,future,3,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Stuffed Crust,,pizza_type,,,2026-11-01,False,-0.000244,0.730075,False,down,future,4,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Stuffed Crust,,pizza_type,,,2026-12-01,False,-0.000244,0.730075,False,down,future,5,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Stuffed Crust,,pizza_type,,,2027-01-01,False,-0.000244,0.730075,False,down,future,6,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Stuffed Crust,0.0,pizza_type,26.0,0.0,2024-01-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Stuffed Crust,0.0,pizza_type,30.0,0.0,2024-02-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Stuffed Crust,0.0,pizza_type,32.0,0.0,2024-03-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Stuffed Crust,0.0,pizza_type,31.0,0.0,2024-04-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Stuffed Crust,0.0,pizza_type,6.0,0.0,2024-05-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Stuffed Crust,0.0,pizza_type,11.0,0.0,2024-06-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Stuffed Crust,0.0,pizza_type,31.0,0.0,2024-07-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Stuffed Crust,0.0,pizza_type,86.0,0.0,2024-08-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Stuffed Crust,0.0,pizza_type,75.0,0.0,2024-09-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Stuffed Crust,0.0,pizza_type,44.0,0.0,2024-10-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Stuffed Crust,1.0,pizza_type,30.0,0.033333,2024-11-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Stuffed Crust,4.0,pizza_type,41.0,0.097561,2024-12-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Stuffed Crust,2.0,pizza_type,31.0,0.064516,2025-01-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Stuffed Crust,2.0,pizza_type,28.0,0.071429,2025-02-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Stuffed Crust,3.0,pizza_type,31.0,0.096774,2025-03-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Stuffed Crust,1.0,pizza_type,30.0,0.033333,2025-04-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Stuffed Crust,3.0,pizza_type,31.0,0.096774,2025-05-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Stuffed Crust,4.0,pizza_type,50.0,0.08,2025-06-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Stuffed Crust,0.0,pizza_type,11.0,0.0,2025-07-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Stuffed Crust,1.0,pizza_type,31.0,0.032258,2025-08-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Stuffed Crust,0.0,pizza_type,30.0,0.0,2025-09-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Stuffed Crust,0.0,pizza_type,31.0,0.0,2025-10-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Stuffed Crust,0.0,pizza_type,30.0,0.0,2025-11-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Stuffed Crust,0.0,pizza_type,39.0,0.0,2025-12-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Stuffed Crust,0.0,pizza_type,31.0,0.0,2026-01-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Stuffed Crust,0.0,pizza_type,28.0,0.0,2026-02-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Stuffed Crust,0.0,pizza_type,31.0,0.0,2026-03-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Stuffed Crust,0.0,pizza_type,30.0,0.0,2026-04-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Stuffed Crust,0.0,pizza_type,31.0,0.0,2026-05-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Stuffed Crust,0.0,pizza_type,30.0,0.0,2026-06-01,False,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Stuffed Crust,0.0,pizza_type,7.0,0.0,2026-07-01,True,-0.000244,0.730075,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Thai Chicken,,pizza_type,,,2026-08-01,False,0.001332,0.246543,False,up,future,1,0.096774,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Thai Chicken,,pizza_type,,,2026-09-01,False,0.001332,0.246543,False,up,future,2,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Thai Chicken,,pizza_type,,,2026-10-01,False,0.001332,0.246543,False,up,future,3,0.225806,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Thai Chicken,,pizza_type,,,2026-11-01,False,0.001332,0.246543,False,up,future,4,0.033333,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Thai Chicken,,pizza_type,,,2026-12-01,False,0.001332,0.246543,False,up,future,5,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Thai Chicken,,pizza_type,,,2027-01-01,False,0.001332,0.246543,False,up,future,6,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Thai Chicken,0.0,pizza_type,26.0,0.0,2024-01-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Thai Chicken,0.0,pizza_type,30.0,0.0,2024-02-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Thai Chicken,0.0,pizza_type,32.0,0.0,2024-03-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Thai Chicken,0.0,pizza_type,31.0,0.0,2024-04-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Thai Chicken,0.0,pizza_type,6.0,0.0,2024-05-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Thai Chicken,0.0,pizza_type,11.0,0.0,2024-06-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Thai Chicken,0.0,pizza_type,31.0,0.0,2024-07-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Thai Chicken,0.0,pizza_type,86.0,0.0,2024-08-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Thai Chicken,0.0,pizza_type,75.0,0.0,2024-09-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Thai Chicken,0.0,pizza_type,44.0,0.0,2024-10-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Thai Chicken,0.0,pizza_type,30.0,0.0,2024-11-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Thai Chicken,0.0,pizza_type,41.0,0.0,2024-12-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Thai Chicken,1.0,pizza_type,31.0,0.032258,2025-01-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Thai Chicken,0.0,pizza_type,28.0,0.0,2025-02-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Thai Chicken,0.0,pizza_type,31.0,0.0,2025-03-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Thai Chicken,1.0,pizza_type,30.0,0.033333,2025-04-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Thai Chicken,1.0,pizza_type,31.0,0.032258,2025-05-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Thai Chicken,3.0,pizza_type,50.0,0.06,2025-06-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Thai Chicken,1.0,pizza_type,11.0,0.090909,2025-07-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Thai Chicken,3.0,pizza_type,31.0,0.096774,2025-08-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Thai Chicken,6.0,pizza_type,30.0,0.2,2025-09-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Thai Chicken,7.0,pizza_type,31.0,0.225806,2025-10-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Thai Chicken,1.0,pizza_type,30.0,0.033333,2025-11-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Thai Chicken,0.0,pizza_type,39.0,0.0,2025-12-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Thai Chicken,0.0,pizza_type,31.0,0.0,2026-01-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Thai Chicken,0.0,pizza_type,28.0,0.0,2026-02-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Thai Chicken,0.0,pizza_type,31.0,0.0,2026-03-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Thai Chicken,0.0,pizza_type,30.0,0.0,2026-04-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Thai Chicken,0.0,pizza_type,31.0,0.0,2026-05-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Thai Chicken,0.0,pizza_type,30.0,0.0,2026-06-01,False,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Thai Chicken,0.0,pizza_type,7.0,0.0,2026-07-01,True,0.001332,0.246543,False,up,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Thin Crust,,pizza_type,,,2026-08-01,False,-7.9e-05,0.662362,False,down,future,1,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Thin Crust,,pizza_type,,,2026-09-01,False,-7.9e-05,0.662362,False,down,future,2,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Thin Crust,,pizza_type,,,2026-10-01,False,-7.9e-05,0.662362,False,down,future,3,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Thin Crust,,pizza_type,,,2026-11-01,False,-7.9e-05,0.662362,False,down,future,4,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Thin Crust,,pizza_type,,,2026-12-01,False,-7.9e-05,0.662362,False,down,future,5,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Thin Crust,,pizza_type,,,2027-01-01,False,-7.9e-05,0.662362,False,down,future,6,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Thin Crust,0.0,pizza_type,26.0,0.0,2024-01-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Thin Crust,0.0,pizza_type,30.0,0.0,2024-02-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Thin Crust,0.0,pizza_type,32.0,0.0,2024-03-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Thin Crust,0.0,pizza_type,31.0,0.0,2024-04-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Thin Crust,0.0,pizza_type,6.0,0.0,2024-05-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Thin Crust,0.0,pizza_type,11.0,0.0,2024-06-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Thin Crust,0.0,pizza_type,31.0,0.0,2024-07-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Thin Crust,0.0,pizza_type,86.0,0.0,2024-08-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Thin Crust,0.0,pizza_type,75.0,0.0,2024-09-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Thin Crust,0.0,pizza_type,44.0,0.0,2024-10-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Thin Crust,0.0,pizza_type,30.0,0.0,2024-11-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Thin Crust,2.0,pizza_type,41.0,0.04878,2024-12-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Thin Crust,0.0,pizza_type,31.0,0.0,2025-01-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Thin Crust,0.0,pizza_type,28.0,0.0,2025-02-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Thin Crust,0.0,pizza_type,31.0,0.0,2025-03-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Thin Crust,0.0,pizza_type,30.0,0.0,2025-04-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Thin Crust,0.0,pizza_type,31.0,0.0,2025-05-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Thin Crust,0.0,pizza_type,50.0,0.0,2025-06-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Thin Crust,0.0,pizza_type,11.0,0.0,2025-07-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Thin Crust,0.0,pizza_type,31.0,0.0,2025-08-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Thin Crust,0.0,pizza_type,30.0,0.0,2025-09-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Thin Crust,0.0,pizza_type,31.0,0.0,2025-10-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Thin Crust,0.0,pizza_type,30.0,0.0,2025-11-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Thin Crust,0.0,pizza_type,39.0,0.0,2025-12-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Thin Crust,0.0,pizza_type,31.0,0.0,2026-01-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Thin Crust,0.0,pizza_type,28.0,0.0,2026-02-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Thin Crust,0.0,pizza_type,31.0,0.0,2026-03-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Thin Crust,0.0,pizza_type,30.0,0.0,2026-04-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Thin Crust,0.0,pizza_type,31.0,0.0,2026-05-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Thin Crust,0.0,pizza_type,30.0,0.0,2026-06-01,False,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Thin Crust,0.0,pizza_type,7.0,0.0,2026-07-01,True,-7.9e-05,0.662362,False,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Veg,,pizza_type,,,2026-08-01,False,-0.001681,0.019347,True,down,future,1,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Veg,,pizza_type,,,2026-09-01,False,-0.001681,0.019347,True,down,future,2,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Veg,,pizza_type,,,2026-10-01,False,-0.001681,0.019347,True,down,future,3,0.16129,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Veg,,pizza_type,,,2026-11-01,False,-0.001681,0.019347,True,down,future,4,0.2,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Veg,,pizza_type,,,2026-12-01,False,-0.001681,0.019347,True,down,future,5,0.153846,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Veg,,pizza_type,,,2027-01-01,False,-0.001681,0.019347,True,down,future,6,0.193548,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Veg,6.0,pizza_type,26.0,0.230769,2024-01-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Veg,6.0,pizza_type,30.0,0.2,2024-02-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Veg,6.0,pizza_type,32.0,0.1875,2024-03-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Veg,6.0,pizza_type,31.0,0.193548,2024-04-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Veg,1.0,pizza_type,6.0,0.166667,2024-05-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Veg,2.0,pizza_type,11.0,0.181818,2024-06-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Veg,7.0,pizza_type,31.0,0.225806,2024-07-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Veg,20.0,pizza_type,86.0,0.232558,2024-08-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Veg,20.0,pizza_type,75.0,0.266667,2024-09-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Veg,12.0,pizza_type,44.0,0.272727,2024-10-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Veg,7.0,pizza_type,30.0,0.233333,2024-11-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Veg,9.0,pizza_type,41.0,0.219512,2024-12-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Veg,5.0,pizza_type,31.0,0.16129,2025-01-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Veg,5.0,pizza_type,28.0,0.178571,2025-02-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Veg,5.0,pizza_type,31.0,0.16129,2025-03-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Veg,6.0,pizza_type,30.0,0.2,2025-04-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Veg,5.0,pizza_type,31.0,0.16129,2025-05-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Veg,10.0,pizza_type,50.0,0.2,2025-06-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Veg,1.0,pizza_type,11.0,0.090909,2025-07-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Veg,6.0,pizza_type,31.0,0.193548,2025-08-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Veg,6.0,pizza_type,30.0,0.2,2025-09-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Veg,5.0,pizza_type,31.0,0.16129,2025-10-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Veg,6.0,pizza_type,30.0,0.2,2025-11-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Veg,6.0,pizza_type,39.0,0.153846,2025-12-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Veg,6.0,pizza_type,31.0,0.193548,2026-01-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Veg,5.0,pizza_type,28.0,0.178571,2026-02-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Veg,5.0,pizza_type,31.0,0.16129,2026-03-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Veg,6.0,pizza_type,30.0,0.2,2026-04-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Veg,5.0,pizza_type,31.0,0.16129,2026-05-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Veg,6.0,pizza_type,30.0,0.2,2026-06-01,False,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Veg,1.0,pizza_type,7.0,0.142857,2026-07-01,True,-0.001681,0.019347,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-08,Vegan,,pizza_type,,,2026-08-01,False,-0.008934,0.0,True,down,future,1,0.096774,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-09,Vegan,,pizza_type,,,2026-09-01,False,-0.008934,0.0,True,down,future,2,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-10,Vegan,,pizza_type,,,2026-10-01,False,-0.008934,0.0,True,down,future,3,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-11,Vegan,,pizza_type,,,2026-11-01,False,-0.008934,0.0,True,down,future,4,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2026-12,Vegan,,pizza_type,,,2026-12-01,False,-0.008934,0.0,True,down,future,5,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2027-01,Vegan,,pizza_type,,,2027-01-01,False,-0.008934,0.0,True,down,future,6,0.0,seasonal_naive_prior_year_share,Forecast is a method demo; generated random shares do not support a strong business trend claim.
+2024-01,Vegan,5.0,pizza_type,26.0,0.192308,2024-01-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-02,Vegan,6.0,pizza_type,30.0,0.2,2024-02-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-03,Vegan,7.0,pizza_type,32.0,0.21875,2024-03-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-04,Vegan,6.0,pizza_type,31.0,0.193548,2024-04-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-05,Vegan,1.0,pizza_type,6.0,0.166667,2024-05-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-06,Vegan,2.0,pizza_type,11.0,0.181818,2024-06-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-07,Vegan,6.0,pizza_type,31.0,0.193548,2024-07-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-08,Vegan,18.0,pizza_type,86.0,0.209302,2024-08-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-09,Vegan,15.0,pizza_type,75.0,0.2,2024-09-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-10,Vegan,9.0,pizza_type,44.0,0.204545,2024-10-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-11,Vegan,6.0,pizza_type,30.0,0.2,2024-11-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2024-12,Vegan,8.0,pizza_type,41.0,0.195122,2024-12-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-01,Vegan,6.0,pizza_type,31.0,0.193548,2025-01-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-02,Vegan,6.0,pizza_type,28.0,0.214286,2025-02-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-03,Vegan,7.0,pizza_type,31.0,0.225806,2025-03-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-04,Vegan,6.0,pizza_type,30.0,0.2,2025-04-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-05,Vegan,6.0,pizza_type,31.0,0.193548,2025-05-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-06,Vegan,7.0,pizza_type,50.0,0.14,2025-06-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-07,Vegan,2.0,pizza_type,11.0,0.181818,2025-07-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-08,Vegan,3.0,pizza_type,31.0,0.096774,2025-08-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-09,Vegan,0.0,pizza_type,30.0,0.0,2025-09-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-10,Vegan,0.0,pizza_type,31.0,0.0,2025-10-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-11,Vegan,0.0,pizza_type,30.0,0.0,2025-11-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2025-12,Vegan,0.0,pizza_type,39.0,0.0,2025-12-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-01,Vegan,0.0,pizza_type,31.0,0.0,2026-01-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-02,Vegan,0.0,pizza_type,28.0,0.0,2026-02-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-03,Vegan,0.0,pizza_type,31.0,0.0,2026-03-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-04,Vegan,0.0,pizza_type,30.0,0.0,2026-04-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-05,Vegan,0.0,pizza_type,31.0,0.0,2026-05-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-06,Vegan,0.0,pizza_type,30.0,0.0,2026-06-01,False,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.
+2026-07,Vegan,0.0,pizza_type,7.0,0.0,2026-07-01,True,-0.008934,0.0,True,down,history,0,,history,Observed share from the generated Kaggle file.

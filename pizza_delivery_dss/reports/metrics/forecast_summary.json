@@ -1,0 +1,7 @@
+{
+  "backtest_rows": 19,
+  "mae": 12.211,
+  "mape": 0.457,
+  "method": "seasonal_naive_prior_year",
+  "warning": "Synthetic and partial-month data make this a planning demo, not a production forecast."
+}

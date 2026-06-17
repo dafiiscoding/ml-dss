@@ -1,0 +1,62 @@
+antecedent,consequent,support,confidence,lift,matches
+distance=high,delayed=True,0.1564,1.0,4.781,157
+"distance=high, payment=Offline",delayed=True,0.0508,1.0,4.781,51
+"distance=high, payment=Online",delayed=True,0.1056,1.0,4.781,106
+"distance=high, peak=True",delayed=True,0.1554,1.0,4.781,156
+"distance=high, size=Large",delayed=True,0.0707,1.0,4.781,71
+"distance=high, size=XL",delayed=True,0.0837,1.0,4.781,84
+"distance=high, toppings=high",delayed=True,0.1534,1.0,4.781,154
+"distance=high, traffic=High",delayed=True,0.1524,1.0,4.781,153
+"distance=high, weekend=False",delayed=True,0.1096,1.0,4.781,110
+"distance=high, weekend=True",delayed=True,0.0468,1.0,4.781,47
+"size=Large, traffic=High",delayed=True,0.0747,0.7353,3.5154,75
+"payment=Offline, traffic=High",delayed=True,0.0538,0.7013,3.3529,54
+"toppings=high, traffic=High",delayed=True,0.1564,0.588,2.8113,157
+"payment=Offline, toppings=high",delayed=True,0.0548,0.5789,2.7679,55
+"peak=True, traffic=High",delayed=True,0.1633,0.5307,2.5375,164
+"traffic=High, weekend=True",delayed=True,0.0508,0.5152,2.4629,51
+traffic=High,delayed=True,0.1643,0.503,2.4051,165
+"traffic=High, weekend=False",delayed=True,0.1135,0.4978,2.38,114
+"size=XL, traffic=High",delayed=True,0.0837,0.497,2.3763,84
+"payment=Online, traffic=High",delayed=True,0.1106,0.4422,2.1143,111
+"toppings=high, weekend=True",delayed=True,0.0508,0.418,1.9986,51
+"peak=True, size=XL",delayed=True,0.0837,0.4158,1.9881,84
+size=XL,delayed=True,0.0837,0.4138,1.9783,84
+"size=XL, toppings=high",delayed=True,0.0827,0.4109,1.9645,83
+"peak=True, toppings=high",delayed=True,0.1653,0.3799,1.8161,166
+toppings=high,delayed=True,0.1663,0.3761,1.7982,167
+"size=XL, weekend=False",delayed=True,0.0558,0.3733,1.7849,56
+"size=Large, weekend=False",delayed=True,0.0618,0.3647,1.7436,62
+"size=Large, toppings=high",delayed=True,0.0837,0.3636,1.7385,84
+"toppings=high, weekend=False",delayed=True,0.1155,0.3602,1.7223,116
+size=Large,delayed=True,0.0847,0.3542,1.6933,85
+"peak=True, size=Large",delayed=True,0.0837,0.3529,1.6874,84
+"payment=Online, size=XL",delayed=True,0.0568,0.3497,1.6719,57
+"payment=Online, toppings=high",delayed=True,0.1116,0.3209,1.5343,112
+"payment=Online, size=Large",delayed=True,0.0568,0.3115,1.4891,57
+"payment=Offline, peak=True",delayed=True,0.0578,0.2407,1.1506,58
+payment=Offline,delayed=True,0.0578,0.2329,1.1136,58
+"peak=True, weekend=True",delayed=True,0.0618,0.2305,1.1019,62
+peak=True,delayed=True,0.2082,0.2202,1.0529,209
+weekend=True,delayed=True,0.0618,0.2168,1.0364,62
+"peak=True, weekend=False",delayed=True,0.1464,0.2162,1.0335,147
+"payment=Offline, weekend=False",delayed=True,0.0378,0.2147,1.0264,38
+"payment=Online, peak=True",delayed=True,0.1504,0.2133,1.0197,151
+weekend=False,delayed=True,0.1474,0.2061,0.9855,148
+"payment=Online, weekend=False",delayed=True,0.1096,0.2033,0.9721,110
+payment=Online,delayed=True,0.1514,0.2013,0.9625,152
+"payment=Online, weekend=True",delayed=True,0.0418,0.1963,0.9383,42
+"size=Medium, traffic=Medium",delayed=True,0.0339,0.1411,0.6745,34
+"payment=Online, traffic=Medium",delayed=True,0.0398,0.1356,0.6483,40
+"distance=medium, size=Medium",delayed=True,0.0378,0.1338,0.6397,38
+"distance=medium, traffic=Medium",delayed=True,0.0408,0.1168,0.5585,41
+"peak=True, traffic=Medium",delayed=True,0.0438,0.1152,0.5507,44
+"traffic=Medium, weekend=False",delayed=True,0.0339,0.1149,0.5492,34
+traffic=Medium,delayed=True,0.0438,0.1106,0.5285,44
+"payment=Online, size=Medium",delayed=True,0.0359,0.1065,0.5092,36
+"peak=True, size=Medium",delayed=True,0.0388,0.1029,0.492,39
+"distance=medium, payment=Online",delayed=True,0.0458,0.1013,0.4844,46
+"distance=medium, peak=True",delayed=True,0.0528,0.0927,0.443,53
+distance=medium,delayed=True,0.0528,0.0915,0.4376,53
+size=Medium,delayed=True,0.0388,0.0909,0.4346,39
+"distance=medium, weekend=False",delayed=True,0.0378,0.09,0.4305,38

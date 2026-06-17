@@ -1,0 +1,85 @@
+location,orders,delayed,delay_rate,avg_distance_km,top_type,top_size
+"Atlanta, GA",78,4,0.051282,4.015385,Veg,Medium
+"Milwaukee, WI",71,3,0.042254,4.577465,Margarita,Medium
+"Louisville, KY",69,2,0.028986,5.978261,Cheese Burst,XL
+"Omaha, NE",68,2,0.029412,5.029412,BBQ Chicken,Medium
+"Albuquerque, NM",59,2,0.033898,5.491525,Sicilian,Large
+"Boston, MA",51,17,0.333333,4.843137,Non-Veg,Small
+"Dallas, TX",50,4,0.08,3.93,Non-Veg,Medium
+"Miami, FL",49,12,0.244898,4.495918,Veg,Medium
+"Denver, CO",46,8,0.173913,3.902174,Vegan,Small
+"Chicago, IL",45,3,0.066667,4.355556,Non-Veg,Medium
+"Los Angeles, CA",42,13,0.309524,5.578571,Cheese Burst,XL
+"Seattle, WA",37,11,0.297297,5.443243,Non-Veg,Medium
+"Phoenix, AZ",35,11,0.314286,5.385714,Non-Veg,Medium
+"Houston, TX",27,3,0.111111,3.537037,Vegan,Small
+"New York, NY",21,4,0.190476,4.452381,Veg,Large
+"Austin, TX",19,7,0.368421,5.842105,Non-Veg,Large
+"Charlotte, NC",18,8,0.444444,5.416667,Veg,Large
+"San Francisco, CA",13,5,0.384615,5.5,Non-Veg,Medium
+"Indianapolis, IN",12,8,0.666667,6.083333,Cheese Burst,XL
+"San Jose, CA",12,2,0.166667,3.583333,Veg,Medium
+"Columbus, OH",11,9,0.818182,5.818182,Veg,Medium
+"Fort Worth, TX",11,9,0.818182,7.909091,Non-Veg,Large
+"San Diego, CA",11,8,0.727273,7.118182,Cheese Burst,XL
+"Jacksonville, FL",11,2,0.181818,3.818182,Vegan,Small
+"Baltimore, MD",10,3,0.3,4.55,Vegan,Small
+"Detroit, MI",10,0,0.0,2.95,Veg,Medium
+"Memphis, TN",9,6,0.666667,6.611111,Cheese Burst,XL
+"El Paso, TX",9,2,0.222222,5.777778,Non-Veg,Large
+"Nashville, TN",6,3,0.5,5.583333,Stuffed Crust,Large
+"Fresno, CA",4,2,0.5,5.625,Cheese Burst,Medium
+"Sacramento, CA",4,2,0.5,5.625,Veg,Medium
+"Washington, DC",4,2,0.5,5.25,Vegan,Small
+"Tucson, AZ",4,1,0.25,4.375,Vegan,Medium
+"Las Vegas, NV",4,0,0.0,4.75,Non-Veg,Medium
+"Philadelphia, PA",3,3,1.0,7.833333,Veg,Large
+"Mesa, AZ",3,1,0.333333,5.166667,Vegan,Small
+"Oklahoma City, OK",3,1,0.333333,4.833333,Veg,Medium
+"Portland, OR",3,1,0.333333,6.166667,Non-Veg,Large
+"Tampa, FL",3,1,0.333333,5.466667,Thai Chicken,Small
+"Kansas City, MO",3,0,0.0,5.333333,Deep Dish,Large
+"San Antonio, TX",3,0,0.0,2.666667,Veg,Medium
+"Orlando, FL",2,2,1.0,9.0,Cheese Burst,XL
+"Akron, OH",2,1,0.5,6.5,Veg,Medium
+"Baton Rouge, LA",2,1,0.5,5.75,Non-Veg,Large
+"Chandler, AZ",2,1,0.5,5.25,Stuffed Crust,XL
+"Durham, NC",2,1,0.5,5.0,Cheese Burst,XL
+"Garland, TX",2,1,0.5,6.0,Non-Veg,Medium
+"Glendale, AZ",2,1,0.5,5.75,Veg,Large
+"Long Beach, CA",2,1,0.5,5.5,Cheese Burst,XL
+"Lubbock, TX",2,0,0.0,4.0,Vegan,Small
+"Raleigh, NC",2,0,0.0,3.5,Vegan,Small
+"Anaheim, CA",1,1,1.0,7.5,Stuffed Crust,XL
+"Bakersfield, CA",1,1,1.0,5.5,Gluten-Free,Medium
+"Fort Wayne, IN",1,1,1.0,10.0,Non-Veg,Large
+"Henderson, NV",1,1,1.0,8.0,Cheese Burst,XL
+"Laredo, TX",1,1,1.0,9.0,Veg,Large
+"Lexington, KY",1,1,1.0,9.0,Veg,Large
+"Lincoln, NE",1,1,1.0,7.5,Cheese Burst,XL
+"Madison, WI",1,1,1.0,5.5,Gluten-Free,Medium
+"Minneapolis, MN",1,1,1.0,9.0,Veg,Large
+"Newark, NJ",1,1,1.0,10.0,Non-Veg,Large
+"Scottsdale, AZ",1,1,1.0,8.0,Cheese Burst,XL
+"St. Louis, MO",1,1,1.0,7.5,Stuffed Crust,XL
+"St. Paul, MN",1,1,1.0,5.5,Gluten-Free,Medium
+"St. Petersburg, FL",1,1,1.0,5.5,Gluten-Free,Medium
+"Virginia Beach, VA",1,1,1.0,7.0,Cheese Burst,XL
+"Wichita, KS",1,1,1.0,8.0,Cheese Burst,XL
+"Arlington, TX",1,0,0.0,3.0,Veg,Medium
+"Aurora, CO",1,0,0.0,2.0,Vegan,Small
+"Boise, ID",1,0,0.0,3.0,Veg,Medium
+"Chula Vista, CA",1,0,0.0,2.5,Vegan,Small
+"Cleveland, OH",1,0,0.0,2.5,Vegan,Small
+"Corpus Christi, TX",1,0,0.0,6.0,Non-Veg,Large
+"Honolulu, HI",1,0,0.0,4.0,Non-Veg,Medium
+"Irving, TX",1,0,0.0,2.5,Vegan,Small
+"Jersey City, NJ",1,0,0.0,2.0,Vegan,Small
+"New Orleans, LA",1,0,0.0,6.0,Non-Veg,Large
+"Norfolk, VA",1,0,0.0,4.0,Non-Veg,Medium
+"Oakland, CA",1,0,0.0,4.0,Non-Veg,Medium
+"Plano, TX",1,0,0.0,2.0,Vegan,Small
+"Reno, NV",1,0,0.0,6.0,Deep Dish,Large
+"Riverside, CA",1,0,0.0,2.5,Vegan,Small
+"Stockton, CA",1,0,0.0,3.0,Veg,Medium
+"Tulsa, OK",1,0,0.0,4.0,Non-Veg,Medium

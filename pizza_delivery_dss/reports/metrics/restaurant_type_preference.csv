@@ -1,0 +1,35 @@
+pizza_type,restaurant_name,orders,share_within_type
+BBQ Chicken,Papa John's,54,1.0
+Cheese Burst,Little Caesars,93,0.494681
+Cheese Burst,Pizza Hut,83,0.441489
+Cheese Burst,Domino's,10,0.053191
+Cheese Burst,Papa John's,2,0.010638
+Deep Dish,Papa John's,4,0.666667
+Deep Dish,Domino's,2,0.333333
+Gluten-Free,Papa John's,37,0.902439
+Gluten-Free,Domino's,4,0.097561
+Margarita,Marco's Pizza,54,1.0
+Non-Veg,Marco's Pizza,88,0.407407
+Non-Veg,Little Caesars,47,0.217593
+Non-Veg,Papa John's,41,0.189815
+Non-Veg,Domino's,24,0.111111
+Non-Veg,Pizza Hut,16,0.074074
+Sicilian,Domino's,59,0.921875
+Sicilian,Papa John's,3,0.046875
+Sicilian,Little Caesars,1,0.015625
+Sicilian,Marco's Pizza,1,0.015625
+Stuffed Crust,Little Caesars,13,0.619048
+Stuffed Crust,Pizza Hut,8,0.380952
+Thai Chicken,Marco's Pizza,20,0.833333
+Thai Chicken,Domino's,3,0.125
+Thai Chicken,Little Caesars,1,0.041667
+Thin Crust,Domino's,2,1.0
+Veg,Domino's,106,0.524752
+Veg,Pizza Hut,64,0.316832
+Veg,Marco's Pizza,16,0.079208
+Veg,Papa John's,16,0.079208
+Vegan,Papa John's,47,0.356061
+Vegan,Little Caesars,44,0.333333
+Vegan,Pizza Hut,23,0.174242
+Vegan,Marco's Pizza,16,0.121212
+Vegan,Domino's,2,0.015152

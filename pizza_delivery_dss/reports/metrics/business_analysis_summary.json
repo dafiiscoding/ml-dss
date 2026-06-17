@@ -1,0 +1,17 @@
+{
+  "synthetic_warning_count": 12,
+  "hypothesis_tests_significant": 8,
+  "top_size": "Medium",
+  "top_type": "Non-Veg",
+  "forecast": {
+    "backtest_rows": 19,
+    "mae": 12.211,
+    "mape": 0.457,
+    "method": "seasonal_naive_prior_year",
+    "warning": "Synthetic and partial-month data make this a planning demo, not a production forecast."
+  },
+  "staffing_peak_hour": 19,
+  "recommendation_rules": 60,
+  "preference_trend_significant_count": 9,
+  "preference_trend_caveat": "Generated shares are mostly flat; use the forecast as a method demo, not a demand signal."
+}

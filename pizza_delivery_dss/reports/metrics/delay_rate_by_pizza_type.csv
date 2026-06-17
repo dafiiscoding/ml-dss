@@ -1,0 +1,13 @@
+pizza_type,count,delayed,delay_rate
+Stuffed Crust,21,20,0.9523809523809523
+Gluten-Free,41,22,0.5365853658536586
+Cheese Burst,188,67,0.35638297872340424
+Veg,202,44,0.21782178217821782
+Non-Veg,216,45,0.20833333333333334
+Thai Chicken,24,3,0.125
+Sicilian,64,6,0.09375
+Vegan,132,3,0.022727272727272728
+Deep Dish,6,0,0.0
+BBQ Chicken,54,0,0.0
+Margarita,54,0,0.0
+Thin Crust,2,0,0.0

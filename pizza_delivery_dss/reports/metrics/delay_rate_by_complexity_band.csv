@@ -1,0 +1,5 @@
+complexity_band,count,delayed,delay_rate
+Very High,204,85,0.4166666666666667
+High,238,83,0.3487394957983193
+Medium,320,38,0.11875
+Low,242,4,0.01652892561983471

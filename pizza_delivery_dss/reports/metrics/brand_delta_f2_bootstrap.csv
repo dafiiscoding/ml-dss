@@ -1,0 +1,2 @@
+quantity,point_estimate,ci_low_2_5,ci_high_97_5,ci_includes_zero,n_boot,verdict
+delta_f2_with_minus_without_restaurant,0.0343,-0.0096,0.0957,True,2000,within_noise

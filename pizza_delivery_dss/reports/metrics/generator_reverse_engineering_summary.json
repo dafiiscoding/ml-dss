@@ -1,0 +1,70 @@
+{
+  "dataset_rows": 1004,
+  "deterministic_columns_exact": [
+    "estimated_duration_min",
+    "topping_density",
+    "pizza_complexity",
+    "traffic_impact",
+    "delay_min",
+    "delivery_efficiency_min_per_km",
+    "is_delayed"
+  ],
+  "delay_label_threshold_inference": {
+    "exact_rules_on_observed_grid": [
+      "delivery_duration_min > 30",
+      "delivery_duration_min >= 35"
+    ],
+    "max_observed_on_time_duration": 30.0,
+    "min_observed_delayed_duration": 35.0,
+    "note": "The source file provides is_delayed, not an SLA document. Because duration is snapped to 5-minute values, delivery_duration_min > 30 and delivery_duration_min >= 35 are observationally equivalent in this dataset."
+  },
+  "duration_rule": {
+    "unique_values": [
+      15,
+      20,
+      25,
+      30,
+      35,
+      40,
+      45,
+      50
+    ],
+    "grid_step_minutes": 5,
+    "multiple_of_5_share": 1.0,
+    "best_linear_spec_r2": 0.8754210051353858
+  },
+  "categorical_information_verdict": {
+    "location": "strong_artifact_signal_after_distance_control",
+    "pizza_type": "strong_artifact_signal_after_distance_control",
+    "restaurant_name": "weak_artifact_or_sampling_signal_after_distance_control",
+    "payment_method": "weak_artifact_or_sampling_signal_after_distance_control",
+    "traffic_level": "weak_artifact_or_sampling_signal_after_distance_control",
+    "pizza_size": "noise_after_distance_control",
+    "is_weekend": "noise_after_distance_control"
+  },
+  "uniformity_rejections_at_0_05": [
+    "location",
+    "pizza_type",
+    "pizza_size",
+    "toppings_count",
+    "toppings_count",
+    "toppings_count"
+  ],
+  "brand_verdict": {
+    "brand_counts_min": 194,
+    "brand_counts_max": 212,
+    "brand_exchangeable_rows": 0,
+    "dev_f2_with_restaurant": 0.9433962264150944,
+    "dev_f2_without_restaurant": 0.9090909090909091,
+    "delta_f2_without_restaurant": -0.03430531732418529
+  },
+  "pseudo_spec": [
+    "distance_km is sampled from a short discrete menu of 25 values.",
+    "estimated_duration_min = 2.4 * distance_km.",
+    "delivery_duration_min is snapped to a 5-minute grid from 15 to 50 minutes.",
+    "The effective label boundary lies between 30 and 35 minutes: delivery_duration_min > 30 is equivalent to delivery_duration_min >= 35 on the observed grid.",
+    "topping_density, pizza_complexity, traffic_impact, delay_min and delivery_efficiency are deterministic transforms.",
+    "Some categorical columns still carry weak or strong artifact signal after distance-band control, so the generator is not purely independent uniform draws.",
+    "The five restaurant brands can be collapsed for chain-level descriptive reporting, but homogeneity tests reject treating brands as statistically identical."
+  ]
+}

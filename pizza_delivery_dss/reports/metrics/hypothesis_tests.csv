@@ -1,0 +1,10 @@
+variable,test,rows,chi2,dof,p_value,cramers_v,min_expected,significant_at_0_05,interpretation
+traffic_level,chi-square independence vs is_delayed,3,265.676749,2,0.0,0.514411,58.14741,True,Evidence of association with delay
+pizza_type,chi-square independence vs is_delayed,12,186.022262,11,0.0,0.430443,0.418327,True,Evidence of association with delay
+payment_method,chi-square independence vs is_delayed,6,176.02834,5,0.0,0.418721,4.810757,True,Evidence of association with delay
+complexity_band,chi-square independence vs is_delayed,4,151.23479,3,0.0,0.388114,42.669323,True,Evidence of association with delay
+pizza_size,chi-square independence vs is_delayed,4,148.199282,3,0.0,0.384199,27.609562,True,Evidence of association with delay
+location_top12,chi-square independence vs is_delayed,13,142.016354,12,0.0,0.376099,7.739044,True,Evidence of association with delay
+restaurant_name,chi-square independence vs is_delayed,5,18.187573,4,0.001134,0.134592,40.577689,True,Evidence of association with delay
+time_segment,chi-square independence vs is_delayed,3,14.442731,2,0.000731,0.119938,0.62749,True,Evidence of association with delay
+payment_category,chi-square independence vs is_delayed,2,0.947863,1,0.330264,0.030726,52.081673,False,No strong evidence of association with delay

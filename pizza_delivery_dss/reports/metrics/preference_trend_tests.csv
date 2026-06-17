@@ -1,0 +1,17 @@
+dimension,category,months,tau,p_value,trend
+pizza_size,01_Small,20,-0.1368,0.4173,no_trend
+pizza_size,02_Medium,31,0.3333,0.0089,increasing
+pizza_size,03_Large,31,-0.1892,0.1392,no_trend
+pizza_size,04_XL,31,0.3097,0.0151,increasing
+pizza_type,BBQ Chicken,9,-0.0556,0.917,no_trend
+pizza_type,Cheese Burst,31,0.243,0.057,no_trend
+pizza_type,Deep Dish,4,-0.6667,0.3082,no_trend
+pizza_type,Gluten-Free,13,0.4359,0.0441,increasing
+pizza_type,Margarita,9,0.3333,0.2515,no_trend
+pizza_type,Non-Veg,21,-0.7048,0.0,decreasing
+pizza_type,Sicilian,17,0.5074,0.0051,increasing
+pizza_type,Stuffed Crust,9,-0.1111,0.7545,no_trend
+pizza_type,Thai Chicken,9,0.6111,0.0286,increasing
+pizza_type,Thin Crust,1,,,insufficient_data
+pizza_type,Veg,31,-0.2903,0.0228,decreasing
+pizza_type,Vegan,20,-0.1211,0.4754,no_trend

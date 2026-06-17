@@ -1,0 +1,3 @@
+is_delayed,orders,duration_min,duration_q25,duration_median,duration_mean,duration_q75,duration_max,estimated_duration_mean,delay_min_mean,delay_min_median,distance_mean,complexity_mean,high_traffic_share,peak_hour_share
+False,794,15,20.0,30.0,26.27204,30.0,30,10.078186,16.193854,15.6,4.199244,8.288413,0.20529,0.93199
+True,210,35,40.0,40.0,41.666667,45.0,50,18.642286,23.024381,22.0,7.767619,13.928571,0.785714,0.995238

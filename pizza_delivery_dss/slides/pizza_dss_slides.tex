@@ -1,0 +1,366 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{%
+  \hfill\scriptsize\insertframenumber/\inserttotalframenumber\hspace{0.8em}\vspace{0.4em}
+}
+\definecolor{HustRed}{RGB}{160,30,45}
+\definecolor{Ink}{RGB}{30,36,45}
+\setbeamercolor{structure}{fg=HustRed}
+\setbeamercolor{frametitle}{fg=Ink,bg=white}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+
+\title[Pizza Delivery DSS]{Hệ hỗ trợ quyết định điều phối giao pizza}
+\subtitle{Dự báo đơn trễ, xếp ưu tiên và tham khảo bài toán vận tải}
+\author{Nhóm 29}
+\institute{Đại học Bách khoa Hà Nội -- Khoa Toán Tin\\TS. Lê Hải Hà; TS. Trịnh Đình Thăng}
+\date{Tháng 6 năm 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Thông điệp chính}
+  \begin{block}{Luận điểm}
+  Một DSS nhỏ nhưng đầy đủ có thể chuyển dữ liệu đơn hàng pizza thành hàng đợi
+  ưu tiên và gợi ý hành động vận hành.
+  \end{block}
+  \begin{itemize}
+    \item Dữ liệu Kaggle thật: 1.004 đơn hàng, 25 cột gốc, 37 cột sau FE.
+    \item Kiểm soát leakage: không dùng duration/delay sau giao hàng làm feature.
+    \item Audit dữ liệu synthetic: 12 cảnh báo data-realism.
+    \item Thêm reverse-engineering generator, behavior, forecasting, recommendation, staffing và transportation scenario.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Bài toán quyết định}
+  \begin{columns}
+    \column{0.52\linewidth}
+    \textbf{Người dùng}: quản lý vận hành/điều phối giao hàng.
+    \begin{itemize}
+      \item Đơn nào có nguy cơ giao trễ?
+      \item Đơn nào cần theo dõi trước?
+      \item Gợi ý hành động gì theo mức rủi ro?
+    \end{itemize}
+    \column{0.44\linewidth}
+    \textbf{Luồng DSS}
+    \begin{enumerate}
+      \item Data audit
+      \item Generator forensics
+      \item EDA + behavior
+      \item Forecast + recommendation
+      \item Predictive model
+      \item Risk/Priority rules
+      \item Dashboard/PowerBI
+    \end{enumerate}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Dữ liệu và leakage}
+  \begin{table}
+  \centering
+  \begin{tabular}{lr}
+  \toprule
+  Chỉ tiêu & Giá trị\\
+  \midrule
+  Số đơn hàng & 1.004\\
+  Delayed & 210\\
+  On-time & 794\\
+  Tỷ lệ trễ & 20,92\%\\
+  Missing value & 0\\
+  Duplicate order id & 0\\
+  \bottomrule
+  \end{tabular}
+  \end{table}
+  \vspace{4pt}
+  \alert{\textbf{Audit quan trọng:}} \texttt{is\_delayed = delivery\_duration\_min > 30}.
+  Vì vậy duration, delivery time, delay và delivery efficiency bị chặn khỏi feature.
+\end{frame}
+
+\begin{frame}{Dữ liệu rác: biến điểm yếu thành audit}
+  \begin{columns}
+    \column{0.5\linewidth}
+    \begin{itemize}
+      \item Không missing trên toàn bộ bảng.
+      \item File 2024--25 nhưng có dữ liệu tới 07/2026.
+      \item Duration chỉ có 8 giá trị rời rạc.
+      \item Estimated duration = 2,4 x distance.
+      \item Complexity = toppings x size score.
+    \end{itemize}
+    \column{0.46\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{../reports/figures/synthetic_data_flags.png}
+  \end{columns}
+  \small Kết luận: báo cáo không overclaim; dùng compact feature set để giảm cột trùng thông tin.
+\end{frame}
+
+\begin{frame}{Truy ngược generator}
+  \begin{columns}
+    \column{0.48\linewidth}
+    \begin{itemize}
+      \item 7 công thức/target khớp tuyệt đối.
+      \item Duration nằm trên lưới 5 phút: 15--50.
+      \item Best OLS duration recovery: R2 = 0,8754.
+      \item Brand có artifact nhỏ: bỏ restaurant làm dev F2 giảm 0,0343.
+    \end{itemize}
+    \small Kết luận: dùng dữ liệu để minh họa quy trình DSS, không overclaim thị trường thật.
+    \column{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{../reports/figures/feature_information_audit.png}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{EDA: trễ là lớp thiểu số}
+  \centering
+  \includegraphics[width=0.64\linewidth]{../reports/figures/delay_distribution.png}
+  \vspace{4pt}
+  \small Accuracy một mình dễ đánh lừa: always-on-time đạt 0,791 nhưng F2 bằng 0.
+\end{frame}
+
+\begin{frame}{EDA: traffic và distance dẫn dắt rủi ro}
+  \centering
+  \includegraphics[width=0.64\linewidth]{../reports/figures/delay_rate_by_traffic.png}
+  \vspace{4pt}
+  \small Insight này được đưa vào Risk Score, nhưng không diễn giải như quan hệ nhân quả tuyệt đối.
+\end{frame}
+
+\begin{frame}{Customer behavior: size, type, location}
+  \begin{columns}
+    \column{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{../reports/figures/size_preference.png}
+    \column{0.48\linewidth}
+    \begin{itemize}
+      \item Top size: Medium.
+      \item Top type: Non-Veg.
+      \item 60 rule recommendation theo popularity.
+      \item Location có tín hiệu nhưng nhiều nhóm nhỏ, cần diễn giải cẩn thận.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Forecasting và staffing}
+  \begin{columns}
+    \column{0.54\linewidth}
+    \includegraphics[width=\linewidth]{../reports/figures/monthly_demand_forecast.png}
+    \column{0.42\linewidth}
+    \begin{itemize}
+      \item Seasonal-naive prior-year.
+      \item Backtest: 19 tháng.
+      \item MAE: 12,211 đơn.
+      \item MAPE: 45,7\%, chỉ dùng demo planning.
+      \item Peak staffing hour: 19h.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Trend sở thích size/type}
+  \begin{columns}
+    \column{0.54\linewidth}
+    \includegraphics[width=\linewidth]{../reports/figures/preference_size_share_forecast.png}
+    \column{0.42\linewidth}
+    \begin{itemize}
+      \item Forecast share theo tháng cho size/type.
+      \item Một số trend có p-value nhỏ.
+      \item Vì dữ liệu synthetic, dùng như demo phương pháp.
+      \item Không kết luận thị hiếu thật.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Kiến thức môn học được dùng}
+  \begin{table}
+  \centering
+  \begin{tabular}{ll}
+  \toprule
+  Nhóm kiến thức & Thể hiện trong dự án\\
+  \midrule
+  DSS & Predictive + Prescriptive + Dashboard\\
+  ML supervised & Dự báo \texttt{is\_delayed}\\
+  DT/NB/kNN/SVM/RF & So sánh 6 classifier\\
+  Metric & Accuracy, F2, Balanced Accuracy, MCC\\
+  Clustering & K-Means khám phá nhóm đơn\\
+  Association rules & Luật điều kiện đi cùng delayed\\
+  Hypothesis tests & Payment, size, type, location, traffic\\
+  Time series & Demand forecasting và staffing\\
+  Recommendation & Popularity rules theo context\\
+  Transportation problem & Assignment đơn rủi ro cao cho tài xế giả định\\
+  \bottomrule
+  \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}{Feature engineering: full vs compact}
+  \begin{table}
+  \centering
+  \begin{tabular}{lrrrr}
+  \toprule
+  Feature set & Features & Acc. & F2 & MCC\\
+  \midrule
+  Compact non-redundant & 12 & 0,9701 & 0,9434 & 0,9117\\
+  Full pre-dispatch & 17 & 0,9701 & 0,9286 & 0,9097\\
+  \bottomrule
+  \end{tabular}
+  \end{table}
+  \small Compact bỏ cột deterministic và dùng \texttt{pizza\_size\_score}: Small=1, Medium=2, Large=3, XL=4.
+\end{frame}
+
+\begin{frame}{So sánh model trên dev}
+  \begin{table}
+  \centering
+  \begin{tabular}{lrrrr}
+  \toprule
+  Model & Acc. & Bal. Acc. & F2 & MCC\\
+  \midrule
+  Logistic Regression & 0,9701 & 0,9636 & 0,9434 & 0,9117\\
+  SVM & 0,9602 & 0,9398 & 0,9048 & 0,8796\\
+  Decision Tree & 0,9502 & 0,9335 & 0,8962 & 0,8525\\
+  Random Forest & 0,9652 & 0,9254 & 0,8780 & 0,8926\\
+  k-NN & 0,9353 & 0,8540 & 0,7538 & 0,7970\\
+  Naive Bayes & 0,6368 & 0,7179 & 0,6642 & 0,3544\\
+  \bottomrule
+  \end{tabular}
+  \end{table}
+  \small Chọn Logistic Regression theo F2 trên dev.
+\end{frame}
+
+\begin{frame}{Kết quả test sau khi khóa mô hình}
+  \begin{columns}
+    \column{0.45\linewidth}
+    \begin{table}
+    \centering
+    \begin{tabular}{lr}
+    \toprule
+    Metric & Giá trị\\
+    \midrule
+    Accuracy & 0,9602\\
+    Balanced Accuracy & 0,9661\\
+    Precision & 0,8542\\
+    Recall & 0,9762\\
+    F1 & 0,9111\\
+    F2 & 0,9491\\
+    MCC & 0,8889\\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+    \column{0.5\linewidth}
+    Confusion matrix:
+    \begin{table}
+    \centering
+    \begin{tabular}{lrr}
+    \toprule
+     & On-time & Delayed\\
+    \midrule
+    Actual on-time & 152 & 7\\
+    Actual delayed & 1 & 41\\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Tầng DSS: từ xác suất đến hành động}
+  \[
+  Risk = 0,55S_{model}+0,15S_{traffic}+0,12S_{distance}
+       +0,08S_{peak}+0,06S_{complexity}+0,04S_{weekend}
+  \]
+  \begin{table}
+  \centering
+  \begin{tabular}{lll}
+  \toprule
+  Risk & Priority & Action\\
+  \midrule
+  0--35 & Low & Hàng đợi bình thường\\
+  36--65 & Medium & Theo dõi tài xế/traffic\\
+  66--100 & High & Escalate, backup driver, customer support\\
+  \bottomrule
+  \end{tabular}
+  \end{table}
+  \small Priority là policy minh bạch, chưa phải tối ưu thống kê.
+\end{frame}
+
+\begin{frame}{Tham khảo bài toán vận tải}
+  \begin{block}{Ý tưởng}
+  Lấy các đơn có rủi ro cao trong queue, tạo fleet tài xế giả định và giải
+  bài toán assignment tối thiểu chi phí.
+  \end{block}
+  \begin{itemize}
+    \item Đơn hàng là dữ liệu thật từ queue.
+    \item Driver/capacity là kịch bản mô phỏng vì dataset gốc không có.
+    \item Objective: giảm chi phí gán dựa trên distance, traffic, risk và base location.
+    \item Output: \texttt{reports/metrics/transport\_assignment.csv}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Dashboard Streamlit và PowerBI}
+  \begin{columns}
+    \column{0.48\linewidth}
+    \textbf{Streamlit}
+    \begin{itemize}
+      \item Overview
+      \item EDA
+      \item Customer Behavior
+      \item Forecast \& Staffing
+      \item Model Evaluation
+      \item Single Order Demo
+      \item Delay Queue
+      \item Data Quality
+    \end{itemize}
+    \column{0.48\linewidth}
+    \textbf{PowerBI pack}
+    \begin{itemize}
+      \item fact orders
+      \item fact delay queue
+      \item fact transport assignment
+      \item fact forecast/staffing/recommendation
+      \item fact hypothesis/data realism audit
+      \item dimensions
+      \item DAX measures
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Minh chứng tái lập}
+  \begin{itemize}
+    \item 5 notebook theo module: data, EDA, modeling, DSS/PowerBI, business.
+    \item \texttt{python -m scripts.run\_all}: 17 bước tái tạo pipeline.
+    \item 15 unit tests: schema, leakage, split, forensics, model, DSS, forecast, assignment.
+    \item Streamlit AppTest kiểm tra dashboard không exception.
+    \item LaTeX report compile bằng XeLaTeX.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Giới hạn và hướng phát triển}
+  \begin{itemize}
+    \item Dataset nhỏ và có tính mô phỏng.
+    \item Có 12 cảnh báo data-realism; không overclaim kết quả kinh doanh.
+    \item Brand/preference trend có artifact từ generator, không phải kết luận thị trường thật.
+    \item Chronological holdout không có delayed sample, nên bản học thuật dùng stratified split.
+    \item Forecast MAPE 45,7\%, chỉ là demo planning.
+    \item Driver/fleet là mô phỏng, chưa phải dữ liệu điều phối thật.
+    \item Priority chưa được tối ưu bằng cost/SLA thật.
+    \item Hướng phát triển: thu thập driver logs, SLA, route distance, cost và kiểm thử theo thời gian.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Kết luận}
+  \begin{block}{Kết quả}
+  Dự án pizza giữ quy trình DSS đầy đủ nhưng nhỏ hơn CrisisMMD: dữ liệu thật,
+  audit leakage, audit synthetic, generator forensics, EDA, hypothesis tests,
+  behavior, forecasting, recommendation, model comparison, DSS rules, transportation scenario,
+  Streamlit, PowerBI pack, LaTeX report và slide.
+  \end{block}
+  \centering
+  \Large Cảm ơn thầy cô và các bạn!
+\end{frame}
+
+\end{document}

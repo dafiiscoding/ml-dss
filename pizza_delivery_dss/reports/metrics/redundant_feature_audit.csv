@@ -1,0 +1,8 @@
+column,source_or_formula,max_abs_error,model_action
+estimated_duration_min,2.4 * distance_km,3.552713678800501e-15,Drop in compact feature set; keep distance_km.
+topping_density,toppings_count / distance_km,2.220446049250313e-16,Drop in compact feature set; keep base variables.
+pizza_complexity,toppings_count * pizza_size_score,0.0,Use for interpretation; compact model uses size_score and toppings_count.
+traffic_impact,"Low=1, Medium=2, High=3",0.0,Drop in compact feature set; keep traffic_level.
+delay_min,delivery_duration_min - estimated_duration_min,3.552713678800501e-15,Block as leakage.
+delivery_efficiency_min_per_km,delivery_duration_min / distance_km,0.0,Block as leakage.
+restaurant_avg_time,group statistic from delivery duration,,Block as post-hoc aggregate leakage.

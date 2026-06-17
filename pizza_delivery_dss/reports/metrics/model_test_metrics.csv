@@ -1,0 +1,2 @@
+model,accuracy,balanced_accuracy,precision,recall,f1,f2,mcc,roc_auc,tn,fp,fn,tp
+Logistic Regression,0.9602,0.9661,0.8542,0.9762,0.9111,0.9491,0.8889,0.9961,152,7,1,41

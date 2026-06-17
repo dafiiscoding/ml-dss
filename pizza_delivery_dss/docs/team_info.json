@@ -1,0 +1,38 @@
+{
+  "school": "Đại học Bách khoa Hà Nội",
+  "faculty": "Khoa Toán - Tin",
+  "course": "Hệ hỗ trợ quyết định",
+  "group": "29",
+  "lecturers": [
+    "TS. Lê Hải Hà",
+    "TS. Trịnh Đình Thăng"
+  ],
+  "semester": "2025.2",
+  "location_date": "Hà Nội, tháng 6 năm 2026",
+  "members": [
+    {
+      "name": "Đoàn Danh Long",
+      "student_id": "20237354",
+      "contribution": "Điều phối dự án, thiết kế pipeline DSS, mô hình hóa và tổng hợp báo cáo",
+      "share_percent": 25
+    },
+    {
+      "name": "Vũ Quang Vinh",
+      "student_id": "20237408",
+      "contribution": "Phân tích dữ liệu, EDA, customer behavior và kiểm định giả thiết",
+      "share_percent": 25
+    },
+    {
+      "name": "Nguyễn Đăng Đức",
+      "student_id": "20237312",
+      "contribution": "Feature engineering, forecasting, recommendation và Power BI data pack",
+      "share_percent": 25
+    },
+    {
+      "name": "Nguyễn Tuấn Anh",
+      "student_id": "20237293",
+      "contribution": "Dashboard Streamlit, tối ưu vận tải, kiểm thử và chuẩn bị slide",
+      "share_percent": 25
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+Orders = COUNTROWS(fact_orders)
+
+Delayed Orders = CALCULATE([Orders], fact_orders[is_delayed] = TRUE())
+
+Delay Rate = DIVIDE([Delayed Orders], [Orders])
+
+Average Delivery Duration = AVERAGE(fact_orders[delivery_duration_min])
+
+Average Distance = AVERAGE(fact_orders[distance_km])
+
+High Priority Orders =
+CALCULATE(COUNTROWS(fact_delay_queue), fact_delay_queue[priority] = "High")
+
+Average Delay Risk = AVERAGE(fact_delay_queue[delay_risk_score])
+
+Assigned Scenario Orders = COUNTROWS(fact_transport_assignment)
+
+Average Assignment Cost = AVERAGE(fact_transport_assignment[estimated_assignment_cost])
+
+Forecast Orders = SUM(fact_monthly_demand_forecast[forecast_orders])
+
+Scenario Orders Per Day = SUM(fact_hourly_staffing_plan[scenario_orders_per_day])
+
+Recommended Staff = SUM(fact_hourly_staffing_plan[recommended_staff])
+
+Significant Hypothesis Tests =
+CALCULATE(COUNTROWS(fact_hypothesis_tests), fact_hypothesis_tests[significant_at_0_05] = TRUE())
+
+Synthetic Warning Flags =
+CALCULATE(COUNTROWS(fact_data_realism_audit), fact_data_realism_audit[severity] IN {"warning", "critical"})

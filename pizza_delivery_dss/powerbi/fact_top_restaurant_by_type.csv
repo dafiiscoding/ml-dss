@@ -1,0 +1,13 @@
+pizza_type,restaurant_name,orders,share_within_type
+Veg,Domino's,106,0.524752
+Cheese Burst,Little Caesars,93,0.494681
+Non-Veg,Marco's Pizza,88,0.407407
+Sicilian,Domino's,59,0.921875
+BBQ Chicken,Papa John's,54,1.0
+Margarita,Marco's Pizza,54,1.0
+Vegan,Papa John's,47,0.356061
+Gluten-Free,Papa John's,37,0.902439
+Thai Chicken,Marco's Pizza,20,0.833333
+Stuffed Crust,Little Caesars,13,0.619048
+Deep Dish,Papa John's,4,0.666667
+Thin Crust,Domino's,2,1.0

@@ -1,0 +1,5 @@
+metric,point_estimate,ci_low_2_5,ci_high_97_5,bootstrap_std,n_boot
+f2,0.9491,0.8955,0.9859,0.0229,2000
+balanced_accuracy,0.9661,0.9329,0.9904,0.0145,2000
+mcc,0.8889,0.8083,0.9583,0.0381,2000
+recall,0.9762,0.9189,1.0,0.0235,2000

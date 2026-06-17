@@ -1,0 +1,61 @@
+rule_type,context,recommendation,context_orders,matched_orders,confidence
+Most chosen restaurant for same pizza type,pizza_type=BBQ Chicken,restaurant_name=Papa John's,54,54,1.0
+Most chosen restaurant for same pizza type,pizza_type=Margarita,restaurant_name=Marco's Pizza,54,54,1.0
+Top pizza type by restaurant and size,"restaurant_name=Papa John's, pizza_size=Small",pizza_type=Vegan,47,47,1.0
+Top pizza type by restaurant and size,"restaurant_name=Little Caesars, pizza_size=Small",pizza_type=Vegan,43,43,1.0
+Top pizza type by restaurant and size,"restaurant_name=Pizza Hut, pizza_size=Small",pizza_type=Vegan,23,23,1.0
+Preferred restaurant by location,"location=Omaha, NE",restaurant_name=Papa John's,68,67,0.985294
+Top pizza type by restaurant and size,"restaurant_name=Pizza Hut, pizza_size=Medium",pizza_type=Veg,65,64,0.984615
+Top pizza type by restaurant and size,"restaurant_name=Little Caesars, pizza_size=Medium",pizza_type=Non-Veg,46,45,0.978261
+Preferred restaurant by location,"location=Louisville, KY",restaurant_name=Little Caesars,69,67,0.971014
+Top size by time segment,time_segment=Lunch,pizza_size=Medium,51,49,0.960784
+Preferred restaurant by location,"location=New York, NY",restaurant_name=Domino's,21,20,0.952381
+Preferred restaurant by location,"location=Albuquerque, NM",restaurant_name=Domino's,59,56,0.949153
+Preferred restaurant by location,"location=Milwaukee, WI",restaurant_name=Marco's Pizza,71,67,0.943662
+Top pizza type by restaurant and size,"restaurant_name=Pizza Hut, pizza_size=XL",pizza_type=Cheese Burst,88,82,0.931818
+Most chosen restaurant for same pizza type,pizza_type=Sicilian,restaurant_name=Domino's,64,59,0.921875
+Most chosen restaurant for same pizza type,pizza_type=Gluten-Free,restaurant_name=Papa John's,41,37,0.902439
+Top pizza type by restaurant and size,"restaurant_name=Pizza Hut, pizza_size=Large",pizza_type=Non-Veg,18,16,0.888889
+Preferred restaurant by location,"location=El Paso, TX",restaurant_name=Papa John's,9,8,0.888889
+Top pizza type by restaurant and size,"restaurant_name=Marco's Pizza, pizza_size=Small",pizza_type=Vegan,17,15,0.882353
+Top pizza type by restaurant and size,"restaurant_name=Little Caesars, pizza_size=XL",pizza_type=Cheese Burst,110,93,0.845455
+Most chosen restaurant for same pizza type,pizza_type=Thai Chicken,restaurant_name=Marco's Pizza,24,20,0.833333
+Preferred restaurant by location,"location=Houston, TX",restaurant_name=Little Caesars,27,22,0.814815
+Top pizza type by restaurant and size,"restaurant_name=Papa John's, pizza_size=Large",pizza_type=Non-Veg,26,21,0.807692
+Preferred restaurant by location,"location=Baltimore, MD",restaurant_name=Little Caesars,10,8,0.8
+Top pizza type by restaurant and size,"restaurant_name=Domino's, pizza_size=Medium",pizza_type=Veg,47,37,0.787234
+Preferred restaurant by location,"location=San Jose, CA",restaurant_name=Domino's,12,9,0.75
+Preferred restaurant by location,"location=Atlanta, GA",restaurant_name=Pizza Hut,78,58,0.74359
+Preferred restaurant by location,"location=San Diego, CA",restaurant_name=Pizza Hut,11,8,0.727273
+Preferred restaurant by location,"location=Memphis, TN",restaurant_name=Pizza Hut,9,6,0.666667
+Preferred restaurant by location,"location=Miami, FL",restaurant_name=Domino's,49,32,0.653061
+Preferred restaurant by location,"location=Columbus, OH",restaurant_name=Domino's,11,7,0.636364
+Preferred restaurant by location,"location=Los Angeles, CA",restaurant_name=Pizza Hut,42,26,0.619048
+Most chosen restaurant for same pizza type,pizza_type=Stuffed Crust,restaurant_name=Little Caesars,21,13,0.619048
+Preferred restaurant by location,"location=Detroit, MI",restaurant_name=Domino's,10,6,0.6
+Preferred restaurant by location,"location=Seattle, WA",restaurant_name=Marco's Pizza,37,22,0.594595
+Top pizza type by restaurant and size,"restaurant_name=Marco's Pizza, pizza_size=Large",pizza_type=Non-Veg,36,21,0.583333
+Preferred restaurant by location,"location=Indianapolis, IN",restaurant_name=Pizza Hut,12,7,0.583333
+Preferred restaurant by location,"location=Fort Worth, TX",restaurant_name=Marco's Pizza,11,6,0.545455
+Preferred restaurant by location,"location=Jacksonville, FL",restaurant_name=Little Caesars,11,6,0.545455
+Most chosen restaurant for same pizza type,pizza_type=Veg,restaurant_name=Domino's,202,106,0.524752
+Top pizza type by restaurant,restaurant_name=Domino's,pizza_type=Veg,212,106,0.5
+Preferred restaurant by location,"location=Denver, CO",restaurant_name=Papa John's,46,23,0.5
+Preferred restaurant by location,"location=Charlotte, NC",restaurant_name=Marco's Pizza,18,9,0.5
+Most chosen restaurant for same pizza type,pizza_type=Cheese Burst,restaurant_name=Little Caesars,188,93,0.494681
+Preferred restaurant by location,"location=Phoenix, AZ",restaurant_name=Marco's Pizza,35,17,0.485714
+Preferred restaurant by location,"location=Dallas, TX",restaurant_name=Little Caesars,50,24,0.48
+Preferred restaurant by location,"location=Austin, TX",restaurant_name=Domino's,19,9,0.473684
+Top pizza type by restaurant and size,"restaurant_name=Marco's Pizza, pizza_size=Medium",pizza_type=Non-Veg,142,67,0.471831
+Top pizza type by restaurant,restaurant_name=Little Caesars,pizza_type=Cheese Burst,199,93,0.467337
+Preferred restaurant by location,"location=San Francisco, CA",restaurant_name=Little Caesars,13,6,0.461538
+Top pizza type by restaurant,restaurant_name=Marco's Pizza,pizza_type=Non-Veg,195,88,0.451282
+Top pizza type by restaurant and size,"restaurant_name=Domino's, pizza_size=Large",pizza_type=Veg,160,69,0.43125
+Top pizza type by restaurant,restaurant_name=Pizza Hut,pizza_type=Cheese Burst,194,83,0.427835
+Top pizza type by restaurant and size,"restaurant_name=Papa John's, pizza_size=Medium",pizza_type=BBQ Chicken,129,54,0.418605
+Most chosen restaurant for same pizza type,pizza_type=Non-Veg,restaurant_name=Marco's Pizza,216,88,0.407407
+Top size by time segment,time_segment=Dinner,pizza_size=Medium,950,379,0.398947
+Most chosen restaurant for same pizza type,pizza_type=Vegan,restaurant_name=Papa John's,132,47,0.356061
+Preferred restaurant by location,"location=Boston, MA",restaurant_name=Papa John's,51,18,0.352941
+Preferred restaurant by location,"location=Chicago, IL",restaurant_name=Papa John's,45,15,0.333333
+Top pizza type by restaurant,restaurant_name=Papa John's,pizza_type=BBQ Chicken,204,54,0.264706

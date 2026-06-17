@@ -1,0 +1,19 @@
+restaurant_name,pizza_size_label,pizza_size_score,orders,share_within_restaurant
+Domino's,01_Small,1,2,0.009434
+Domino's,02_Medium,2,47,0.221698
+Domino's,03_Large,3,160,0.754717
+Domino's,04_XL,4,3,0.014151
+Little Caesars,01_Small,1,43,0.21608
+Little Caesars,02_Medium,2,46,0.231156
+Little Caesars,04_XL,4,110,0.552764
+Marco's Pizza,01_Small,1,17,0.087179
+Marco's Pizza,02_Medium,2,142,0.728205
+Marco's Pizza,03_Large,3,36,0.184615
+Papa John's,01_Small,1,47,0.230392
+Papa John's,02_Medium,2,129,0.632353
+Papa John's,03_Large,3,26,0.127451
+Papa John's,04_XL,4,2,0.009804
+Pizza Hut,01_Small,1,23,0.118557
+Pizza Hut,02_Medium,2,65,0.335052
+Pizza Hut,03_Large,3,18,0.092784
+Pizza Hut,04_XL,4,88,0.453608

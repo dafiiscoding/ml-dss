@@ -1,0 +1,85 @@
+state_code,city,location,orders,delayed,delay_rate,avg_duration_min,avg_distance_km,high_traffic_share,peak_hour_share,top_restaurant,top_restaurant_orders,top_type,top_type_orders,top_size,top_size_orders,small_sample_flag
+GA,Atlanta,"Atlanta, GA",78,4,0.051282,28.782051,4.015385,0.064103,0.884615,Pizza Hut,58,Veg,56,Medium,66,False
+WI,Milwaukee,"Milwaukee, WI",71,3,0.042254,30.422535,4.577465,0.014085,1.0,Marco's Pizza,67,Margarita,54,Medium,69,False
+KY,Louisville,"Louisville, KY",69,2,0.028986,30.144928,5.978261,0.985507,1.0,Little Caesars,67,Cheese Burst,67,XL,67,False
+NE,Omaha,"Omaha, NE",68,2,0.029412,30.220588,5.029412,0.014706,1.0,Papa John's,67,BBQ Chicken,54,Medium,67,False
+NM,Albuquerque,"Albuquerque, NM",59,2,0.033898,30.084746,5.491525,0.016949,1.0,Domino's,56,Sicilian,55,Large,56,False
+MA,Boston,"Boston, MA",51,17,0.333333,30.196078,4.843137,0.509804,1.0,Papa John's,18,Non-Veg,23,Small,17,False
+TX,Dallas,"Dallas, TX",50,4,0.08,25.9,3.93,0.4,0.94,Little Caesars,24,Non-Veg,32,Medium,33,False
+FL,Miami,"Miami, FL",49,12,0.244898,26.530612,4.495918,0.44898,0.857143,Domino's,32,Veg,28,Medium,24,False
+CO,Denver,"Denver, CO",46,8,0.173913,26.086957,3.902174,0.369565,1.0,Papa John's,23,Vegan,23,Small,22,False
+IL,Chicago,"Chicago, IL",45,3,0.066667,25.222222,4.355556,0.111111,0.733333,Papa John's,15,Non-Veg,22,Medium,16,False
+CA,Los Angeles,"Los Angeles, CA",42,13,0.309524,29.761905,5.578571,0.428571,1.0,Pizza Hut,26,Cheese Burst,28,XL,27,False
+WA,Seattle,"Seattle, WA",37,11,0.297297,29.324324,5.443243,0.486486,0.621622,Marco's Pizza,22,Non-Veg,17,Medium,16,False
+AZ,Phoenix,"Phoenix, AZ",35,11,0.314286,32.142857,5.385714,0.685714,0.8,Marco's Pizza,17,Non-Veg,23,Medium,15,False
+TX,Houston,"Houston, TX",27,3,0.111111,23.148148,3.537037,0.185185,0.962963,Little Caesars,22,Vegan,19,Small,19,False
+NY,New York,"New York, NY",21,4,0.190476,26.190476,4.452381,0.47619,1.0,Domino's,20,Veg,18,Large,11,False
+TX,Austin,"Austin, TX",19,7,0.368421,32.631579,5.842105,0.157895,1.0,Papa John's,9,Non-Veg,10,Large,15,False
+NC,Charlotte,"Charlotte, NC",18,8,0.444444,32.777778,5.416667,0.388889,1.0,Marco's Pizza,9,Veg,7,Large,7,False
+CA,San Francisco,"San Francisco, CA",13,5,0.384615,33.461538,5.5,0.307692,0.923077,Little Caesars,6,Non-Veg,7,Medium,8,False
+IN,Indianapolis,"Indianapolis, IN",12,8,0.666667,34.166667,6.083333,0.583333,1.0,Pizza Hut,7,Cheese Burst,4,XL,6,False
+CA,San Jose,"San Jose, CA",12,2,0.166667,23.333333,3.583333,0.083333,1.0,Domino's,9,Veg,9,Medium,8,False
+OH,Columbus,"Columbus, OH",11,9,0.818182,35.0,5.818182,0.272727,1.0,Domino's,7,Veg,6,Medium,7,False
+TX,Fort Worth,"Fort Worth, TX",11,9,0.818182,41.818182,7.909091,0.818182,1.0,Marco's Pizza,6,Non-Veg,7,Large,6,False
+CA,San Diego,"San Diego, CA",11,8,0.727273,37.272727,7.118182,0.727273,0.909091,Pizza Hut,8,Cheese Burst,6,XL,7,False
+FL,Jacksonville,"Jacksonville, FL",11,2,0.181818,25.454545,3.818182,0.0,1.0,Little Caesars,6,Vegan,6,Small,6,False
+MD,Baltimore,"Baltimore, MD",10,3,0.3,28.0,4.55,0.3,1.0,Little Caesars,8,Vegan,6,Small,6,False
+MI,Detroit,"Detroit, MI",10,0,0.0,22.0,2.95,0.0,1.0,Domino's,6,Veg,8,Medium,8,False
+TN,Memphis,"Memphis, TN",9,6,0.666667,35.555556,6.611111,0.666667,1.0,Pizza Hut,6,Cheese Burst,6,XL,6,False
+TX,El Paso,"El Paso, TX",9,2,0.222222,31.111111,5.777778,0.0,1.0,Papa John's,8,Non-Veg,7,Large,7,False
+TN,Nashville,"Nashville, TN",6,3,0.5,33.333333,5.583333,0.5,1.0,Pizza Hut,2,Stuffed Crust,2,Large,2,False
+CA,Fresno,"Fresno, CA",4,2,0.5,35.0,5.625,0.5,1.0,Little Caesars,1,Cheese Burst,1,Medium,2,True
+CA,Sacramento,"Sacramento, CA",4,2,0.5,33.75,5.625,0.5,1.0,Marco's Pizza,1,Veg,3,Medium,2,True
+DC,Washington,"Washington, DC",4,2,0.5,31.25,5.25,0.5,1.0,Marco's Pizza,2,Vegan,2,Small,2,True
+AZ,Tucson,"Tucson, AZ",4,1,0.25,30.0,4.375,0.25,1.0,Pizza Hut,2,Vegan,1,Medium,2,True
+NV,Las Vegas,"Las Vegas, NV",4,0,0.0,30.0,4.75,0.0,1.0,Marco's Pizza,2,Non-Veg,2,Medium,3,True
+PA,Philadelphia,"Philadelphia, PA",3,3,1.0,41.666667,7.833333,0.666667,1.0,Domino's,2,Veg,2,Large,2,True
+AZ,Mesa,"Mesa, AZ",3,1,0.333333,30.0,5.166667,0.333333,1.0,Pizza Hut,1,Vegan,1,Small,1,True
+FL,Tampa,"Tampa, FL",3,1,0.333333,35.0,5.466667,0.333333,1.0,Marco's Pizza,2,Thai Chicken,2,Small,2,True
+OK,Oklahoma City,"Oklahoma City, OK",3,1,0.333333,30.0,4.833333,0.333333,1.0,Little Caesars,1,Veg,2,Medium,2,True
+OR,Portland,"Portland, OR",3,1,0.333333,35.0,6.166667,0.333333,1.0,Domino's,2,Non-Veg,1,Large,2,True
+MO,Kansas City,"Kansas City, MO",3,0,0.0,30.0,5.333333,0.0,1.0,Domino's,1,Deep Dish,1,Large,2,True
+TX,San Antonio,"San Antonio, TX",3,0,0.0,20.0,2.666667,0.0,1.0,Papa John's,2,Veg,2,Medium,2,True
+FL,Orlando,"Orlando, FL",2,2,1.0,45.0,9.0,1.0,1.0,Domino's,2,Cheese Burst,1,XL,1,True
+AZ,Chandler,"Chandler, AZ",2,1,0.5,30.0,5.25,0.5,1.0,Little Caesars,1,Stuffed Crust,1,XL,1,True
+AZ,Glendale,"Glendale, AZ",2,1,0.5,32.5,5.75,0.5,1.0,Domino's,1,Veg,1,Large,1,True
+CA,Long Beach,"Long Beach, CA",2,1,0.5,35.0,5.5,0.5,1.0,Papa John's,1,Cheese Burst,1,XL,1,True
+LA,Baton Rouge,"Baton Rouge, LA",2,1,0.5,32.5,5.75,0.0,1.0,Pizza Hut,1,Non-Veg,1,Large,1,True
+NC,Durham,"Durham, NC",2,1,0.5,30.0,5.0,0.5,1.0,Little Caesars,1,Cheese Burst,1,XL,1,True
+OH,Akron,"Akron, OH",2,1,0.5,35.0,6.5,0.5,1.0,Papa John's,1,Veg,1,Medium,1,True
+TX,Garland,"Garland, TX",2,1,0.5,35.0,6.0,0.5,1.0,Marco's Pizza,1,Non-Veg,1,Medium,1,True
+NC,Raleigh,"Raleigh, NC",2,0,0.0,25.0,3.5,0.0,1.0,Pizza Hut,1,Vegan,1,Small,1,True
+TX,Lubbock,"Lubbock, TX",2,0,0.0,25.0,4.0,0.0,1.0,Pizza Hut,2,Vegan,1,Small,1,True
+AZ,Scottsdale,"Scottsdale, AZ",1,1,1.0,40.0,8.0,1.0,1.0,Papa John's,1,Cheese Burst,1,XL,1,True
+CA,Anaheim,"Anaheim, CA",1,1,1.0,40.0,7.5,1.0,1.0,Little Caesars,1,Stuffed Crust,1,XL,1,True
+CA,Bakersfield,"Bakersfield, CA",1,1,1.0,35.0,5.5,0.0,1.0,Papa John's,1,Gluten-Free,1,Medium,1,True
+FL,St. Petersburg,"St. Petersburg, FL",1,1,1.0,35.0,5.5,0.0,1.0,Papa John's,1,Gluten-Free,1,Medium,1,True
+IN,Fort Wayne,"Fort Wayne, IN",1,1,1.0,50.0,10.0,1.0,1.0,Domino's,1,Non-Veg,1,Large,1,True
+KS,Wichita,"Wichita, KS",1,1,1.0,40.0,8.0,1.0,1.0,Little Caesars,1,Cheese Burst,1,XL,1,True
+KY,Lexington,"Lexington, KY",1,1,1.0,45.0,9.0,1.0,1.0,Domino's,1,Veg,1,Large,1,True
+MN,Minneapolis,"Minneapolis, MN",1,1,1.0,45.0,9.0,1.0,1.0,Domino's,1,Veg,1,Large,1,True
+MN,St. Paul,"St. Paul, MN",1,1,1.0,35.0,5.5,0.0,1.0,Papa John's,1,Gluten-Free,1,Medium,1,True
+MO,St. Louis,"St. Louis, MO",1,1,1.0,40.0,7.5,1.0,1.0,Little Caesars,1,Stuffed Crust,1,XL,1,True
+NE,Lincoln,"Lincoln, NE",1,1,1.0,40.0,7.5,1.0,1.0,Little Caesars,1,Cheese Burst,1,XL,1,True
+NJ,Newark,"Newark, NJ",1,1,1.0,50.0,10.0,1.0,1.0,Domino's,1,Non-Veg,1,Large,1,True
+NV,Henderson,"Henderson, NV",1,1,1.0,40.0,8.0,1.0,1.0,Little Caesars,1,Cheese Burst,1,XL,1,True
+TX,Laredo,"Laredo, TX",1,1,1.0,45.0,9.0,1.0,1.0,Domino's,1,Veg,1,Large,1,True
+VA,Virginia Beach,"Virginia Beach, VA",1,1,1.0,40.0,7.0,1.0,1.0,Little Caesars,1,Cheese Burst,1,XL,1,True
+WI,Madison,"Madison, WI",1,1,1.0,35.0,5.5,0.0,1.0,Papa John's,1,Gluten-Free,1,Medium,1,True
+CA,Chula Vista,"Chula Vista, CA",1,0,0.0,20.0,2.5,0.0,1.0,Marco's Pizza,1,Vegan,1,Small,1,True
+CA,Oakland,"Oakland, CA",1,0,0.0,30.0,4.0,0.0,1.0,Marco's Pizza,1,Non-Veg,1,Medium,1,True
+CA,Riverside,"Riverside, CA",1,0,0.0,20.0,2.5,0.0,1.0,Marco's Pizza,1,Vegan,1,Small,1,True
+CA,Stockton,"Stockton, CA",1,0,0.0,20.0,3.0,0.0,1.0,Papa John's,1,Veg,1,Medium,1,True
+CO,Aurora,"Aurora, CO",1,0,0.0,20.0,2.0,0.0,1.0,Pizza Hut,1,Vegan,1,Small,1,True
+HI,Honolulu,"Honolulu, HI",1,0,0.0,30.0,4.0,0.0,1.0,Marco's Pizza,1,Non-Veg,1,Medium,1,True
+ID,Boise,"Boise, ID",1,0,0.0,20.0,3.0,0.0,1.0,Marco's Pizza,1,Veg,1,Medium,1,True
+LA,New Orleans,"New Orleans, LA",1,0,0.0,30.0,6.0,0.0,1.0,Pizza Hut,1,Non-Veg,1,Large,1,True
+NJ,Jersey City,"Jersey City, NJ",1,0,0.0,20.0,2.0,0.0,1.0,Pizza Hut,1,Vegan,1,Small,1,True
+NV,Reno,"Reno, NV",1,0,0.0,30.0,6.0,0.0,1.0,Domino's,1,Deep Dish,1,Large,1,True
+OH,Cleveland,"Cleveland, OH",1,0,0.0,20.0,2.5,0.0,1.0,Marco's Pizza,1,Vegan,1,Small,1,True
+OK,Tulsa,"Tulsa, OK",1,0,0.0,30.0,4.0,0.0,1.0,Marco's Pizza,1,Non-Veg,1,Medium,1,True
+TX,Arlington,"Arlington, TX",1,0,0.0,20.0,3.0,0.0,1.0,Papa John's,1,Veg,1,Medium,1,True
+TX,Corpus Christi,"Corpus Christi, TX",1,0,0.0,30.0,6.0,0.0,1.0,Pizza Hut,1,Non-Veg,1,Large,1,True
+TX,Irving,"Irving, TX",1,0,0.0,20.0,2.5,0.0,1.0,Pizza Hut,1,Vegan,1,Small,1,True
+TX,Plano,"Plano, TX",1,0,0.0,20.0,2.0,0.0,1.0,Pizza Hut,1,Vegan,1,Small,1,True
+VA,Norfolk,"Norfolk, VA",1,0,0.0,30.0,4.0,0.0,1.0,Marco's Pizza,1,Non-Veg,1,Medium,1,True

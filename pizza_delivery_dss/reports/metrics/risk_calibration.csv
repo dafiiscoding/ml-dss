@@ -1,0 +1,4 @@
+risk_band,orders,actual_delayed,actual_delay_rate,mean_risk_score,mean_predicted_probability,monotonic_from_previous
+Low,116,0,0.0,23.827586,0.017317,True
+Medium,41,3,0.073171,44.931707,0.209461,True
+High,44,39,0.886364,87.729545,0.934955,True

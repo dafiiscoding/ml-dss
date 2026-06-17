@@ -1,0 +1,5 @@
+distance_band,count,delayed,delay_rate
+8+ km,68,68,1.0
+6-8 km,100,96,0.96
+3-6 km,623,46,0.0738362760834671
+0-3 km,213,0,0.0

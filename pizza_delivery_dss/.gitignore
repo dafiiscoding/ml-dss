@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.streamlit*.log
+.streamlit.pid
+data/raw/*.zip
+
+# LaTeX build intermediates. Keep the final copied PDFs in reports/ and slides/.
+reports/latex/*.aux
+reports/latex/*.log
+reports/latex/*.out
+reports/latex/*.toc
+reports/latex/*.lof
+reports/latex/*.lot
+reports/latex/main.pdf
+slides/*.aux
+slides/*.log
+slides/*.nav
+slides/*.out
+slides/*.snm
+slides/*.toc
+slides/pizza_dss_slides.pdf

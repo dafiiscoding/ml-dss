@@ -1,0 +1,9 @@
+{
+  "scenario_type": "simulated_driver_fleet_on_real_orders",
+  "assigned_orders": 12,
+  "drivers": 6,
+  "total_capacity": 12,
+  "mean_assignment_cost": 32.84,
+  "high_priority_assigned": 12,
+  "note": "Drivers/capacity are simulated because the Kaggle dataset has no driver table."
+}

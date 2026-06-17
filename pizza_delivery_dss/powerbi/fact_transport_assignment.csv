@@ -1,0 +1,13 @@
+order_id,restaurant_name,location,traffic_level,distance_km,delay_risk_score,priority,driver_id,driver_slot,driver_base_location,estimated_assignment_cost
+ORD271,Marco's Pizza,"Miami, FL",High,10.0,96.4,High,D04,D04-1,"Miami, FL",31.26
+ORD361,Marco's Pizza,"Boston, MA",High,10.0,96.4,High,D06,D06-1,"Boston, MA",30.63
+ORD581,Domino's,"Austin, TX",High,10.0,96.4,High,D03,D03-1,"Chicago, IL",37.74
+ORD128,Pizza Hut,"Los Angeles, CA",High,8.0,96.3,High,D02,D02-1,"Los Angeles, CA",26.24
+ORD539,Little Caesars,"Garland, TX",High,8.0,96.2,High,D01,D01-1,"New York, NY",32.93
+ORD609,Little Caesars,"Dallas, TX",High,8.0,96.2,High,D05,D05-1,"Dallas, TX",25.45
+ORD417,Pizza Hut,"Los Angeles, CA",High,8.0,96.1,High,D02,D02-2,"Los Angeles, CA",26.31
+ORD319,Pizza Hut,"San Diego, CA",High,8.0,95.9,High,D04,D04-2,"Miami, FL",33.03
+ORD574,Little Caesars,"Houston, TX",High,8.0,95.7,High,D05,D05-2,"Dallas, TX",33.63
+ORD564,Domino's,"Baltimore, MD",High,10.0,95.2,High,D01,D01-2,"New York, NY",39.68
+ORD531,Domino's,"Fort Wayne, IN",High,10.0,95.2,High,D03,D03-2,"Chicago, IL",38.16
+ORD457,Pizza Hut,"Seattle, WA",High,10.0,95.2,High,D06,D06-2,"Boston, MA",39.05

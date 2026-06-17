@@ -1,0 +1,3 @@
+model,accuracy,balanced_accuracy,precision,recall,f1,f2,mcc,roc_auc,tn,fp,fn,tp,feature_count,note
+compact_nonredundant,0.9701,0.9636,0.9091,0.9524,0.9302,0.9434,0.9117,0.9942,155,4,2,40,12,Drops formula-derived columns and uses pizza_size_score encoding.
+full_pre_dispatch,0.9701,0.9549,0.9286,0.9286,0.9286,0.9286,0.9097,0.9904,156,3,3,39,17,Includes engineered deterministic columns for coursework comparison.

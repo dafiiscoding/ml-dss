@@ -1,0 +1,4 @@
+scenario,low_cut,high_cut,low_orders,medium_orders,high_orders,high_actual_delayed,high_delay_rate,captured_delayed_share
+tighter_capacity,30,60,97,57,47,40,0.851064,0.952381
+locked_policy,35,65,116,41,44,39,0.886364,0.928571
+looser_capacity,40,70,129,31,41,38,0.926829,0.904762

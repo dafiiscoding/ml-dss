@@ -1,0 +1,7 @@
+driver_id,base_location,capacity,speed_factor
+D01,"New York, NY",2,1.0
+D02,"Los Angeles, CA",2,0.95
+D03,"Chicago, IL",2,1.05
+D04,"Miami, FL",2,1.0
+D05,"Dallas, TX",2,0.98
+D06,"Boston, MA",2,1.02

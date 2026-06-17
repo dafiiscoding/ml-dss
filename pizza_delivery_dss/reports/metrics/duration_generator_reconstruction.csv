@@ -1,0 +1,6 @@
+quantity,value,meaning
+linear_r2,0.8364,Phần phương sai duration giải thích bởi distance+traffic.
+residual_std_min,3.1359,Quy mô nhiễu quanh phần xác định (phút).
+residual_within_2_5_min_share,0.5568,Tỷ lệ residual nằm trong nửa ô lưới 5 phút.
+round5_reconstruction_accuracy,0.5568,Tỷ lệ round5(dự đoán tuyến tính) khớp đúng duration thật.
+intercept_min,10.5311,"Thời gian nền khi distance=0, traffic gốc."

@@ -1,0 +1,5 @@
+delay_severity,orders,delayed,order_share,avg_distance_km,avg_complexity,high_traffic_share
+On-time <=30,794,0,0.790837,4.199244,8.288413,0.20529
+Late 35,44,44,0.043825,5.520455,6.659091,0.090909
+Late 40,92,92,0.091633,7.566304,18.826087,0.978261
+Late 45-50,74,74,0.073705,9.354054,12.162162,0.959459

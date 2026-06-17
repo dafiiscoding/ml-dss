@@ -1,0 +1,34 @@
+state_code,locations,orders,delayed,delay_rate,avg_duration_min,avg_distance_km,high_traffic_share,top_city,top_restaurant,top_type,top_size
+TX,13,128,27,0.210938,28.085938,4.628906,0.304688,Dallas,Little Caesars,Non-Veg,Medium
+CA,13,94,35,0.37234,30.691489,5.405319,0.393617,Los Angeles,Pizza Hut,Cheese Burst,XL
+GA,1,78,4,0.051282,28.782051,4.015385,0.064103,Atlanta,Pizza Hut,Veg,Medium
+WI,2,72,4,0.055556,30.486111,4.590278,0.013889,Milwaukee,Marco's Pizza,Margarita,Medium
+KY,2,70,3,0.042857,30.357143,6.021429,0.985714,Louisville,Little Caesars,Cheese Burst,XL
+NE,2,69,3,0.043478,30.362319,5.065217,0.028986,Omaha,Papa John's,BBQ Chicken,Medium
+FL,5,66,18,0.272727,27.424242,4.578788,0.378788,Miami,Domino's,Veg,Medium
+NM,1,59,2,0.033898,30.084746,5.491525,0.016949,Albuquerque,Domino's,Sicilian,Large
+MA,1,51,17,0.333333,30.196078,4.843137,0.509804,Boston,Papa John's,Non-Veg,Small
+AZ,6,47,16,0.340426,31.914894,5.351064,0.617021,Phoenix,Marco's Pizza,Non-Veg,Medium
+CO,2,47,8,0.170213,25.957447,3.861702,0.361702,Denver,Papa John's,Vegan,Small
+IL,1,45,3,0.066667,25.222222,4.355556,0.111111,Chicago,Papa John's,Non-Veg,Medium
+WA,1,37,11,0.297297,29.324324,5.443243,0.486486,Seattle,Marco's Pizza,Non-Veg,Medium
+NC,3,22,9,0.409091,31.818182,5.204545,0.363636,Charlotte,Marco's Pizza,Vegan,Small
+NY,1,21,4,0.190476,26.190476,4.452381,0.47619,New York,Domino's,Veg,Large
+TN,2,15,9,0.6,34.666667,6.2,0.6,Memphis,Pizza Hut,Cheese Burst,XL
+OH,3,14,10,0.714286,33.928571,5.678571,0.285714,Columbus,Domino's,Veg,Medium
+IN,2,13,9,0.692308,35.384615,6.384615,0.615385,Indianapolis,Pizza Hut,Cheese Burst,XL
+MI,1,10,0,0.0,22.0,2.95,0.0,Detroit,Domino's,Veg,Medium
+MD,1,10,3,0.3,28.0,4.55,0.3,Baltimore,Little Caesars,Vegan,Small
+NV,3,6,1,0.166667,31.666667,5.5,0.166667,Las Vegas,Marco's Pizza,Non-Veg,Medium
+OK,2,4,1,0.25,30.0,4.625,0.25,Oklahoma City,Marco's Pizza,Veg,Medium
+DC,1,4,2,0.5,31.25,5.25,0.5,Washington,Marco's Pizza,Vegan,Small
+MO,2,4,1,0.25,32.5,5.875,0.25,Kansas City,Domino's,Deep Dish,Large
+LA,2,3,1,0.333333,31.666667,5.833333,0.0,Baton Rouge,Pizza Hut,Non-Veg,Large
+PA,1,3,3,1.0,41.666667,7.833333,0.666667,Philadelphia,Domino's,Veg,Large
+OR,1,3,1,0.333333,35.0,6.166667,0.333333,Portland,Domino's,Non-Veg,Large
+NJ,2,2,1,0.5,35.0,6.0,0.5,Newark,Domino's,Non-Veg,Large
+MN,2,2,2,1.0,40.0,7.25,0.5,Minneapolis,Domino's,Veg,Large
+VA,2,2,1,0.5,35.0,5.5,0.5,Norfolk,Marco's Pizza,Non-Veg,Medium
+KS,1,1,1,1.0,40.0,8.0,1.0,Wichita,Little Caesars,Cheese Burst,XL
+HI,1,1,0,0.0,30.0,4.0,0.0,Honolulu,Marco's Pizza,Non-Veg,Medium
+ID,1,1,0,0.0,20.0,3.0,0.0,Boise,Marco's Pizza,Veg,Medium

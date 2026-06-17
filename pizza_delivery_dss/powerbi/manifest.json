@@ -1,0 +1,22 @@
+{
+  "tables": [
+    "fact_orders.csv",
+    "fact_delay_queue.csv",
+    "fact_transport_assignment.csv",
+    "fact_monthly_demand_forecast.csv",
+    "fact_hourly_staffing_plan.csv",
+    "fact_recommendation_rules.csv",
+    "fact_hypothesis_tests.csv",
+    "fact_data_realism_audit.csv",
+    "fact_product_type_mix.csv",
+    "fact_product_size_mix.csv",
+    "fact_top_restaurant_by_type.csv",
+    "fact_redundant_feature_audit.csv",
+    "dim_restaurant.csv",
+    "dim_location.csv",
+    "dim_date.csv"
+  ],
+  "dax": "measures.dax",
+  "dashboard_spec": "dashboard_spec.md",
+  "note": "Create the .pbix manually in Power BI Desktop using this pack."
+}

@@ -1,0 +1,17 @@
+rule,operator,threshold_minutes,mismatches,mismatch_rate,accuracy,false_positives,false_negatives,predicted_delayed,actual_delayed,exact_match,max_observed_on_time_duration,min_observed_delayed_duration,interpretation
+delivery_duration_min > 30,>,30.0,0,0.0,1.0,0,0,210,210,True,30.0,35.0,Observationally exact on this 5-minute duration grid.
+delivery_duration_min >= 35,>=,35.0,0,0.0,1.0,0,0,210,210,True,30.0,35.0,Observationally exact on this 5-minute duration grid.
+delivery_duration_min > 35,>,35.0,44,0.0438247012,0.9561752988,0,44,166,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min >= 40,>=,40.0,44,0.0438247012,0.9561752988,0,44,166,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min > 40,>,40.0,136,0.1354581673,0.8645418327,0,136,74,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min >= 45,>=,45.0,136,0.1354581673,0.8645418327,0,136,74,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min > 45,>,45.0,170,0.1693227092,0.8306772908,0,170,40,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min >= 50,>=,50.0,170,0.1693227092,0.8306772908,0,170,40,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min > 50,>,50.0,210,0.2091633466,0.7908366534,0,210,0,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min > 25,>,25.0,437,0.4352589641,0.5647410359,437,0,647,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min >= 30,>=,30.0,437,0.4352589641,0.5647410359,437,0,647,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min > 20,>,20.0,560,0.5577689243,0.4422310757,560,0,770,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min >= 25,>=,25.0,560,0.5577689243,0.4422310757,560,0,770,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min > 15,>,15.0,793,0.7898406375,0.2101593625,793,0,1003,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min >= 20,>=,20.0,793,0.7898406375,0.2101593625,793,0,1003,210,False,30.0,35.0,Does not reproduce the provided label exactly.
+delivery_duration_min >= 15,>=,15.0,794,0.7908366534,0.2091633466,794,0,1004,210,False,30.0,35.0,Does not reproduce the provided label exactly.

@@ -1,0 +1,5 @@
+pizza_size_score,pizza_size_label,pizza_size,count,delayed,delay_rate,order_share
+1,01_Small,Small,132,2,0.015152,0.131474
+2,02_Medium,Medium,429,39,0.090909,0.427291
+3,03_Large,Large,240,85,0.354167,0.239044
+4,04_XL,XL,203,84,0.413793,0.202191

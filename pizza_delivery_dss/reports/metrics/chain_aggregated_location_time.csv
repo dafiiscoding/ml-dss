@@ -1,0 +1,93 @@
+location,time_segment,orders,delayed,delay_rate,avg_distance_km
+"Milwaukee, WI",Dinner,71,3,0.042254,4.577465
+"Atlanta, GA",Dinner,69,4,0.057971,4.14058
+"Louisville, KY",Dinner,69,2,0.028986,5.978261
+"Omaha, NE",Dinner,68,2,0.029412,5.029412
+"Albuquerque, NM",Dinner,59,2,0.033898,5.491525
+"Boston, MA",Dinner,51,17,0.333333,4.843137
+"Dallas, TX",Dinner,47,4,0.085106,3.978723
+"Denver, CO",Dinner,46,8,0.173913,3.902174
+"Los Angeles, CA",Dinner,42,13,0.309524,5.578571
+"Miami, FL",Dinner,41,12,0.292683,4.74878
+"Chicago, IL",Dinner,33,3,0.090909,4.651515
+"Phoenix, AZ",Dinner,28,11,0.392857,5.892857
+"Houston, TX",Dinner,27,3,0.111111,3.537037
+"Seattle, WA",Dinner,24,11,0.458333,6.245833
+"New York, NY",Dinner,21,4,0.190476,4.452381
+"Charlotte, NC",Dinner,18,8,0.444444,5.416667
+"Austin, TX",Dinner,17,6,0.352941,5.894118
+"San Francisco, CA",Dinner,13,5,0.384615,5.5
+"Seattle, WA",Lunch,13,0,0.0,3.961538
+"Indianapolis, IN",Dinner,12,8,0.666667,6.083333
+"San Jose, CA",Dinner,12,2,0.166667,3.583333
+"Chicago, IL",Lunch,12,0,0.0,3.541667
+"Columbus, OH",Dinner,11,9,0.818182,5.818182
+"Fort Worth, TX",Dinner,11,9,0.818182,7.909091
+"San Diego, CA",Dinner,11,8,0.727273,7.118182
+"Jacksonville, FL",Dinner,11,2,0.181818,3.818182
+"Baltimore, MD",Dinner,10,3,0.3,4.55
+"Detroit, MI",Dinner,10,0,0.0,2.95
+"Memphis, TN",Dinner,9,6,0.666667,6.611111
+"El Paso, TX",Dinner,9,2,0.222222,5.777778
+"Atlanta, GA",Lunch,9,0,0.0,3.055556
+"Miami, FL",Lunch,7,0,0.0,3.071429
+"Phoenix, AZ",Lunch,7,0,0.0,3.357143
+"Nashville, TN",Dinner,6,3,0.5,5.583333
+"Fresno, CA",Dinner,4,2,0.5,5.625
+"Sacramento, CA",Dinner,4,2,0.5,5.625
+"Washington, DC",Dinner,4,2,0.5,5.25
+"Tucson, AZ",Dinner,4,1,0.25,4.375
+"Las Vegas, NV",Dinner,4,0,0.0,4.75
+"Philadelphia, PA",Dinner,3,3,1.0,7.833333
+"Mesa, AZ",Dinner,3,1,0.333333,5.166667
+"Oklahoma City, OK",Dinner,3,1,0.333333,4.833333
+"Portland, OR",Dinner,3,1,0.333333,6.166667
+"Tampa, FL",Dinner,3,1,0.333333,5.466667
+"Dallas, TX",Lunch,3,0,0.0,3.166667
+"Kansas City, MO",Dinner,3,0,0.0,5.333333
+"San Antonio, TX",Dinner,3,0,0.0,2.666667
+"Orlando, FL",Dinner,2,2,1.0,9.0
+"Akron, OH",Dinner,2,1,0.5,6.5
+"Austin, TX",Late,2,1,0.5,5.4
+"Baton Rouge, LA",Dinner,2,1,0.5,5.75
+"Chandler, AZ",Dinner,2,1,0.5,5.25
+"Durham, NC",Dinner,2,1,0.5,5.0
+"Garland, TX",Dinner,2,1,0.5,6.0
+"Glendale, AZ",Dinner,2,1,0.5,5.75
+"Long Beach, CA",Dinner,2,1,0.5,5.5
+"Lubbock, TX",Dinner,2,0,0.0,4.0
+"Raleigh, NC",Dinner,2,0,0.0,3.5
+"Anaheim, CA",Dinner,1,1,1.0,7.5
+"Bakersfield, CA",Dinner,1,1,1.0,5.5
+"Fort Wayne, IN",Dinner,1,1,1.0,10.0
+"Henderson, NV",Dinner,1,1,1.0,8.0
+"Laredo, TX",Dinner,1,1,1.0,9.0
+"Lexington, KY",Dinner,1,1,1.0,9.0
+"Lincoln, NE",Dinner,1,1,1.0,7.5
+"Madison, WI",Dinner,1,1,1.0,5.5
+"Minneapolis, MN",Dinner,1,1,1.0,9.0
+"Newark, NJ",Dinner,1,1,1.0,10.0
+"Scottsdale, AZ",Dinner,1,1,1.0,8.0
+"St. Louis, MO",Dinner,1,1,1.0,7.5
+"St. Paul, MN",Dinner,1,1,1.0,5.5
+"St. Petersburg, FL",Dinner,1,1,1.0,5.5
+"Virginia Beach, VA",Dinner,1,1,1.0,7.0
+"Wichita, KS",Dinner,1,1,1.0,8.0
+"Arlington, TX",Dinner,1,0,0.0,3.0
+"Aurora, CO",Dinner,1,0,0.0,2.0
+"Boise, ID",Dinner,1,0,0.0,3.0
+"Chula Vista, CA",Dinner,1,0,0.0,2.5
+"Cleveland, OH",Dinner,1,0,0.0,2.5
+"Corpus Christi, TX",Dinner,1,0,0.0,6.0
+"Honolulu, HI",Dinner,1,0,0.0,4.0
+"Irving, TX",Dinner,1,0,0.0,2.5
+"Jersey City, NJ",Dinner,1,0,0.0,2.0
+"Miami, FL",Late,1,0,0.0,4.1
+"New Orleans, LA",Dinner,1,0,0.0,6.0
+"Norfolk, VA",Dinner,1,0,0.0,4.0
+"Oakland, CA",Dinner,1,0,0.0,4.0
+"Plano, TX",Dinner,1,0,0.0,2.0
+"Reno, NV",Dinner,1,0,0.0,6.0
+"Riverside, CA",Dinner,1,0,0.0,2.5
+"Stockton, CA",Dinner,1,0,0.0,3.0
+"Tulsa, OK",Dinner,1,0,0.0,4.0

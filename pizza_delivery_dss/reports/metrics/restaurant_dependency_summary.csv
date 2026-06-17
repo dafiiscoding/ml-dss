@@ -1,0 +1,6 @@
+restaurant_name,orders,delayed,delay_rate,avg_duration_min,avg_distance_km,avg_complexity,high_traffic_share,peak_hour_share,weekend_share,online_payment_share,top_type,top_type_orders,top_size,top_size_orders,top_location,top_location_orders
+Domino's,212,62,0.292453,30.259434,5.515566,10.306604,0.311321,0.995283,0.306604,0.735849,Veg,106,Large,160,"Albuquerque, NM",56
+Papa John's,204,26,0.127451,28.186275,4.291176,5.887255,0.132353,0.990196,0.279412,0.887255,BBQ Chicken,54,Medium,129,"Omaha, NE",67
+Little Caesars,199,45,0.226131,28.844221,5.092965,12.708543,0.623116,0.98995,0.256281,0.829146,Cheese Burst,93,XL,110,"Louisville, KY",67
+Marco's Pizza,195,36,0.184615,30.230769,4.914872,6.702564,0.271795,0.748718,0.276923,0.517949,Non-Veg,88,Medium,142,"Milwaukee, WI",67
+Pizza Hut,194,41,0.21134,29.948454,4.890722,11.773196,0.298969,0.994845,0.304124,0.783505,Cheese Burst,83,XL,88,"Atlanta, GA",58

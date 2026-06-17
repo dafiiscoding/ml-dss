@@ -1,0 +1,86 @@
+{
+  "selection_metric": "f2",
+  "active_feature_set": "compact_nonredundant",
+  "active_feature_columns": [
+    "toppings_count",
+    "distance_km",
+    "order_hour",
+    "pizza_size_score",
+    "restaurant_name",
+    "location",
+    "pizza_type",
+    "traffic_level",
+    "payment_category",
+    "is_peak_hour",
+    "is_weekend",
+    "order_month"
+  ],
+  "best_model": "Logistic Regression",
+  "train_rows": 602,
+  "dev_rows": 201,
+  "test_rows": 201,
+  "test_metrics": {
+    "model": "Logistic Regression",
+    "accuracy": 0.9601990049751243,
+    "balanced_accuracy": 0.9660826594788858,
+    "precision": 0.8541666666666666,
+    "recall": 0.9761904761904762,
+    "f1": 0.9111111111111111,
+    "f2": 0.9490740740740741,
+    "mcc": 0.888893671646048,
+    "roc_auc": 0.9961066187481282,
+    "tn": 152,
+    "fp": 7,
+    "fn": 1,
+    "tp": 41
+  },
+  "cv_metrics_top": {
+    "model": "SVM",
+    "cv_folds": 5,
+    "f2_mean": 0.9447263394763233,
+    "f2_std": 0.042565651961821674,
+    "balanced_accuracy_mean": 0.9649045209176788,
+    "balanced_accuracy_std": 0.026261115121302057,
+    "mcc_mean": 0.9177135038991884,
+    "mcc_std": 0.03376720985208466,
+    "roc_auc_mean": 0.9971267881241566,
+    "roc_auc_std": 0.0029406672973995938
+  },
+  "test_bootstrap_ci": [
+    {
+      "metric": "f2",
+      "point_estimate": 0.9491,
+      "ci_low_2_5": 0.8955,
+      "ci_high_97_5": 0.9859,
+      "bootstrap_std": 0.0229,
+      "n_boot": 2000
+    },
+    {
+      "metric": "balanced_accuracy",
+      "point_estimate": 0.9661,
+      "ci_low_2_5": 0.9329,
+      "ci_high_97_5": 0.9904,
+      "bootstrap_std": 0.0145,
+      "n_boot": 2000
+    },
+    {
+      "metric": "mcc",
+      "point_estimate": 0.8889,
+      "ci_low_2_5": 0.8083,
+      "ci_high_97_5": 0.9583,
+      "bootstrap_std": 0.0381,
+      "n_boot": 2000
+    },
+    {
+      "metric": "recall",
+      "point_estimate": 0.9762,
+      "ci_low_2_5": 0.9189,
+      "ci_high_97_5": 1.0,
+      "bootstrap_std": 0.0235,
+      "n_boot": 2000
+    }
+  ],
+  "tuning_best_params": {
+    "model__C": 0.3
+  }
+}

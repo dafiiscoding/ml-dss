@@ -1,0 +1,16 @@
+check,severity,evidence,interpretation
+No missing values,warning,0 missing cells across 37 columns,"Clean data is useful, but a zero-missing operational file is a synthetic-data signal."
+Future timestamp relative to analysis date,warning,"max order_time=2026-07-07 20:00:00, analysis_date=2026-06-15","The file title says 2024-25, but rows reach July 2026."
+Label is deterministic from delivery duration,critical,True,"delivery_duration_min, delay_min and delivery_time must be blocked from predictive features."
+Estimated duration formula,warning,max |estimated_duration_min - 2.4 * distance_km| = 0.0000000000,estimated_duration_min is a deterministic transform of distance_km.
+Topping density formula,warning,max |topping_density - toppings_count / distance_km| = 0.0000000000,topping_density duplicates information already in toppings_count and distance_km.
+Pizza complexity formula,warning,max |pizza_complexity - toppings_count * size_score| = 0.0000000000,pizza_complexity is engineered from toppings_count and encoded size.
+Traffic impact is only encoded traffic level,warning,"unique traffic_impact values=[1, 2, 3]",traffic_impact is redundant with traffic_level.
+Delivery duration has few discrete values,warning,"8 unique values: [15, 20, 25, 30, 35, 40, 45, 50]",Real delivery duration usually has richer minute-level variation.
+Order hour support is narrow,warning,8 unique hours; 94.2% are 18-20h,This is useful for dinner-peak staffing but too clean for full-day demand modeling.
+Distance support is discretized,warning,25 unique distances across 1004 rows,Distances look sampled from a short menu of values rather than GPS-derived trips.
+Toppings count support is narrow,warning,"1:43, 2:198, 3:319, 4:240, 5:204","Toppings are limited to 1-5, with most rows between 2 and 5."
+Restaurant distribution is near uniform,info,"min=194, max=212 across 5 brands",Uniform brand counts often appear in generated examples.
+Sequential order ids,info,missing ids inside ORD range=1,"Sequential ids are acceptable, but they reinforce the generated-data reading."
+Repeated time gaps,warning,top gap=1 days 01:15:00 occurs 269 times,Order timestamps progress with repeated gaps rather than a natural arrival process.
+Starts after New Year,info,min order_time=2024-01-05 18:30:00,"The 2024 series starts on Jan 5; without business context, do not infer a New Year effect."
