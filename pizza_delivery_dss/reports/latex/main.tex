@@ -257,6 +257,10 @@ Leakage & Rò rỉ thông tin tương lai vào feature, làm metric mô hình b�
 Feature compact & Tập feature đã loại các cột công thức/trùng thông tin, chỉ
 giữ biến có thể biết tại thời điểm nhận đơn.\\
 Dev set & Tập phát triển dùng để chọn mô hình/siêu tham số trước khi báo test.\\
+Hyperparameter tuning & Dò siêu tham số bằng train/CV/dev; không dùng test để
+chọn cấu hình nhằm tránh leakage.\\
+GridSearchCV & Thử toàn bộ lưới siêu tham số bằng cross-validation rồi chọn cấu
+hình có metric trung bình tốt nhất.\\
 F2 & Chỉ số F-score đặt trọng số Recall cao hơn Precision; phù hợp khi bỏ sót
 đơn trễ là lỗi quan trọng.\\
 MCC & Matthews Correlation Coefficient; chỉ số cân bằng cho bài toán nhị phân
@@ -874,7 +878,109 @@ Naive Bayes & 0,6368 & 0,7179 & 0,6642 & 0,3544\\
 
 Logistic Regression được chọn vì đạt F2 cao nhất trên dev, đồng thời có cấu
 trúc đơn giản và dễ giải thích hơn các mô hình phức tạp trong phạm vi dataset
-nhỏ.
+nhỏ. Gaussian Naive Bayes vẫn được đưa vào so sánh để có baseline xác suất, nhưng
+giả định feature độc lập không phù hợp với dữ liệu này: nhiều feature là biến
+đổi từ distance/traffic, nên Bayes có Recall khá nhưng Precision thấp, F2 chỉ
+0,6642 và MCC 0,3544.
+
+\section{Dò siêu tham số sau khi chọn model}
+
+Sau vòng model selection, dự án chỉ tune Logistic Regression theo nguyên tắc
+``select-then-tune'': chọn họ mô hình trước bằng dev/CV, rồi tinh chỉnh họ thắng.
+Tune cả sáu mô hình trên dataset nhỏ sẽ làm tăng số lần so sánh và dễ overfit
+dev. Logistic Regression cũng là model phù hợp tầng DSS vì cho xác suất ổn định
+và hệ số dễ giải thích hơn SVM/RF.
+
+GridSearchCV chạy trên train với Stratified K-Fold, scoring F2, và lưới
+\code{C \in \{0.1, 0.3, 1, 3, 10\}} quanh giá trị mặc định \code{C=1.0}. Kết quả
+CV tốt nhất là \code{C=0.3}, nhưng khi refit trên train và so lại trên dev,
+phiên bản tuned kém default rõ rệt. Vì vậy model khóa vẫn giữ default
+\code{C=1.0}; test chỉ được báo sau quyết định này.
+
+\begin{table}[H]
+\centering
+\caption{So sánh Logistic Regression default và tuned trên dev}
+\begin{tabular}{lrrrrr}
+\toprule
+Biến thể & C & CV F2 mean & Dev F2 & Dev MCC & Quyết định\\
+\midrule
+Default LR & 1,0 & 0,9387 & 0,9434 & 0,9117 & Giữ\\
+Tuned LR & 0,3 & 0,9437 & 0,8894 & 0,8779 & Không dùng\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Kiểm soát F-beta threshold và split may mắn}
+
+Ngoài việc chọn model theo F2, dự án kiểm tra riêng bước chọn ngưỡng xác suất.
+Ngưỡng 0,5 là mặc định kỹ thuật của classifier; nếu mục tiêu vận hành ưu tiên
+Recall mạnh hơn, có thể hạ ngưỡng. Việc quét ngưỡng chỉ dùng dev, không dùng
+test để chọn policy.
+
+\begin{table}[H]
+\centering
+\caption{Ngưỡng tốt nhất trên dev theo F1/F2/F3}
+\begin{tabular}{lrrrrrr}
+\toprule
+Metric & Threshold & Precision & Recall & F-beta & FP & FN\\
+\midrule
+F1 & 0,4400 & 0,9091 & 0,9524 & 0,9302 & 4 & 2\\
+F2 & 0,1569 & 0,7778 & 1,0000 & 0,9459 & 12 & 0\\
+F3 & 0,1569 & 0,7778 & 1,0000 & 0,9722 & 12 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{fbeta_threshold_curve.png}
+\caption{Quét ngưỡng F-beta trên dev.}
+\end{figure}
+
+Khi chuyển ngưỡng F2 tối ưu từ dev sang test, Recall đạt 1,0 và không còn FN,
+nhưng FP tăng từ 7 lên 22; F2 test giảm từ 0,9491 xuống 0,9052. Do đó báo cáo
+chính giữ ngưỡng 0,5 cho metric test, còn dashboard coi threshold là policy có
+thể chỉnh nếu quản lý muốn đánh đổi thêm FP để giảm FN.
+
+\begin{table}[H]
+\centering
+\caption{Transfer ngưỡng từ dev sang test}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Policy test & Threshold & Precision & Recall & F1 & F2 & FP & FN\\
+\midrule
+Default 0,5 & 0,5000 & 0,8542 & 0,9762 & 0,9111 & 0,9491 & 7 & 1\\
+Dev-best F2 & 0,1569 & 0,6563 & 1,0000 & 0,7925 & 0,9052 & 22 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Để kiểm soát khả năng ``ăn may'' do một split đẹp, dự án còn chạy 100 lần
+repeated stratified holdout trên pool train+dev, giữ test ngoài audit. Logistic
+Regression được refit ở mỗi run với threshold 0,5. Kết quả cho thấy điểm cao
+khá ổn định nhưng vẫn có biên dao động, nên không overclaim con số 0,95 như một
+đảm bảo tuyệt đối.
+
+\begin{table}[H]
+\centering
+\caption{Tóm tắt 100-run stability audit trên train+dev}
+\begin{tabular}{lrrrrr}
+\toprule
+Metric & Mean & Std & Min & P05 & P95\\
+\midrule
+F2 & 0,9419 & 0,0279 & 0,8416 & 0,8892 & 0,9770\\
+MCC & 0,9161 & 0,0290 & 0,8495 & 0,8687 & 0,9569\\
+Recall & 0,9481 & 0,0355 & 0,8095 & 0,8810 & 1,0000\\
+Precision & 0,9206 & 0,0367 & 0,8200 & 0,8542 & 0,9756\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{model_stability_f2_distribution.png}
+\caption{Phân phối F2 qua 100 lần chia lại train/dev.}
+\end{figure}
 
 \section{Kết quả test và baseline}
 
@@ -942,6 +1048,35 @@ Risk =&\ 0,55S_{model} + 0,15S_{traffic} + 0,12S_{distance}\\
 \end{aligned}
 \]
 
+\begin{table}[H]
+\centering
+\caption{Chuẩn hóa từng thành phần Risk Score}
+\small
+\begin{tabularx}{\linewidth}{lrlX}
+\toprule
+Thành phần & Weight & Công thức điểm 0--100 & Lý do\\
+\midrule
+\(S_{model}\) & 0,55 & \(P(delayed)\times100\) & Tín hiệu học máy là bằng chứng chính.\\
+\(S_{traffic}\) & 0,15 & Low=20, Medium=60, High=100 & Traffic là driver vận hành rõ trong EDA.\\
+\(S_{distance}\) & 0,12 & \(\min(distance/10\times100,100)\) & 10 km là mức xa nhất trong dữ liệu.\\
+\(S_{peak}\) & 0,08 & Peak=100, non-peak=20 & Giờ cao điểm ảnh hưởng năng lực xử lý.\\
+\(S_{complexity}\) & 0,06 & \(\min(complexity/20\times100,100)\) & Complexity tối đa quan sát là 20.\\
+\(S_{weekend}\) & 0,04 & Weekend=70, weekday=40 & Tín hiệu phụ, weight nhỏ vì audit yếu.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Các trọng số cộng đúng 1,0 và được chọn như một policy minh bạch: mô hình chiếm
+vai trò chính, còn traffic/distance/peak/complexity/weekend là áp lực vận hành
+để người điều phối hiểu vì sao một đơn được đẩy lên hàng đợi. Đây không phải
+trọng số tối ưu thống kê; nếu cửa hàng đổi năng lực xử lý, policy có thể chỉnh.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{risk_component_breakdown.png}
+\caption{Đóng góp trung bình của từng thành phần vào Risk Score.}
+\end{figure}
+
 Risk Score được ánh xạ thành Priority:
 
 \begin{table}[H]
@@ -966,6 +1101,23 @@ Recommended Action tương ứng:
   \item Low: giữ trong hàng đợi bình thường.
 \end{itemize}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{risk_calibration.png}
+\caption{Calibration: delay rate thực tế theo priority band.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{priority_threshold_sensitivity.png}
+\caption{Độ nhạy số đơn High priority khi thay ngưỡng.}
+\end{figure}
+
+Calibration cho thấy delay rate tăng từ Low 0,0\% sang Medium 7,3\% và High
+88,6\%. Ngưỡng 35/65 được giữ như policy khóa vì bắt được 92,9\% đơn trễ trong
+nhóm High, nhưng sensitivity chứng minh đây là tham số vận hành, không phải
+chân lý tuyệt đối.
+
 \section{Kịch bản assignment}
 
 Dự án lấy nhóm đơn High priority từ queue, tạo fleet tài xế giả lập có capacity
@@ -974,12 +1126,39 @@ priority cho 6 tài xế giả lập, mean assignment cost 32,84. Đây là minh
 prescriptive DSS vì dataset Kaggle không có depot, driver logs hoặc capacity
 thật.
 
+\begin{table}[H]
+\centering
+\small
+\caption{Minh bạch công thức cost trong kịch bản assignment}
+\begin{tabularx}{\textwidth}{p{3.4cm}p{5.6cm}X}
+\toprule
+Thành phần & Công thức & Nguồn/ý nghĩa\\
+\midrule
+Travel minutes & \code{distance\_km * 3.2 / speed\_factor} &
+\code{distance\_km} đến từ đơn thật; \code{speed\_factor} là giả lập cho tài xế.\\
+Priority penalty & \code{0.35 * (100 - delay\_risk\_score)} &
+Đơn risk càng cao thì penalty càng thấp, nên được ưu tiên trong tối ưu.\\
+High traffic penalty & \code{6 nếu traffic = High} &
+Traffic cao cần thêm buffer vận hành.\\
+Same-location bonus & \code{-8 nếu cùng location/base} &
+Ưu tiên tài xế cùng khu vực trong fleet giả lập.\\
+Cost floor & \code{max(total, 0)} &
+Đảm bảo cost không âm khi có bonus.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Thuật toán chính là Hungarian linear-sum assignment nếu \code{scipy} khả dụng;
+greedy chỉ là fallback để pipeline vẫn chạy trong môi trường thiếu thư viện.
+Vì cost dùng proxy và fleet giả lập, phần này chỉ chứng minh cách biến queue
+thành khuyến nghị phân công, không phải claim tối ưu điều phối tài xế thật.
+
 \section{Dashboard Streamlit và Power BI}
 
 Dashboard Streamlit gồm tám tab: Overview, EDA, Customer Behavior, Forecast \&
 Staffing, Model Evaluation, Single Order Demo, Delay Queue và Data Quality.
-Dashboard giúp người dùng xem KPI, giải thích mô hình, thử một đơn mới và xem
-hàng đợi ưu tiên.
+Dashboard giúp người dùng xem KPI, giải thích mô hình, thử một đơn mới, xem
+hàng đợi ưu tiên, bóc tách Risk Score và kiểm tra kịch bản assignment.
 
 Power BI pack gồm fact/dim CSV, DAX measures và dashboard spec. Dự án không tự
 sinh file \code{.pbix}; nếu lớp yêu cầu dashboard native, cần import các bảng
@@ -1000,7 +1179,7 @@ streamlit run app/streamlit_app.py
 
 Pipeline \code{scripts.run\_all} gồm 18 bước, từ audit dữ liệu đến build
 notebook, report PDF, slide PDF, unit tests và Streamlit smoke test. Kiểm thử
-hiện tại gồm 26 unit tests cho schema, leakage, split, detailed EDA, forensics, brand
+hiện tại gồm 30 unit tests cho schema, leakage, split, detailed EDA, forensics, brand
 ablation, preference forecast, model, cross-validation, bootstrap CI, DSS rules
 và assignment.
 
@@ -1024,6 +1203,46 @@ Time series & Monthly demand forecast và preference share forecast.\\
 Recommendation & Popularity/context rules.\\
 Optimization & Assignment scenario cho đơn High priority.\\
 BI/dashboard & Streamlit và Power BI-ready pack.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Các câu hỏi phản biện đã kiểm soát}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Câu hỏi dễ bị hỏi khi bảo vệ và câu trả lời khóa}
+\begin{tabularx}{\textwidth}{p{4.2cm}X}
+\toprule
+Câu hỏi & Câu trả lời trong dự án\\
+\midrule
+Sao biết đơn trễ là sau 30 phút? &
+Không giả định SLA trước. Nhóm suy luận từ nhãn: on-time max 30 phút, delayed
+min 35 phút; vì duration nằm trên lưới 5 phút nên \code{>30} và \code{>=35}
+khớp nhãn 0 mismatch.\\
+Vì sao không dùng \code{delivery\_duration\_min}? &
+Đó là thông tin sau giao hàng và phục dựng nhãn trực tiếp; dùng làm feature sẽ
+leakage.\\
+Vì sao không chọn Naive Bayes? &
+Naive Bayes đã được thử trong 6 classifier nhưng dev F2/MCC thấp hơn rõ; giả
+định độc lập feature không hợp với distance, estimated duration, complexity và
+các biến được sinh từ nhau.\\
+F-beta có được tối ưu không? &
+Có quét threshold F1/F2/F3 trên dev. Dev-best F2 bắt hết delayed nhưng transfer
+sang test làm FP tăng 7 lên 22 và F2 giảm, nên giữ threshold 0,5 cho báo cáo
+chính.\\
+Điểm F2 cao có do may mắn split không? &
+100-run train+dev stability cho F2 mean 0,9419 và p05 0,8892; điểm cao tương
+đối ổn định, nhưng vẫn được giải thích bằng data synthetic/generator gần tất
+định, không overclaim production.\\
+Risk Score và assignment có tối ưu thống kê không? &
+Không. Risk Score là weighted scoring policy minh bạch; assignment dùng cost
+proxy và fleet giả lập. Hai phần này là prototype prescriptive DSS, cần SLA,
+driver log và cost thật nếu triển khai.\\
+Forecast/recommendation dùng được kinh doanh thật không? &
+Không claim. Forecast MAPE 45,7\% và recommendation là popularity/context rule,
+chỉ minh họa quy trình planning và reporting trên dữ liệu synthetic.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -1153,7 +1372,7 @@ nhiệm hoàn toàn về tính chính xác của nội dung, kết quả và khu
 Claude Code (Anthropic) & Hỗ trợ viết/refactor code, soạn notebook, soạn bản
 nháp báo cáo, gợi ý kỹ thuật phân tích & Code/notebook trong \code{src/},
 \code{scripts/}, \code{notebooks/}; nhóm kiểm chứng bằng \code{run\_all} (18/18),
-26 unit test, và đọc lại từng output/insight.\\
+30 unit test, và đọc lại từng output/insight.\\
 \rule{2.5cm}{0.4pt} & \rule{3.5cm}{0.4pt} & \emph{(Nhóm bổ sung công cụ khác nếu có: ChatGPT, Gemini, Copilot\ldots)}\\
 \bottomrule
 \end{tabularx}

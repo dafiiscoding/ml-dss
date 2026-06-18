@@ -4,16 +4,21 @@ This folder contains Power BI-ready CSV tables and DAX measures. The repository
 does not generate a `.pbix` file automatically because Power BI Desktop is not a
 scriptable dependency in this environment.
 
+For detailed page-by-page build instructions, relationships, visuals, and page
+notes, read `POWERBI_BUILD_GUIDE.md`.
+
 ## Tables
 
 - `fact_orders.csv`: cleaned source order table.
 - `fact_delay_queue.csv`: model/DSS output sorted by delay risk.
 - `fact_transport_assignment.csv`: transportation-problem scenario assignments.
+- `fact_transport_cost_policy.csv`: transparent cost formula for the assignment scenario.
 - `fact_monthly_demand_forecast.csv`: historical monthly demand and seasonal-naive forecast.
 - `fact_hourly_staffing_plan.csv`: scenario staffing by order hour.
 - `fact_recommendation_rules.csv`: popularity-based recommendation rules.
 - `fact_hypothesis_tests.csv`: chi-square hypothesis tests.
 - `fact_data_realism_audit.csv`: synthetic/data-quality warning flags.
+- `fact_risk_component_policy.csv`: Risk Score component formulas, weights, and rationale.
 - `fact_product_type_mix.csv`: order-share and delay-rate by pizza type.
 - `fact_product_size_mix.csv`: order-share and delay-rate by encoded pizza size.
 - `dim_restaurant.csv`: restaurant dimension.
@@ -34,10 +39,12 @@ scriptable dependency in this environment.
 
 3. Model and DSS Queue
    - Table: order_id, restaurant, location, risk score, priority, action.
+   - Table: Risk Score component weights and normalization.
    - Slicer: priority, traffic, restaurant.
 
 4. Transportation Scenario
    - Table: order-driver assignments.
+   - Table: cost formula terms and data source.
    - Bar: assigned orders by driver.
    - KPI: mean assignment cost.
 

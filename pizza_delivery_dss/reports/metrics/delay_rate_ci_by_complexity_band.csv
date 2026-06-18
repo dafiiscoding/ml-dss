@@ -1,0 +1,5 @@
+complexity_band,orders,delayed,delay_rate,ci_low,ci_high,small_sample
+Very High,204,85,0.416667,0.351163,0.485251,False
+High,238,83,0.348739,0.29103,0.411255,False
+Medium,320,38,0.11875,0.08775,0.158795,False
+Low,242,4,0.016529,0.006446,0.041722,False

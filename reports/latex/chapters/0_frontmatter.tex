@@ -116,23 +116,87 @@ Review; các trọng số ưu tiên được xem là chính sách minh bạch, k
 \noindent\textbf{Từ khóa:} DSS, CrisisMMD, Text Mining, CLIP, Late Fusion,
 Human-in-the-loop.
 
-\chapter*{Bảng thuật ngữ viết tắt}
-\addcontentsline{toc}{chapter}{Bảng thuật ngữ viết tắt}
-\begin{longtable}{>{\bfseries}p{3.2cm}p{11cm}}
+\chapter*{Bảng thuật ngữ}
+\addcontentsline{toc}{chapter}{Bảng thuật ngữ}
+Bảng này giải nghĩa ngắn gọn các thuật ngữ dùng trong báo cáo. Mỗi khái niệm
+được trình bày kỹ hơn (định nghĩa $\rightarrow$ trực giác $\rightarrow$ ví dụ
+$\rightarrow$ vai trò $\rightarrow$ giới hạn) tại chương tương ứng.
+
+\begin{longtable}{>{\bfseries}p{3.4cm}p{10.8cm}}
 \toprule
 \textmd{\bfseries Thuật ngữ} & \textbf{Giải nghĩa}\\
 \midrule
-DSS & Decision Support System -- Hệ hỗ trợ quyết định.\\
-TF--IDF & Term Frequency--Inverse Document Frequency.\\
-CLIP & Contrastive Language--Image Pre-training; dùng để trích đặc trưng ảnh.\\
-EDA & Exploratory Data Analysis -- Phân tích khám phá dữ liệu.\\
-F2 & Chỉ số F-score nhấn mạnh Recall hơn Precision.\\
-Macro-F1 & F1 trung bình đều trên các lớp, phù hợp dữ liệu mất cân bằng.\\
+\endhead
+\multicolumn{2}{l}{\textit{\textbf{Dữ liệu và bài toán}}}\\
+Tweet & Một bài đăng ngắn trên Twitter/X, trong dự án luôn kèm một ảnh.\\
+CrisisMMD & Bộ dữ liệu nghiên cứu đã lưu trữ: tweet, ảnh và nhãn của bảy thảm
+họa 2017.\\
+Annotation & Dữ liệu gán nhãn do con người tạo (nhãn, văn bản, định danh) đi
+kèm bộ dữ liệu.\\
+Nhãn chuẩn & Nhãn chính thức dùng để học và chấm điểm (informative, humanitarian).\\
+Train/Dev/Test & Tập huấn luyện / tập phát triển (dev) / tập kiểm tra; học trên
+train, chọn tham số trên dev, báo cáo một lần trên test.\\
+\midrule
+\multicolumn{2}{l}{\textit{\textbf{Đặc trưng văn bản}}}\\
+Feature & Đặc trưng: một con số mô tả mẫu mà mô hình đọc được.\\
+Feature engineering & Thiết kế đặc trưng: biến dữ liệu thô thành vector số.\\
+Vector thưa & Vector hầu hết phần tử bằng 0 (ví dụ TF--IDF).\\
+Vector đặc & Vector mà mọi phần tử đều có giá trị (ví dụ embedding CLIP).\\
+TF--IDF & Term Frequency--Inverse Document Frequency: trọng số từ theo độ phổ
+biến trong một văn bản và độ hiếm trên toàn tập.\\
+TF / IDF & Tần suất từ trong một văn bản / nghịch đảo số văn bản chứa từ đó.\\
+Unigram / Bigram & Một từ đơn / cặp hai từ liền nhau (``power outage'').\\
+Stopword & Từ quá phổ biến, ít thông tin (``the'', ``is'') thường bị loại.\\
+Từ ngoài từ vựng (OOV) & Từ không có trong từ điển đã học từ train.\\
+\midrule
+\multicolumn{2}{l}{\textit{\textbf{Đặc trưng ảnh}}}\\
+Pixel & Điểm ảnh, đơn vị màu nhỏ nhất của một bức ảnh.\\
+Patch & Một ô vuông nhỏ của ảnh (ViT chia ảnh thành lưới patch).\\
+Token ảnh & Vector biểu diễn một patch, đưa vào Transformer.\\
+Transformer & Kiến trúc mạng học quan hệ giữa các token.\\
+CLIP / ViT-B/32 & Mô hình tiền huấn luyện trích đặc trưng ảnh; dùng \emph{frozen},
+không fine-tune.\\
 Embedding & Vector số biểu diễn nội dung của văn bản hoặc ảnh.\\
-Late Fusion & Kết hợp xác suất của các mô hình sau khi từng nhánh đã dự báo.\\
-Calibration & Chuyển score của mô hình thành xác suất có thể diễn giải tốt hơn.\\
+Chuẩn hóa L2 & Đưa vector về độ dài 1 để so sánh theo hướng, không theo độ lớn.\\
+\midrule
+\multicolumn{2}{l}{\textit{\textbf{Trùng lặp và rò rỉ}}}\\
+SHA-256 & Hàm băm: cho file ảnh một ``vân tay'' 256 bit; phát hiện ảnh giống hệt.\\
+Perceptual hash & Băm tri giác: ảnh \emph{trông giống} cho hash gần nhau.\\
+Khoảng cách Hamming & Số bit khác nhau giữa hai hash.\\
+Near-duplicate & Ảnh gần trùng (resize/crop nhẹ) chứ không giống hệt byte.\\
+Robustness mask & Mặt nạ đánh giá độ bền: loại thêm near-duplicate khi kiểm tra
+độ nhạy.\\
+\midrule
+\multicolumn{2}{l}{\textit{\textbf{Mô hình và đánh giá}}}\\
+Baseline & Mốc đối chứng đơn giản (dummy/majority) để biết mô hình có thật sự
+hơn không.\\
+Hyperparameter & Siêu tham số: tham số đặt trước khi học (ví dụ $C$, $k$).\\
+Tuning & Dò siêu tham số trên lưới hữu hạn, chọn theo dev.\\
+Calibration & Hiệu chỉnh score thành xác suất đáng tin hơn.\\
+Accuracy & Tỷ lệ dự báo đúng trên tổng số mẫu.\\
+Precision / Recall & Độ chính xác (đoán dương đúng bao nhiêu) / độ phủ (bắt được
+bao nhiêu ca dương thật).\\
+F1 / F2 & Trung bình điều hòa của Precision--Recall; F2 nghiêng về Recall.\\
+Macro-F1 & F1 trung bình đều trên các lớp, phù hợp dữ liệu mất cân bằng.\\
+Weighted-F1 & F1 trung bình có trọng số theo số mẫu mỗi lớp.\\
 MCC & Matthews Correlation Coefficient; đo tương quan của dự báo nhị phân.\\
+\midrule
+\multicolumn{2}{l}{\textit{\textbf{Hợp nhất và độ bền}}}\\
+Late Fusion & Kết hợp xác suất của các mô hình sau khi từng nhánh đã dự báo.\\
+Threshold & Ngưỡng quyết định để chuyển xác suất thành nhãn.\\
+Conflict score & Mức bất đồng giữa dự báo văn bản và ảnh.\\
+Bootstrap & Lấy mẫu lại có hoàn lại để ước lượng độ ổn định của metric.\\
+Confidence interval & Khoảng tin cậy của một đại lượng ước lượng.\\
+Domain shift & Lệch phân bố giữa dữ liệu học và dữ liệu mới (ví dụ thảm họa mới).\\
+\midrule
+\multicolumn{2}{l}{\textit{\textbf{Tầng quyết định}}}\\
+Risk Score & Điểm rủi ro do DSS tính bằng chính sách trọng số minh bạch.\\
+Priority & Mức ưu tiên (Low/Medium/High) suy từ Risk Score.\\
+Routing & Phân luồng: gợi ý đội tiếp nhận hồ sơ.\\
+Manual Review & Kiểm tra thủ công: chuyển ca bất đồng cho con người xác minh.\\
+Policy & Chính sách: quy tắc thiết kế, không phải kết quả học từ nhãn.\\
 Human-in-the-loop & Thiết kế giữ con người tại các điểm quyết định rủi ro.\\
-SHA-256 & Hàm băm dùng phát hiện file ảnh giống hệt nhau.\\
+DSS & Decision Support System -- Hệ hỗ trợ quyết định.\\
+EDA & Exploratory Data Analysis -- Phân tích khám phá dữ liệu.\\
 \bottomrule
 \end{longtable}

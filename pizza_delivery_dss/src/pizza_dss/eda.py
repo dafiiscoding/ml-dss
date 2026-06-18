@@ -453,6 +453,10 @@ def build_eda_artifacts():
         "payment_method",
     ]:
         delay_rate_by(df, col).to_csv(METRICS_DIR / f"delay_rate_by_{col}.csv", index=False)
+    for col in ["traffic_level", "distance_band", "complexity_band", "restaurant_name", "state_code"]:
+        delay_rate_with_ci(df, col).round(6).to_csv(
+            METRICS_DIR / f"delay_rate_ci_by_{col}.csv", index=False
+        )
 
     duration_delay_profile(df).round(6).to_csv(METRICS_DIR / "duration_delay_profile.csv", index=False)
     duration_grid_by_delay(df).round(6).to_csv(METRICS_DIR / "duration_grid_by_delay.csv", index=False)
@@ -475,6 +479,8 @@ def build_eda_artifacts():
 
     silhouette = kmeans_silhouette_sweep(df)
     silhouette.round(4).to_csv(METRICS_DIR / "kmeans_silhouette.csv", index=False)
+    cluster_profile = kmeans_cluster_profile(df, k=4)
+    cluster_profile.round(6).to_csv(METRICS_DIR / "kmeans_cluster_profile.csv", index=False)
 
     fig, ax = plt.subplots(figsize=(6, 4))
     df[TARGET_COLUMN].value_counts().rename({False: "On time", True: "Delayed"}).plot.bar(ax=ax)

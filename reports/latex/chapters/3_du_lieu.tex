@@ -1,4 +1,5 @@
 \chapter{Dữ liệu, tiền xử lý và biểu diễn đặc trưng}
+\label{chap:dulieu}
 
 \section{Vai trò của dữ liệu trong bài toán}
 
@@ -122,8 +123,20 @@ Hàng qua bộ lọc robustness & 13.608 & 2.078 & 2.032\\
 Trong train, informative có 8.338 mẫu và not-informative có 5.270 mẫu. Độ mất
 cân bằng nghiêm trọng hơn ở task tám lớp: \code{not\_humanitarian} có 5.260 mẫu,
 trong khi \code{missing\_or\_found\_people} chỉ có 24 mẫu, chênh lệch khoảng
-\textbf{219:1}. Accuracy vì vậy không đủ phản ánh khả năng phát hiện lớp hiếm;
-thiết kế đánh giá phải bổ sung Macro-F1, F2 và kết quả theo từng lớp.
+\textbf{219:1}. Hiểu trực giác, cứ \textbf{219} bài thuộc nhóm phổ biến mới có
+\textbf{1} bài thuộc nhóm hiếm. Accuracy vì vậy không đủ phản ánh khả năng phát
+hiện lớp hiếm; thiết kế đánh giá phải bổ sung Macro-F1, F2 và kết quả theo từng
+lớp.
+
+\begin{insight}[Vì sao Accuracy đánh lừa khi dữ liệu lệch]
+Xét một lớp hiếm có 24 mẫu trên tổng 5.284 mẫu (lớp này + nhóm phổ biến).
+\emph{Mô hình A} bỏ qua hoàn toàn lớp hiếm, đoán mọi bài là nhóm phổ biến: nó
+sai cả 24 bài hiếm nhưng vẫn đạt Accuracy $5.260/5.284 \approx 99{,}5\%$.
+\emph{Mô hình B} bắt đúng 18/24 bài hiếm (Recall lớp hiếm $=0{,}75$) và chỉ lỡ
+vài bài phổ biến, Accuracy cũng quanh $99\%$. Hai mô hình gần như cùng Accuracy
+nhưng giá trị cứu hộ khác hẳn nhau: A bỏ sót toàn bộ người mất tích, B thì
+không. Đây là lý do dự án khóa Macro-F1 và Recall lớp hiếm thay vì nhìn Accuracy.
+\end{insight}
 
 \section{Kiểm soát trùng lặp và rò rỉ dữ liệu}
 
@@ -150,6 +163,51 @@ Không có ID hoặc cặp ID giao nhau giữa các split. Tuy nhiên, SHA-256 p
 dev--test. Có một văn bản sau làm sạch trùng giữa train với dev và một văn bản
 trùng giữa train với test. Trên toàn bộ corpus, 18.082 dòng chỉ tạo ra 17.777
 hash ảnh duy nhất, tức 305 lần lặp ngoài ảnh đại diện đầu tiên.
+
+\subsection{Hai loại ``vân tay'' ảnh: SHA-256 và perceptual hash}
+
+Để phát hiện ảnh trùng mà không phải so từng cặp ảnh (rất tốn kém), dự án dùng
+hai loại hàm băm (hash) bổ sung cho nhau. Một \emph{hàm băm} biến một đầu vào
+thành một chuỗi bit ngắn cố định, gọi là ``vân tay''.
+
+\begin{description}[leftmargin=3.6cm,style=nextline]
+  \item[SHA-256] Đọc \emph{toàn bộ byte} của file ảnh và tạo một vân tay 256 bit.
+        Cùng một file (từng byte giống nhau) luôn cho cùng hash; chỉ cần đổi một
+        byte, hash đã khác hẳn. SHA-256 vì vậy phát hiện ảnh \emph{giống hệt},
+        nhưng \emph{không} biết hai ảnh ``trông giống nhau''.
+  \item[Perceptual hash (pHash)] Rút đặc trưng thị giác tần số thấp (bố cục
+        sáng/tối tổng thể) rồi tạo một vân tay 64 bit. Ảnh bị resize hoặc crop
+        nhẹ vẫn cho hash \emph{gần} nhau. Mức ``gần'' đo bằng \emph{khoảng cách
+        Hamming} -- số bit khác nhau giữa hai hash.
+\end{description}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  imgA/.style={draw,minimum width=1.1cm,minimum height=1.1cm,fill=blue!12},
+  imgB/.style={draw,minimum width=1.1cm,minimum height=1.1cm,fill=blue!25},
+  hash/.style={draw=HUSTBlue,rounded corners=1.5pt,fill=boxgray,font=\ttfamily\scriptsize,
+    minimum height=0.7cm},
+  lab/.style={font=\scriptsize\itshape}
+]
+% Row 1: exact duplicate via SHA-256
+\node[imgA] (a1) at (0,1.6) {};
+\node[imgA] (a2) at (1.4,1.6) {};
+\node[hash,right=0.5cm of a2] (ha) {9f3a\dots e1 = 9f3a\dots e1};
+\node[lab,right=0.3cm of ha] {SHA-256 khớp $\Rightarrow$ giống hệt};
+\node[lab,left=0.2cm of a1] {Ảnh, copy};
+% Row 2: near-duplicate via pHash
+\node[imgA] (b1) at (0,0) {};
+\node[imgB] (b2) at (1.4,0) {};
+\node[hash,right=0.5cm of b2] (hb) {1100\dots01 vs 1100\dots11};
+\node[lab,right=0.3cm of hb] {Hamming $=2 \Rightarrow$ gần trùng};
+\node[lab,left=0.2cm of b1] {Ảnh, crop};
+\end{tikzpicture}
+\caption{Hai lớp phát hiện trùng lặp. SHA-256 chỉ bắt ảnh giống hệt từng byte;
+pHash bắt ảnh gần giống qua khoảng cách Hamming nhỏ.}
+\label{fig:hash-explainer}
+\end{figure}
 
 \subsection{Hai mặt nạ đánh giá}
 
@@ -197,9 +255,44 @@ Ví dụ:
 
 Giữ nội dung hashtag là quyết định có chủ đích vì tên thảm họa hoặc chủ đề cứu
 trợ thường nằm trong hashtag. Ngược lại, bỏ URL và mention giúp giảm số token
-chỉ xuất hiện một lần. Giới hạn của quy tắc hiện tại là loại emoji, dấu tiếng
-nước ngoài và không xử lý mỉa mai; đây là sự đánh đổi để có một pipeline đơn
-giản, có thể kiểm tra và phù hợp với corpus chủ yếu bằng tiếng Anh.
+chỉ xuất hiện một lần.
+
+Một câu hỏi quan trọng: \emph{còn loại rác nào không nằm trong các bước làm sạch
+ở trên thì sao?} Một bộ quy tắc regex \textbf{không thể} liệt kê mọi dạng nhiễu
+của ngôn ngữ mạng xã hội. Vì vậy báo cáo phân loại rõ ba mức xử lý ở
+Bảng~\ref{tab:cleaning-audit} thay vì tuyên bố dữ liệu đã ``sạch hoàn toàn''.
+
+\begin{table}[H]\centering\small
+\caption{Ba mức xử lý nhiễu trong văn bản tweet.}
+\label{tab:cleaning-audit}
+\begin{tabularx}{\textwidth}{p{3.6cm}X}
+\toprule
+\textbf{Mức xử lý} & \textbf{Loại nhiễu}\\
+\midrule
+Đã xử lý trực tiếp & URL, \code{@mention}, HTML entity, ký hiệu \code{\#},
+ký tự không phải chữ/số.\\
+Giảm tác động (không loại hẳn) & Token quá hiếm bị cắt bởi giới hạn 2.000 đặc
+trưng và \code{min\_df}; stopword tiếng Anh bị bỏ trọng số.\\
+Chưa xử lý tốt & Emoji, mỉa mai và phủ định, lỗi chính tả, văn bản đa ngôn ngữ,
+tweet chỉ có URL (rỗng sau làm sạch), spam lặp từ.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Một audit định lượng trên dữ liệu thật (lưu ở \code{text\_cleaning\_audit.json})
+cho thấy: trung bình \textbf{40\%} ký tự mỗi tweet bị loại khi làm sạch -- phần
+lớn là URL và mention; \textbf{không có} tweet nào trở thành chuỗi rỗng sau làm
+sạch (mọi tweet vẫn còn nội dung), nên cơ chế ``tweet chỉ có URL thành rỗng'' là
+một rủi ro lý thuyết chứ không xảy ra trong corpus này; và khi chuyển sang
+dev/test, tỷ lệ token nằm ngoài từ vựng train (OOV) là \textbf{7,6\%} và
+\textbf{7,8\%} -- đủ thấp để TF--IDF vẫn phủ phần lớn nội dung.
+
+Phần rác còn lại chủ yếu mang tính ngữ nghĩa: một tweet mỉa mai
+(``great, another flood'') có thể bị TF--IDF hiểu sai. Đây là lý do các ca như
+vậy được đẩy sang Manual Review thay vì tin tuyệt đối vào dự báo (xem
+Mục~\ref{sec:scenarios}). Việc loại emoji, dấu tiếng nước ngoài và không xử lý
+mỉa mai là một đánh đổi có chủ đích để giữ pipeline đơn giản, kiểm tra được và
+phù hợp corpus chủ yếu tiếng Anh.
 
 \subsection{TF--IDF}
 
@@ -234,6 +327,42 @@ sót term hiếm. Vectorizer \textbf{chỉ fit trên train}; dev và test chỉ 
 \code{transform}. Nếu fit trên toàn corpus, tần suất tài liệu của dev/test sẽ
 đi vào IDF và gây rò rỉ nhẹ nhưng có thật.
 
+\paragraph{Ví dụ tính tay.} Xét ba tweet đồ chơi đã làm sạch (\(N=3\)):
+\(d_1=\) ``flood rescue now'', \(d_2=\) ``flood power outage'',
+\(d_3=\) ``donation drive''. Từ \emph{flood} xuất hiện ở 2 văn bản
+(\(\operatorname{df}=2\)), còn \emph{rescue} chỉ ở 1 (\(\operatorname{df}=1\)).
+Theo công thức (dạng smooth của scikit-learn):
+\[
+\operatorname{idf}(\text{flood})=\ln\frac{1+3}{1+2}+1=1{,}288,\qquad
+\operatorname{idf}(\text{rescue})=\ln\frac{1+3}{1+1}+1=1{,}693.
+\]
+Mỗi từ xuất hiện một lần trong \(d_1\) nên \(\operatorname{tf}=1\), suy ra
+\(\operatorname{tfidf}(\text{flood},d_1)=1{,}288\) và
+\(\operatorname{tfidf}(\text{rescue},d_1)=1{,}693\). Như vậy \emph{rescue}
+(hiếm hơn) được trọng số cao hơn \emph{flood} (phổ biến hơn) -- đúng trực giác:
+từ hiếm phân biệt tốt hơn. Sau chuẩn hóa \(L_2\) cho vector \(d_1\) (ba từ
+flood/rescue/now), trọng số flood là \(1{,}288/2{,}719=0{,}47\) và rescue là
+\(1{,}693/2{,}719=0{,}62\). Ma trận document--term tương ứng (chưa chuẩn hóa)
+là một ma trận thưa:
+
+\begin{table}[H]\centering\small
+\caption{Ma trận document--term TF--IDF của ba tweet đồ chơi (ô trống $=0$).}
+\begin{tabular}{lccccccc}
+\toprule
+& \textbf{flood} & \textbf{rescue} & \textbf{now} & \textbf{power}
+& \textbf{outage} & \textbf{donation} & \textbf{drive}\\
+\midrule
+\(d_1\) & 1,29 & 1,69 & 1,69 & & & &\\
+\(d_2\) & 1,29 & & & 1,69 & 1,69 & &\\
+\(d_3\) & & & & & & 1,69 & 1,69\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Điểm yếu cần nhớ: TF--IDF chỉ đếm từ và cặp từ, \emph{không} hiểu thứ tự xa,
+phủ định (``no rescue needed'') hay mỉa mai, và xem các từ là độc lập. Đây là lý
+do nhánh văn bản cần được bổ sung bằng ảnh và bằng Manual Review cho ca mơ hồ.
+
 \section{Tiền xử lý và feature engineering ảnh}
 
 \subsection{Từ pixel đến vector đặc trưng}
@@ -254,11 +383,68 @@ niệm cần phân biệt:
         huấn luyện bằng dữ liệu đích. \textbf{Dự án không fine-tune CLIP}.
 \end{description}
 
-Trong ViT-B/32, ảnh \(224\times224\) được chia thành các patch \(32\times32\).
-Mỗi patch được biến thành một token và đi qua Transformer để tổng hợp quan hệ
-giữa các vùng ảnh. CLIP được học bằng mục tiêu tương phản: đưa vector của ảnh
-gần vector của mô tả phù hợp và xa mô tả không phù hợp. Vì vậy embedding thường
-chứa thông tin ngữ nghĩa cao hơn màu hoặc histogram đơn giản.
+Trong ViT-B/32, ảnh \(224\times224\) được chia thành lưới \(7\times7\) gồm
+\(49\) patch kích thước \(32\times32\). Mỗi patch được biến thành một token và
+đi qua Transformer để tổng hợp quan hệ giữa các vùng ảnh, cuối cùng thu về một
+vector \(512\) chiều (Hình~\ref{fig:vit-clip}a). CLIP được học bằng
+\emph{mục tiêu tương phản} (contrastive): trong một lô ảnh--caption, vector của
+mỗi ảnh được kéo gần caption đúng của nó và đẩy xa các caption còn lại
+(Hình~\ref{fig:vit-clip}b). Nhờ vậy embedding chứa thông tin ngữ nghĩa cao hơn
+màu sắc hay histogram đơn giản.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.54\textwidth}
+\centering
+\begin{tikzpicture}[font=\scriptsize,node distance=4mm]
+% 7x7 patch grid
+\foreach \i in {0,...,6}{
+  \foreach \j in {0,...,6}{
+    \fill[blue!\the\numexpr10+\i*6+\j\relax] (\i*0.28,\j*0.28) rectangle ++(0.26,0.26);
+  }
+}
+\draw[HUSTBlue,thick] (0,0) rectangle (1.96,1.96);
+\node[below=1mm] at (0.98,0) {Ảnh $224{\times}224$ $\to$ $7{\times}7$ patch};
+\node[draw=HUSTBlue,rounded corners=2pt,fill=boxgray,right=1.1cm of current bounding box.east,
+  minimum height=0.8cm,align=center] (tf) at (3.6,1) {Transformer\\(49 token)};
+\node[draw=HUSTBlue,rounded corners=2pt,fill=boxgray,below=5mm of tf,align=center] (vec)
+  {Vector $512$-D};
+\draw[-{Latex[length=2mm]},thick,HUSTBlue] (1.96,1) -- (tf.west);
+\draw[-{Latex[length=2mm]},thick,HUSTBlue] (tf) -- (vec);
+\end{tikzpicture}
+\caption{Patch $\to$ token $\to$ Transformer $\to$ embedding.}
+\end{subfigure}\hfill
+\begin{subfigure}{0.42\textwidth}
+\centering
+\begin{tikzpicture}[font=\scriptsize]
+\foreach \i in {0,1,2}{
+  \foreach \j in {0,1,2}{
+    \ifnum\i=\j
+      \fill[HUSTBlue!70] (\j*0.7,-\i*0.7) rectangle ++(0.6,0.6);
+    \else
+      \fill[black!8] (\j*0.7,-\i*0.7) rectangle ++(0.6,0.6);
+    \fi
+  }
+}
+\node[left] at (0,-0.3) {ảnh 1};
+\node[left] at (0,-1.0) {ảnh 2};
+\node[left] at (0,-1.7) {ảnh 3};
+\node[above] at (0.3,0.6) {cap.1};
+\node[above] at (1.0,0.6) {cap.2};
+\node[above] at (1.7,0.6) {cap.3};
+\end{tikzpicture}
+\caption{Ô chéo (cặp đúng) được kéo gần, ô ngoài bị đẩy xa.}
+\end{subfigure}
+\caption{Cách CLIP biến ảnh thành vector và cách nó được huấn luyện tương phản.}
+\label{fig:vit-clip}
+\end{figure}
+
+Một ví dụ trực giác về lân cận: trong không gian CLIP, vector của một ảnh
+\emph{đường ngập} thường gần vector của một ảnh ngập khác hơn là gần ảnh
+\emph{thùng quyên góp}. Cần nhấn mạnh: embedding \textbf{không phải} là xác suất
+hay nhãn; nó chỉ là tọa độ ngữ nghĩa. Chính classifier phía sau (Chương~\ref{chap:mohinh})
+mới học ranh giới giữa các lớp CrisisMMD trên không gian đó. Và như đã nêu, CLIP
+luôn được giữ \textbf{frozen, không fine-tune}.
 
 \subsection{Quy trình trích xuất thực tế}
 
@@ -281,8 +467,10 @@ cho thấy norm trung bình bằng 1, độ lệch chuẩn toàn ma trận kho�
 không có vector zero và metadata khớp thứ tự annotation.
 
 \begin{figure}[H]\centering
-\includegraphics[width=\textwidth]{image_gallery.png}
-\caption{Ảnh train đại diện cho tám lớp humanitarian chung.}
+\includegraphics[width=0.92\textwidth]{image_gallery_seeded.png}
+\caption{Hai ảnh train cho mỗi lớp trong tám lớp humanitarian, lấy mẫu xác định
+bằng seed 42 (\emph{không} chọn tay theo ảnh ``đẹp''), nên gallery không bị thiên
+lệch chủ quan.}
 \end{figure}
 
 \subsection{Lý do giữ CLIP cố định}

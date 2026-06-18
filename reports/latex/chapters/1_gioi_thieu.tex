@@ -4,54 +4,186 @@
 
 Trong những giờ đầu của một trận lũ, bão, động đất hoặc cháy rừng, thông tin
 thường xuất hiện trên mạng xã hội trước khi được tổng hợp đầy đủ trong các báo
-cáo chính thức. Người dân có thể đăng lời kêu cứu, vị trí đường bị chặn, hình
-ảnh công trình sập, nhu cầu lương thực hoặc thông tin về hoạt động tình nguyện.
-Nguồn dữ liệu này có giá trị vì nhanh và gần hiện trường, nhưng đồng thời cũng
-rất khó sử dụng trực tiếp:
+cáo chính thức. Trên nền tảng Twitter (nay là X), người dân có thể đăng một
+\emph{tweet} -- một bài viết ngắn, thường kèm ảnh -- để nói về đường bị chặn,
+công trình sập, mất điện, nhu cầu lương thực hoặc hoạt động tình nguyện. Nguồn
+dữ liệu này có giá trị vì nhanh và gần hiện trường, nhưng đồng thời rất khó sử
+dụng trực tiếp:
 
 \begin{itemize}[leftmargin=*]
-  \item số lượng bài đăng tăng nhanh hơn khả năng đọc thủ công;
-  \item văn bản ngắn, có URL, hashtag, viết tắt và nhiều nội dung không liên
-        quan đến cứu trợ;
-  \item một bài đăng có thể chứa cả văn bản và ảnh nhưng hai nguồn bằng chứng
+  \item số lượng tweet tăng nhanh hơn khả năng đọc thủ công của một trung tâm
+        điều phối;
+  \item văn bản ngắn, có đường dẫn (URL), thẻ chủ đề (hashtag), viết tắt và rất
+        nhiều nội dung không liên quan đến cứu trợ;
+  \item một tweet có thể chứa cả văn bản và ảnh, nhưng hai nguồn bằng chứng này
         không nhất thiết nói cùng một nội dung;
   \item thông tin thường thiếu vị trí chính xác, có thể được đăng lại hoặc dùng
-        lại một ảnh cũ;
-  \item chi phí của các loại sai khác nhau: bỏ sót một lời kêu cứu có thể
-        nghiêm trọng hơn việc chuyển nhầm một bài đăng ít khẩn cấp cho người
-        kiểm tra.
+        lại một tấm ảnh cũ;
+  \item chi phí của các loại sai khác nhau: bỏ sót một lời kêu cứu nguy hiểm hơn
+        nhiều so với việc chuyển nhầm một tweet ít khẩn cấp cho người kiểm tra.
 \end{itemize}
 
 Vấn đề của trung tâm điều phối không đơn thuần là ``gán nhãn đúng cho một
-tweet''. Người điều phối cần quyết định \emph{bài nào phải được chú ý trước,
-vấn đề thuộc nhóm nào, đội nào nên tiếp nhận và trường hợp nào cần con người
-xác minh}. Vì vậy, sản phẩm phù hợp phải là một \textbf{hệ hỗ trợ quyết định}
-(Decision Support System -- DSS), trong đó mô hình học máy chỉ là một thành
-phần tạo bằng chứng đầu vào cho quyết định.
+tweet''. Người điều phối cần quyết định \emph{tweet nào phải được chú ý trước,
+nội dung thuộc nhóm nhu cầu nào, đội nào nên tiếp nhận và trường hợp nào cần con
+người xác minh}. Vì vậy, sản phẩm phù hợp phải là một \textbf{hệ hỗ trợ quyết
+định} (Decision Support System -- DSS), trong đó mô hình học máy chỉ là một
+thành phần tạo bằng chứng đầu vào cho quyết định, không phải bộ phận ra lệnh.
+
+\section{Dữ liệu đến từ đâu và dự án làm gì với nó}
+\label{sec:scope-data}
+
+Một hiểu lầm cần loại bỏ ngay từ đầu: dự án này \textbf{không} thu thập tweet
+trực tiếp từ Internet. Toàn bộ thực nghiệm chạy trên \textbf{CrisisMMD v2.0}, một
+\emph{bộ dữ liệu nghiên cứu đã được lưu trữ} do nhóm QCRI (Qatar Computing
+Research Institute) công bố. Để tránh nhầm lẫn, cần phân biệt ba lớp tách rời
+nhau:
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Nguồn ngoài đời:} người dùng thật đăng tweet và ảnh lên Twitter
+        trong bảy thảm họa năm 2017. Đây là việc đã xảy ra trong quá khứ, dự án
+        không tham gia.
+  \item \textbf{Bộ dữ liệu nghiên cứu:} QCRI thu thập một phần các tweet đó, tải
+        ảnh đính kèm về, thuê người gán nhãn và đóng gói thành CrisisMMD --- gồm
+        các file văn bản (annotation) và các file ảnh đã tải sẵn.
+  \item \textbf{Dự án (phần chúng tôi làm):} đọc bản lưu CrisisMMD, làm sạch văn
+        bản, trích đặc trưng ảnh, huấn luyện mô hình, rồi tạo dự báo và một hàng
+        đợi hỗ trợ quyết định.
+\end{enumerate}
+
+Nói cách khác, đầu vào của dự án là \emph{văn bản tweet và file ảnh đã có sẵn
+trên đĩa}, kèm nhãn do con người gán. Pipeline hiện tại \textbf{không} gọi
+Twitter/X API, \textbf{không} đi theo các URL bên trong tweet để tải nội dung
+mới, và \textbf{không} thu thập bài đăng theo thời gian thực. Khi báo cáo nói
+``đọc và lấy ảnh, văn bản đưa vào mô hình'', điều đó nghĩa là đọc các file ảnh và
+file annotation \emph{đã nằm trong bộ dữ liệu}, không phải truy cập mạng.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  node distance=5mm and 7mm,
+  box/.style={draw=HUSTBlue,rounded corners=2pt,fill=boxgray,align=center,
+    minimum height=1cm,text width=2.5cm},
+  outbox/.style={draw=gray,rounded corners=2pt,fill=black!6,align=center,
+    text=gray,minimum height=1cm,text width=2.5cm,dashed},
+  arrow/.style={-{Latex[length=2.2mm]},thick,HUSTBlue},
+  outarrow/.style={-{Latex[length=2.2mm]},thick,gray,dashed}
+]
+% out-of-scope upstream
+\node[outbox] (tweet) {Tweet gốc\\trên Twitter/X};
+\node[box,right=of tweet] (crisis) {CrisisMMD\\(bản lưu: text + ảnh + nhãn)};
+\node[box,right=of crisis] (prep) {Tiền xử lý\\\& trích đặc trưng};
+% second row
+\node[box,below=12mm of prep] (model) {Mô hình\\dự báo};
+\node[box,left=of model] (dss) {Tầng DSS\\Risk, Priority};
+\node[box,left=of dss] (queue) {Hàng đợi\\\& dashboard};
+% downstream human
+\node[box,below=12mm of queue] (human) {Người xác minh\\(giám sát viên)};
+\node[outbox,right=of human] (ops) {Hotline / cơ quan\\nghiệp vụ ngoài đời};
+
+\draw[outarrow] (tweet) -- (crisis);
+\draw[arrow] (crisis) -- (prep);
+\draw[arrow] (prep) -- (model);
+\draw[arrow] (model) -- (dss);
+\draw[arrow] (dss) -- (queue);
+\draw[arrow] (queue) -- (human);
+\draw[outarrow] (human) -- (ops);
+
+\node[gray,font=\scriptsize\itshape,below=1mm of tweet] {ngoài phạm vi};
+\node[gray,font=\scriptsize\itshape,below=1mm of ops] {ngoài phạm vi};
+\end{tikzpicture}
+\caption{Ranh giới hệ thống. Hộp tô xám, viền đứt là phần \emph{ngoài phạm vi}
+dự án: việc tweet được tạo ra ngoài đời và việc điều động lực lượng ở cuối
+luồng. Dự án bắt đầu từ bản lưu CrisisMMD và kết thúc ở hàng đợi mà con người
+xem.}
+\label{fig:system-boundary}
+\end{figure}
+
+Một hệ thống \emph{thời gian thực} trong tương lai sẽ là một kiến trúc khác:
+nguồn dữ liệu được cấp quyền hoặc API chính thức $\rightarrow$ hàng đợi nạp
+(ingest) $\rightarrow$ lưu vào cơ sở dữ liệu $\rightarrow$ mô hình $\rightarrow$
+con người xác minh. Báo cáo mô tả kiến trúc đó như một \emph{hướng phát triển}
+ở Chương~\ref{chap:ketluan}, chứ không tuyên bố phiên bản hiện tại đã có chức
+năng thu thập trực tuyến.
+
+\section{Vì sao không thay đường dây nóng?}
+\label{sec:hotline}
+
+Một câu hỏi hợp lý là: nếu cần cứu trợ, vì sao người dân không gọi thẳng đường
+dây nóng (hotline) mà lại lên mạng xã hội, và một hệ thống đọc tweet có thực sự
+hữu ích? Câu trả lời là hotline và mạng xã hội phục vụ hai vai trò khác nhau, và
+dự án này \textbf{bổ sung} chứ không thay thế hotline.
+
+Đường dây nóng vẫn là \emph{kênh chính} cho yêu cầu cứu trợ trực tiếp: nó cho
+phép trao đổi hai chiều, người trực có thể hỏi lại để xác minh danh tính và vị
+trí, và mỗi cuộc gọi tương ứng với một người cần giúp cụ thể. Mạng xã hội chỉ là
+\emph{kênh bổ sung}, có ích ở những việc hotline khó làm:
+
+\begin{itemize}[leftmargin=*]
+  \item phát hiện tín hiệu gián tiếp: ảnh đường bị chặn, khu vực mất điện, mức
+        nước dâng -- thông tin mà người đăng không chủ đích báo nạn;
+  \item tổng hợp bức tranh cộng đồng: nhiều tweet cùng một khu vực cho thấy quy
+        mô ảnh hưởng;
+  \item phát hiện nội dung lan truyền rộng nhưng chưa đi vào kênh chính thức;
+  \item hỗ trợ \emph{thứ tự đọc}: giúp người phân tích đọc cái quan trọng trước,
+        không thay quy trình tiếp nhận báo nạn.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\small
+\caption{So sánh ba thành phần theo vai trò. DSS không cạnh tranh với hotline mà
+xử lý phần mạng xã hội mà con người không đọc xuể.}
+\label{tab:hotline-vs-social}
+\begin{tabularx}{\textwidth}{p{3cm}XXX}
+\toprule
+\textbf{Tiêu chí} & \textbf{Hotline} & \textbf{Tweet (mạng xã hội)} &
+\textbf{DSS của dự án}\\
+\midrule
+Tốc độ đến hiện trường & Trung bình & Rất nhanh & Nhanh (xử lý hàng loạt)\\
+Độ xác thực & Cao (hỏi trực tiếp) & Thấp, cần kiểm chứng & Không tự xác thực\\
+Hai chiều & Có & Hầu như không & Không\\
+Độ phủ & Một ca mỗi cuộc gọi & Rất rộng & Rộng nhưng chỉ trong dữ liệu có\\
+Rủi ro chính & Quá tải tổng đài & Tin giả, trùng lặp, thiếu vị trí &
+Sai dự báo, bỏ sót lớp hiếm\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{insight}[Điểm kiểm soát bắt buộc]
+Mọi trường hợp có hậu quả cao (nghi ngờ thương vong, người mất tích) phải được
+kiểm tra lại qua hotline, cơ quan địa phương hoặc nguồn chính thức trước khi
+hành động. DSS chỉ đề xuất \emph{thứ tự chú ý}; nó không xác nhận một lời kêu
+cứu là thật.
+\end{insight}
 
 \section{Bài toán ra quyết định}
 
-Đơn vị phân tích của dự án là một bài đăng gồm nội dung văn bản và một ảnh
-đính kèm. Với mỗi bài đăng, hệ thống hỗ trợ năm quyết định liên tiếp:
+Đơn vị phân tích của dự án là một tweet gồm nội dung văn bản và một ảnh đính
+kèm. Với mỗi tweet, hệ thống hỗ trợ năm quyết định liên tiếp. Để tránh hiểu
+nhầm rằng hệ thống ``tự hành động'', mỗi quyết định được mô tả kèm thao tác cụ
+thể mà nó thực sự thực hiện:
 
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{Sàng lọc:} bài đăng có chứa thông tin hữu ích cho ứng phó thảm
-        họa hay chỉ là nội dung không liên quan?
-  \item \textbf{Phân loại nhu cầu:} thông tin thuộc nhóm thương vong, người
-        mất tích, hạ tầng, người bị ảnh hưởng, cứu trợ/quyên góp hay một nhóm
-        khác?
-  \item \textbf{Xếp mức ưu tiên:} bài đăng nên nằm ở mức Low, Medium hay High
-        trong hàng đợi xử lý?
-  \item \textbf{Phân luồng:} nhóm phản ứng nào nên tiếp nhận bài đăng?
-  \item \textbf{Kiểm duyệt:} bằng chứng có đủ nhất quán để dùng trực tiếp hay
-        cần một giám sát viên xem lại?
+  \item \textbf{Sàng lọc} -- chọn tweet nào đáng đọc. Thao tác: lọc bỏ nội dung
+        không liên quan để người phân tích không phải đọc tuần tự từng bài.
+  \item \textbf{Gợi ý loại nhu cầu} -- đoán nội dung thuộc nhóm thương vong, hạ
+        tầng, cứu trợ, v.v. Thao tác: gắn nhãn gợi ý, \emph{không} khẳng định.
+  \item \textbf{Xếp mức ưu tiên} -- ``xếp High'' nghĩa là \emph{đưa tweet lên
+        đầu hàng đợi để người xem trước}, hoàn toàn không phải tự điều xe cứu hộ.
+  \item \textbf{Phân luồng (routing)} -- ``routing Emergency Team'' nghĩa là
+        \emph{gợi ý nhóm hồ sơ phù hợp}, không gửi lệnh điều động cho đội nào.
+  \item \textbf{Đánh dấu kiểm duyệt} -- ``review'' nghĩa là \emph{mở một ca xác
+        minh có checklist} cho con người, khi bằng chứng hai phương thức mâu
+        thuẫn hoặc thiếu tin cậy.
 \end{enumerate}
 
-Năm quyết định có quan hệ phụ thuộc. Nếu bài đăng bị đánh giá là không hữu ích,
-việc phân luồng cứu hộ không còn nhiều ý nghĩa. Nếu bài đăng được xếp vào nhóm
-thương vong nhưng hai phương thức mâu thuẫn mạnh, hệ thống vẫn phải cảnh báo
-đội khẩn cấp đồng thời yêu cầu người giám sát kiểm tra; không được tự động hạ
-mức ưu tiên chỉ vì mô hình chưa chắc chắn.
+Năm quyết định có quan hệ phụ thuộc. Nếu một tweet bị đánh giá là không hữu ích,
+việc phân luồng không còn nhiều ý nghĩa. Nếu một tweet được xếp vào nhóm thương
+vong nhưng hai phương thức mâu thuẫn mạnh, hệ thống vẫn phải đưa lên đầu hàng đợi
+\emph{đồng thời} yêu cầu người giám sát kiểm tra; nó không tự động hạ mức ưu tiên
+chỉ vì mô hình chưa chắc chắn.
 
 \section{Người sử dụng và nhu cầu thông tin}
 
@@ -65,11 +197,11 @@ mức ưu tiên chỉ vì mô hình chưa chắc chắn.
 \textbf{Thông tin hệ thống cung cấp}\\
 \midrule
 Ban điều phối & Ưu tiên nguồn lực và theo dõi khối lượng sự vụ &
-Số bài theo mức ưu tiên, sự kiện, nhóm nhu cầu và đội tiếp nhận\\
+Số tweet theo mức ưu tiên, sự kiện, nhóm nhu cầu và đội tiếp nhận\\
 Đội khẩn cấp & Xác định trường hợp liên quan sinh mạng cần kiểm tra trước &
 Nhãn thương vong/mất tích, điểm rủi ro, nội dung gốc và cảnh báo mâu thuẫn\\
 Đội hạ tầng & Lập danh sách đường, cầu, điện nước hoặc phương tiện bị hư hỏng &
-Nhãn hạ tầng/phương tiện, thứ tự ưu tiên và bài đăng gốc\\
+Nhãn hạ tầng/phương tiện, thứ tự ưu tiên và tweet gốc\\
 Đội cứu trợ & Điều phối lương thực, nơi trú ẩn, tình nguyện và quyên góp &
 Nhãn người bị ảnh hưởng/cứu trợ, mức ưu tiên và khối lượng theo sự kiện\\
 Giám sát viên & Xác minh trường hợp không nhất quán hoặc thiếu tin cậy &
@@ -80,12 +212,12 @@ Xác suất từng nhánh, conflict score, ảnh, văn bản và lý do cần re
 
 Bảng trên cho thấy cùng một dự báo phải được trình bày khác nhau tùy người dùng.
 Một nhà nghiên cứu quan tâm đến F1 hoặc confusion matrix, trong khi điều phối
-viên cần hàng đợi có thể sắp xếp và hành động đề xuất. DSS phải nối được hai
-góc nhìn này.
+viên cần một hàng đợi có thể sắp xếp và một hành động đề xuất. DSS phải nối được
+hai góc nhìn này.
 
 \section{Ví dụ xuyên suốt}
 
-Giả sử hệ thống nhận được bài đăng:
+Giả sử hệ thống nhận được tweet:
 
 \begin{quote}
 \emph{``Urgent! People are trapped after the bridge collapsed in rising flood
@@ -103,21 +235,57 @@ Quá trình xử lý được chia thành các bước có thể kiểm tra:
         xác suất của tám nhóm humanitarian;
   \item Late Fusion kết hợp hai tập xác suất bằng trọng số được chọn trên tập
         dev;
-  \item tầng DSS kết hợp xác suất, mức nghiêm trọng của nhóm, từ khóa khẩn cấp
-        và độ tin cậy để tạo Risk Score;
+  \item tầng DSS kết hợp các tín hiệu thành một điểm rủi ro (Risk Score);
   \item Risk Score và nhóm humanitarian được chuyển thành Priority, đội tiếp
-        nhận và cờ Manual Review.
+        nhận gợi ý và cờ Manual Review.
 \end{enumerate}
 
-Ví dụ này thể hiện ranh giới quan trọng: mô hình dự báo cung cấp bằng chứng,
-còn quy tắc DSS chuyển bằng chứng thành một đề xuất hành động. Quyết định cuối
+Ví dụ này thể hiện ranh giới quan trọng: mô hình dự báo cung cấp bằng chứng, còn
+quy tắc DSS chuyển bằng chứng thành một \emph{đề xuất} hành động. Quyết định cuối
 cùng vẫn thuộc về con người.
+
+\section{Các tình huống thực tế cần xử lý}
+\label{sec:scenarios}
+
+Câu hỏi nghiên cứu sẽ ít giá trị nếu chỉ coi mỗi tweet là một dòng dữ liệu sạch.
+Trên thực tế, nhiều tình huống khó xảy ra thường xuyên. Bảng~\ref{tab:scenarios}
+liệt kê các tình huống mà thiết kế hệ thống phải tính đến; các chương sau sẽ
+quay lại từng tình huống.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Tình huống thực tế và cách hệ thống được kỳ vọng phản ứng.}
+\label{tab:scenarios}
+\begin{tabularx}{\textwidth}{p{5cm}X}
+\toprule
+\textbf{Tình huống} & \textbf{Phản ứng mong muốn của hệ thống}\\
+\midrule
+Văn bản khẩn cấp nhưng ảnh không liên quan &
+Hai phương thức bất đồng $\rightarrow$ giữ ưu tiên cao và bật cờ review.\\
+Ảnh thiệt hại rõ nhưng văn bản chỉ là tiêu đề chung &
+Tin nhánh ảnh, không vội kết luận nhóm từ riêng văn bản.\\
+Ảnh cũ được đăng lại trong sự kiện mới &
+Bộ lọc trùng lặp (hash) đánh dấu; không tính như bằng chứng mới.\\
+Tweet thiếu vị trí &
+Vẫn xếp ưu tiên nhưng nhắc người xác minh phải tìm vị trí trước khi hành động.\\
+Tweet châm biếm hoặc phủ định (``thank god nobody died'') &
+Là điểm yếu đã biết của TF--IDF; đưa vào cờ review thay vì tin tuyệt đối.\\
+Hàng review vượt công suất &
+Ngưỡng conflict được khóa dưới một giới hạn công suất; chỉ giữ ca bất đồng nhất.\\
+Lớp hiếm có xác suất cao nhưng ít bằng chứng &
+Không tự động hóa; luôn chuyển con người kiểm tra.\\
+Thảm họa mới chưa từng xuất hiện trong train &
+EDA cảnh báo nguy cơ; dashboard cho lọc theo sự kiện để theo dõi độ ổn định.\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \section{Mục tiêu của dự án}
 
-Mục tiêu tổng quát là xây dựng và đánh giá một nguyên mẫu DSS đa phương thức
-có khả năng chuyển dữ liệu mạng xã hội thành thông tin hỗ trợ điều phối cứu
-trợ. Các mục tiêu cụ thể gồm:
+Mục tiêu tổng quát là xây dựng và đánh giá một nguyên mẫu DSS đa phương thức có
+khả năng chuyển dữ liệu tweet--ảnh đã lưu trữ thành thông tin hỗ trợ điều phối
+cứu trợ. Các mục tiêu cụ thể gồm:
 
 \begin{enumerate}[leftmargin=*]
   \item sử dụng toàn bộ dữ liệu CrisisMMD v2.0, gồm 18.082 cặp tweet--ảnh;
@@ -126,37 +294,52 @@ trợ. Các mục tiêu cụ thể gồm:
         khi join, mất cân bằng và bản sao xuyên split;
   \item so sánh sáu thuật toán phân lớp cổ điển trên hai phương thức và hai
         nhiệm vụ dự báo;
-  \item đánh giá việc kết hợp văn bản--ảnh so với từng phương thức đơn lẻ và
-        so với baseline đơn giản;
+  \item đánh giá việc kết hợp văn bản--ảnh so với từng phương thức đơn lẻ và so
+        với baseline đơn giản;
   \item xây dựng tầng quyết định gồm Risk Score, Priority, Routing và Manual
         Review với giả định được công khai;
-  \item cung cấp dashboard để người sử dụng xem tổng quan, kiểm tra mô hình,
-        thử một trường hợp và xử lý hàng đợi ưu tiên.
+  \item cung cấp dashboard để người sử dụng xem tổng quan, kiểm tra mô hình, thử
+        một trường hợp và xử lý hàng đợi ưu tiên.
 \end{enumerate}
 
 \section{Câu hỏi nghiên cứu}
+
+Nhóm câu hỏi thứ nhất mang tính \emph{phương pháp}, kiểm tra bằng metric:
 
 \begin{enumerate}[leftmargin=*]
   \item Văn bản và hình ảnh đóng góp khác nhau như thế nào khi dự báo cùng
         ground truth đa phương thức?
   \item Late Fusion có cải thiện chất lượng so với text-only, image-only và
         dummy baseline hay không?
-  \item Mất cân bằng lớp và sự khác biệt giữa các thảm họa ảnh hưởng thế nào
-        tới khả năng nhận diện các nhóm hiếm?
-  \item Có thể sử dụng bất đồng text--ảnh để tạo một hàng đợi kiểm duyệt nằm
-        trong năng lực xử lý của con người hay không?
-  \item Làm thế nào chuyển kết quả dự báo thành khuyến nghị ưu tiên và phân
-        luồng mà không nhầm chính sách heuristic với kết quả đã học từ dữ liệu?
+  \item Mất cân bằng lớp và sự khác biệt giữa các thảm họa ảnh hưởng thế nào tới
+        khả năng nhận diện các nhóm hiếm?
+  \item Có thể dùng bất đồng text--ảnh để tạo một hàng đợi kiểm duyệt nằm trong
+        năng lực xử lý của con người hay không?
+\end{enumerate}
+
+Nhóm câu hỏi thứ hai mang tính \emph{vận hành}, kiểm tra bằng kịch bản và quy
+tắc thiết kế:
+
+\begin{enumerate}[leftmargin=*,resume]
+  \item Khi tweet thiếu vị trí, kết quả được phép dùng đến đâu trước khi bắt buộc
+        con người xác minh?
+  \item Khi văn bản và ảnh xung đột, ai là người xem lại và họ cần xem gì?
+  \item Khi công suất review đã đầy, hệ thống ưu tiên giữ lại loại ca nào?
+  \item Kết quả thay đổi ra sao trên một sự kiện thảm họa mới?
+  \item Hệ thống có thực sự giúp ích hơn việc đọc tuần tự hoặc luôn dự báo lớp
+        đa số hay không?
 \end{enumerate}
 
 \section{Phạm vi và giới hạn}
 
-Dự án sử dụng dữ liệu tiếng Anh của bảy thảm họa trong năm 2017. Hệ thống
-không thu thập bài đăng thời gian thực, không xác minh danh tính người đăng,
-không trích xuất chính xác tọa độ và không tự động điều động lực lượng ngoài
-đời. Risk Score và Priority không có ground truth tương ứng trong CrisisMMD;
-do đó chúng được xem là \textbf{chính sách vận hành thử nghiệm}, được kiểm tra
-bằng kịch bản và phân tích độ nhạy chứ không được tuyên bố là tối ưu thống kê.
+Dự án sử dụng dữ liệu tiếng Anh của bảy thảm họa trong năm 2017. Như đã nêu ở
+Mục~\ref{sec:scope-data}, hệ thống \textbf{không} thu thập tweet thời gian thực,
+\textbf{không} gọi Twitter/X API, \textbf{không} đi theo URL trong tweet, không
+xác minh danh tính người đăng, không trích xuất chính xác tọa độ và không tự
+động điều động lực lượng ngoài đời. Risk Score và Priority không có ground truth
+tương ứng trong CrisisMMD; do đó chúng được xem là \textbf{chính sách vận hành
+thử nghiệm}, được kiểm tra bằng kịch bản và phân tích độ nhạy chứ không được
+tuyên bố là tối ưu thống kê.
 
 Sản phẩm hướng tới sàng lọc và tổ chức thông tin. Các nhóm có số mẫu rất thấp,
 đặc biệt người mất tích và hư hỏng phương tiện, luôn cần con người kiểm tra
@@ -164,8 +347,8 @@ trước khi dùng cho quyết định có hậu quả lớn.
 
 \section{Cấu trúc báo cáo}
 
-Các chương tiếp theo lần lượt trình bày nền tảng DSS; dữ liệu và cách tạo đặc
-trưng; cơ sở các phương pháp; EDA; thiết kế thực nghiệm và kết quả mô hình;
-Late Fusion và tầng quyết định; dashboard; khuyến nghị, giới hạn và hướng phát
-triển. Phụ lục chứa phân công, khai báo sử dụng công cụ hỗ trợ, siêu tham số
-và bảng tự đánh giá theo hướng dẫn học phần.
+Các chương tiếp theo lần lượt trình bày nền tảng DSS và bản đồ kiến thức học
+phần; dữ liệu và cách tạo đặc trưng; EDA; thiết kế thực nghiệm và kết quả mô
+hình; Late Fusion và tầng quyết định; dashboard; khuyến nghị, giới hạn và hướng
+phát triển. Phụ lục chứa phân công, khai báo sử dụng công cụ hỗ trợ, siêu tham
+số và bảng tự đánh giá theo hướng dẫn học phần.

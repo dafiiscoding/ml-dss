@@ -9,8 +9,13 @@ ngẫu nhiên.
 1. Mở `docs/PROGRESS.md` để lấy trạng thái khóa, số liệu chính và giới hạn.
 2. Mở `README.md` để hiểu bài toán quyết định, dữ liệu, lệnh tái lập và cấu trúc.
 3. Mở `docs/GRADING_MAP.md` để đối chiếu rubric môn học.
-4. Mở `reports/PIZZA_DSS_REPORT.pdf` để đọc bài nộp chính.
-5. Mở `slides/PIZZA_DSS_SLIDE_DECK.pdf` để xem flow thuyết trình.
+4. Mở `docs/SCOPE_PRIORITIZATION.md` để biết phần nào là lõi, phần nào chỉ nên
+   để phụ lục/notebook.
+5. Mở `reports/PIZZA_DSS_REPORT.pdf` để đọc bài nộp chính.
+6. Mở `reports/REPORT_GUIDE.md` nếu cần biết từng chương PDF đang chứng minh gì.
+7. Mở `slides/PIZZA_DSS_SLIDE_DECK.pdf` và `slides/SLIDE_GUIDE.md` để xem flow
+   thuyết trình + speaking notes.
+8. Mở `powerbi/POWERBI_BUILD_GUIDE.md` nếu cần dựng dashboard Power BI Desktop.
 
 ## 2. Đọc theo thứ tự làm việc
 
@@ -121,12 +126,16 @@ ngẫu nhiên.
   - `reports/metrics/baseline_dev_metrics.csv`
   - `reports/metrics/model_dev_comparison.csv`
   - `reports/metrics/feature_set_comparison.csv`
+  - `reports/metrics/hyperparameter_tuning.csv`
+  - `reports/metrics/default_vs_tuned_lr.csv`
   - `reports/metrics/model_test_metrics.csv`
   - `reports/metrics/model_summary.json`
   - `models/best_delay_model.joblib`
 - Ý chính:
   - Fit trên train, chọn bằng dev theo F2, báo test một lần.
   - Model chính là Logistic Regression trên compact feature set.
+  - Tuning chỉ Logistic Regression sau khi chọn model; tuned C=0.3 kém default
+    C=1.0 trên dev nên giữ default.
   - Test: Accuracy 0,9602; Balanced Accuracy 0,9661; F2 0,9491; MCC 0,8889.
   - Luôn đặt cạnh baseline always-on-time và always-delayed.
 
@@ -140,13 +149,20 @@ ngẫu nhiên.
 - Notebook: `notebooks/04_dss_optimization_powerbi.ipynb`.
 - Artifact:
   - `data/processed/delay_priority_queue.csv`
+  - `reports/metrics/risk_component_policy_spec.csv`
   - `reports/metrics/transport_assignment.csv`
   - `reports/metrics/transport_assignment_summary.json`
+  - `reports/metrics/transport_cost_policy_spec.csv`
   - `powerbi/`
 - Ý chính:
   - DSS chuyển xác suất thành Risk Score, Priority và Recommended Action.
+  - Risk Score không phải hộp đen: 6 component được chuẩn hóa về 0-100, cộng có
+    trọng số và hiển thị breakdown trong report/slide/Streamlit.
   - Transportation scenario dùng đơn thật nhưng driver/fleet là giả lập.
-  - Power BI hiện là data pack CSV/DAX/spec, không phải file `.pbix`.
+  - Cost assignment được minh bạch bằng `transport_cost_policy_spec.csv`: travel
+    proxy + priority penalty + traffic penalty - same-location bonus.
+  - Power BI hiện là data pack CSV/DAX/spec, không phải file `.pbix`; cách dựng
+    chi tiết nằm ở `powerbi/POWERBI_BUILD_GUIDE.md`.
 
 ## 2b. Bản đồ Hình → Slide và Dữ liệu → Power BI
 
@@ -182,11 +198,13 @@ thấy biểu đồ ngay cạnh bảng), nguồn PNG dùng chung với slide và
 | `preference_size_share_forecast.png` | [SLIDE] đã có | 05 | Trend share size (gần phẳng) |
 | `hourly_staffing_plan.png` | tùy chọn | 05 | Peak 19h cho staffing |
 | `priority_distribution.png` | [SLIDE] nên thêm | 04 | Cơ cấu Low/Med/High |
+| `risk_component_breakdown.png` | [SLIDE] đã có | 04 | Mỗi component đóng góp bao nhiêu vào Risk Score |
 | `risk_score_histogram.png` | tùy chọn | 04 | Phân bố risk score + ngưỡng |
 | `transport_assignment_cost.png` | tùy chọn | 04 | Chi phí gán tài xế giả lập |
 
 Slide hiện đã chèn 7 hình (`pizza_dss_slides.tex`). Các hình `[SLIDE] nên thêm`
 là khuyến nghị mở rộng; chèn thì rebuild bằng `scripts.build_slides_pdf`.
+Speaking notes chi tiết theo từng slide nằm ở `slides/SLIDE_GUIDE.md`.
 
 ### Dữ liệu → Power BI
 
@@ -198,11 +216,13 @@ trong `src/pizza_dss/powerbi.py::build_powerbi_pack` (notebook 04):
 | `fact_orders.csv` | fact | bảng đơn đã chuẩn hóa từ `data_loader` |
 | `fact_delay_queue.csv` | fact | `data/processed/delay_priority_queue.csv` |
 | `fact_transport_assignment.csv` | fact | `reports/metrics/transport_assignment.csv` |
+| `fact_transport_cost_policy.csv` | fact | `reports/metrics/transport_cost_policy_spec.csv` |
 | `fact_monthly_demand_forecast.csv` | fact | `reports/metrics/monthly_demand_forecast.csv` |
 | `fact_hourly_staffing_plan.csv` | fact | `reports/metrics/hourly_staffing_plan.csv` |
 | `fact_recommendation_rules.csv` | fact | `reports/metrics/recommendation_rules.csv` |
 | `fact_hypothesis_tests.csv` | fact | `reports/metrics/hypothesis_tests.csv` |
 | `fact_data_realism_audit.csv` | fact | `reports/metrics/synthetic_data_audit.csv` |
+| `fact_risk_component_policy.csv` | fact | `reports/metrics/risk_component_policy_spec.csv` |
 | `fact_product_type_mix.csv` | fact | `reports/metrics/type_mix.csv` |
 | `fact_product_size_mix.csv` | fact | `reports/metrics/size_mix.csv` |
 | `fact_top_restaurant_by_type.csv` | fact | `reports/metrics/top_restaurant_by_type.csv` |
@@ -212,9 +232,11 @@ trong `src/pizza_dss/powerbi.py::build_powerbi_pack` (notebook 04):
 | `dim_date.csv` | dim | `order_date` từ `fact_orders` |
 
 Quan hệ chính (đã ghi trong `dashboard_spec.md`): `fact_orders[order_id]` →
-`fact_delay_queue[order_id]` → `fact_transport_assignment[order_id]`; và
+`fact_delay_queue[order_id]` → `fact_transport_assignment[order_id]`; bảng
+`fact_transport_cost_policy` là lookup/spec không cần relationship bắt buộc; và
 `fact_orders` nối `dim_restaurant`/`dim_location`/`dim_date`. Đo lường ở
-`powerbi/measures.dax`.
+`powerbi/measures.dax`. Page-by-page build guide nằm ở
+`powerbi/POWERBI_BUILD_GUIDE.md`.
 
 ## 3. Script chạy lại
 
@@ -228,21 +250,23 @@ cd pizza_delivery_dss
 Kết quả khóa hiện tại:
 
 - `scripts.run_all`: 18/18 bước pass.
-- Unit tests: 26/26 pass.
+- Unit tests: 30/30 pass.
 - Streamlit AppTest: pass.
 
 ## 4. Outline thuyết trình 10-12 phút
 
-1. Bài toán quyết định: vì sao cần DSS, output là gì.
-2. Dữ liệu và leakage: target, cột cấm, split.
-3. Data realism/forensics: dữ liệu synthetic, công thức tất định, duration grid.
-4. EDA insight: lớp trễ, traffic/distance, complexity.
-5. Behavior và forecast: size/type, demand forecast, trend share, staffing.
-6. Modeling: feature set compact, model comparison, metric test và baseline.
-7. DSS layer: risk score, priority, recommended action, delay queue.
-8. Tối ưu vận tải và Power BI: assignment scenario, dashboard/data pack.
-9. Giới hạn: synthetic data, forecast demo, driver giả lập, priority chưa tối ưu cost thật.
-10. Kết luận: dự án nhỏ nhưng đủ quy trình DSS môn học.
+Outline rút gọn chính thức nằm trong `docs/SCOPE_PRIORITIZATION.md`. Bản gọn
+nên ưu tiên:
+
+1. Bài toán quyết định và output DSS.
+2. Data + leakage + target threshold.
+3. Synthetic forensics.
+4. EDA chính: class imbalance, traffic/distance.
+5. Model comparison, Bayes không chọn, tuning/F-beta/stability.
+6. Test result + baseline.
+7. Risk Score + Priority + Queue/Action.
+8. Streamlit/Power BI/transport assignment ở mức demo.
+9. Giới hạn và kết luận.
 
 ## 5. Các câu dễ bị hỏi khi bảo vệ
 

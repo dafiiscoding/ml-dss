@@ -13,6 +13,44 @@ import pandas as pd
 from pizza_dss.config import FIGURES_DIR, METRICS_DIR, RANDOM_STATE
 from pizza_dss.dashboard_data import load_dashboard_data
 
+TRANSPORT_COST_POLICY = [
+    {
+        "term": "travel_minutes",
+        "formula": "distance_km * 3.2 / driver_speed_factor",
+        "source": "distance_km từ đơn thật; speed_factor từ fleet giả lập",
+        "effect": "Đơn xa hoặc tài xế chậm hơn có cost cao hơn.",
+    },
+    {
+        "term": "priority_penalty",
+        "formula": "0.35 * (100 - delay_risk_score)",
+        "source": "delay_risk_score từ queue DSS",
+        "effect": "Đơn risk càng cao thì penalty càng thấp để được ưu tiên gán.",
+    },
+    {
+        "term": "high_traffic_penalty",
+        "formula": "6 nếu traffic_level == 'High', ngược lại 0",
+        "source": "traffic_level từ đơn thật",
+        "effect": "Traffic cao làm tăng cost vì cần thêm buffer vận hành.",
+    },
+    {
+        "term": "same_location_bonus",
+        "formula": "-8 nếu order.location == driver.base_location, ngược lại 0",
+        "source": "location từ đơn thật; base_location từ fleet giả lập",
+        "effect": "Ưu tiên tài xế cùng khu vực để giảm chi phí proxy.",
+    },
+    {
+        "term": "cost_floor",
+        "formula": "max(travel + priority + traffic - same_location_bonus, 0)",
+        "source": "quy tắc an toàn của mô hình cost",
+        "effect": "Đảm bảo cost không âm khi có bonus cùng khu vực.",
+    },
+]
+
+
+def transport_cost_policy_spec():
+    """Return the transparent cost formula used by the assignment scenario."""
+    return [item.copy() for item in TRANSPORT_COST_POLICY]
+
 
 def build_driver_fleet():
     """Return a small deterministic fleet used for the coursework scenario.
@@ -160,6 +198,9 @@ def build_transport_artifacts():
     drivers = build_driver_fleet()
     assignments.to_csv(METRICS_DIR / "transport_assignment.csv", index=False)
     drivers.to_csv(METRICS_DIR / "transport_driver_scenario.csv", index=False)
+    pd.DataFrame(transport_cost_policy_spec()).to_csv(
+        METRICS_DIR / "transport_cost_policy_spec.csv", index=False
+    )
     summary = {
         "scenario_type": "simulated_driver_fleet_on_real_orders",
         "assigned_orders": int(len(assignments)),
@@ -167,6 +208,8 @@ def build_transport_artifacts():
         "total_capacity": int(drivers["capacity"].sum()),
         "mean_assignment_cost": round(float(assignments["estimated_assignment_cost"].mean()), 2),
         "high_priority_assigned": int((assignments["priority"] == "High").sum()),
+        "algorithm": "Hungarian linear sum assignment; greedy fallback if scipy is unavailable",
+        "cost_formula": "distance_km*3.2/speed_factor + 0.35*(100-risk_score) + high_traffic_penalty - same_location_bonus, floored at 0",
         "note": "Drivers/capacity are simulated because the Kaggle dataset has no driver table.",
     }
     with open(METRICS_DIR / "transport_assignment_summary.json", "w", encoding="utf-8") as stream:

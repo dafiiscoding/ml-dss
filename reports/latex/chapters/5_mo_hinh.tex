@@ -1,4 +1,5 @@
 \chapter{Mô hình dự báo, hợp nhất và chính sách DSS}
+\label{chap:mohinh}\label{chap:dss}
 
 \section{Bài toán học có giám sát}
 
@@ -110,6 +111,59 @@ tương quan, từ đó giảm phương sai so với một cây đơn. Dự án 
 \code{balanced\_subsample}. Đánh đổi là model lớn hơn, giải thích khó hơn cây
 đơn và có thể không tận dụng không gian TF--IDF tuyến tính tốt bằng SVM.
 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\scriptsize,
+  pa/.style={circle,fill=HUSTBlue!55,inner sep=0.9pt},
+  pb/.style={rectangle,fill=HUSTRed!55,inner sep=1.2pt},
+  panel/.style={draw=black!30,minimum width=2.6cm,minimum height=2cm}]
+\foreach \name/\col/\row in {Logistic Regression/0/0, Decision Tree/1/0, Naive Bayes/2/0,
+  k-NN/0/1, SVM/1/1, Random Forest/2/1}{
+  \node[panel] at (\col*3,-\row*2.5) {};
+  \node[font=\scriptsize\bfseries,HUSTBlue] at (\col*3,-\row*2.5+1.25) {\name};
+}
+% LR: straight diagonal line
+\draw[thick] (-1.0,-0.9+0) -- (1.0,0.9+0);
+% DT: axis-aligned steps (panel 1,0)
+\draw[thick] (3.0,0.0) -- (3.0,0.9) (3.0,0.0) -- (4.0,0.0) (3.0,0.0)--(3.0,-0.9);
+% NB: curved (panel 2,0)
+\draw[thick] (5.1,-0.9) .. controls (6.0,0.2) .. (6.9,0.9);
+% kNN: jagged (panel 0,1)
+\draw[thick] (-1.0,-2.5+0.6) -- (-0.4,-2.5-0.2) -- (0.2,-2.5+0.4) -- (1.0,-2.5-0.3);
+% SVM: line with margin (panel 1,1)
+\draw[thick] (2.0,-2.5-0.9) -- (4.0,-2.5+0.9);
+\draw[dashed,black!50] (2.0,-2.5-0.5) -- (4.0,-2.5+1.3);
+\draw[dashed,black!50] (2.0,-2.5-1.3) -- (4.0,-2.5+0.5);
+% RF: multiple steps (panel 2,1)
+\draw[thick] (5.2,-2.5+0.6)--(5.8,-2.5+0.6)--(5.8,-2.5-0.3)--(6.4,-2.5-0.3)--(6.4,-2.5+0.3)--(6.9,-2.5+0.3);
+\end{tikzpicture}
+\caption{Trực giác hình dạng ranh giới quyết định của sáu họ trên cùng một dữ
+liệu hai lớp (sơ đồ minh họa): tuyến tính (LR, SVM), bậc thang theo trục (Cây,
+Rừng), cong (Naive Bayes) và cục bộ gồ ghề (k-NN).}
+\label{fig:classifier-grid}
+\end{figure}
+
+\subsection{Vì sao không dùng XGBoost hay mạng sâu?}
+
+Một câu hỏi tự nhiên là vì sao không thêm XGBoost hoặc một classifier sâu. Lý do
+không phải vì các mô hình đó ``kém'' -- mà vì chúng \emph{chưa cần} để trả lời
+câu hỏi hiện tại:
+
+\begin{itemize}[leftmargin=*]
+  \item mục tiêu học phần là \emph{bao phủ} các họ thuật toán trong chương trình
+        và so sánh chúng \emph{có kiểm soát} trên cùng đặc trưng, không phải săn
+        Accuracy cao nhất bằng mọi giá;
+  \item trên TF--IDF tuyến tính, SVM/LR tuyến tính thường đã là baseline rất
+        mạnh; lợi ích biên của boosting trên đặc trưng thưa này thường nhỏ;
+  \item các lớp hiếm (5--24 mẫu) quá nhỏ, mô hình càng phức tạp càng dễ overfit
+        và càng khó đánh giá đáng tin;
+  \item thêm một họ mô hình mới chỉ hợp lệ nếu kèm một protocol tuning công bằng
+        như các họ còn lại; thêm tùy tiện sẽ làm so sánh thiên lệch.
+\end{itemize}
+
+XGBoost và mô hình sâu vì vậy được đặt ở hướng phát triển, gắn với điều kiện có
+thêm dữ liệu lớp hiếm và một quy trình đánh giá tương xứng.
+
 \section{Mất cân bằng lớp và trọng số}
 
 Với \(K\) lớp, scikit-learn đặt trọng số cân bằng xấp xỉ:
@@ -131,13 +185,34 @@ theo lớp vẫn phải được báo cáo.
 
 \subsection{Nhị phân informative}
 
-Gọi TP là informative dự báo đúng, FP là not-informative bị báo nhầm, FN là
-informative bị bỏ sót và TN là not-informative dự báo đúng:
+Trước khi định nghĩa metric cần có \emph{confusion matrix} -- bảng đếm bốn loại
+kết quả. Gọi TP là informative dự báo đúng, FP là not-informative bị báo nhầm,
+FN là informative bị bỏ sót và TN là not-informative dự báo đúng:
+
+\begin{table}[H]\centering\small
+\caption{Confusion matrix nhị phân với một ví dụ số (100 mẫu).}
+\begin{tabular}{ll cc}
+\toprule
+& & \multicolumn{2}{c}{\textbf{Dự báo}}\\
+& & informative & not-informative\\
+\midrule
+\multirow{2}{*}{\textbf{Thực tế}} & informative & TP $=55$ & FN $=5$\\
+& not-informative & FP $=15$ & TN $=25$\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \[
 \operatorname{Precision}=\frac{TP}{TP+FP},\qquad
 \operatorname{Recall}=\frac{TP}{TP+FN}.
 \]
+
+Với ví dụ trên: \(\operatorname{Accuracy}=(55+25)/100=0{,}80\);
+\(\operatorname{Precision}=55/(55+15)=0{,}79\);
+\(\operatorname{Recall}=55/(55+5)=0{,}92\);
+\(F1=2\cdot\frac{0{,}79\cdot0{,}92}{0{,}79+0{,}92}=0{,}85\). Recall cao hơn
+Precision nghĩa là mô hình bắt được hầu hết ca informative nhưng đổi lại nhận
+nhầm một số ca không liên quan.
 
 F1 là trung bình điều hòa của Precision và Recall. F\(_\beta\) tổng quát:
 
@@ -303,16 +378,55 @@ Image humanitarian & Logistic Regression &
 \end{tabularx}
 \end{table}
 
-SVM text tăng F2 dev từ .8511 lên .8548. k-NN ảnh tăng từ .8146 lên .8216.
-Hai model tám lớp giữ \(C=1\); lưới tuning đã được chạy nhưng không tìm thấy
-cấu hình khác tốt hơn đủ rõ. Đây là kết quả hợp lệ: tuning là kiểm định lựa
-chọn, không bảo đảm luôn tạo cải thiện.
+Các con số trong lưới không phải ngẫu nhiên; mỗi tham số có một ý nghĩa và một
+hệ quả khi tăng:
+
+\begin{table}[H]\centering\small
+\caption{Ý nghĩa các siêu tham số được dò.}
+\begin{tabularx}{\textwidth}{p{2.2cm}p{4.4cm}X}
+\toprule
+\textbf{Tham số} & \textbf{Ý nghĩa} & \textbf{Khi tăng giá trị}\\
+\midrule
+\(C\) (SVM, LR) & Mức phạt lỗi trên train (nghịch đảo regularization) &
+Bám train sát hơn, biên hẹp hơn, dễ overfit hơn.\\
+\(k\) (k-NN) & Số láng giềng tham gia bỏ phiếu &
+Dự báo mượt hơn, ít nhiễu nhưng có thể bỏ chi tiết cục bộ.\\
+distance weighting & Cho láng giềng gần trọng số lớn hơn &
+Láng giềng rất gần chi phối, giảm ảnh hưởng của điểm xa.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{Metric chọn model trên dev: trước và sau tuning.}
+\begin{tabular}{lllrrr}
+\toprule
+\textbf{Task} & \textbf{Model} & \textbf{Metric} & \textbf{Trước} &
+\textbf{Sau} & \textbf{Chênh}\\
+\midrule
+Text informative & Linear SVM (C: mặc định$\to$3) & F2 & .8511 & .8548 & +.0037\\
+Image informative & k-NN (k: 15$\to$41, distance) & F2 & .8146 & .8216 & +.0070\\
+Text humanitarian & Logistic Reg. (C=1, giữ) & Macro-F1 & .3297 & .3297 & .0000\\
+Image humanitarian & Logistic Reg. (C=1, giữ) & Macro-F1 & .3637 & .3637 & .0000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Hai task informative nhích nhẹ; hai task tám lớp \emph{không đổi} vì lưới tuning
+đã chạy nhưng không cấu hình nào vượt \(C=1\) đủ rõ (chênh Macro-F1 dưới ngưỡng
+hòa 0,001). Đây là kết quả hợp lệ và \emph{bình thường}: tuning là kiểm định lựa
+chọn, không bảo đảm luôn tạo cải thiện, và việc hai task không nhúc nhích không
+phải là tuning ``thất bại''.
 
 \section{Vòng 3: xác suất, Late Fusion và conflict}
 
 \subsection{Căn chỉnh xác suất}
 
-Late Fusion kết hợp đầu ra sau khi mỗi nhánh đã dự báo. Với informative:
+Cơ sở lý thuyết của bước này là \emph{trung bình có trọng số} (weighted average),
+trong thống kê gọi là \emph{linear opinion pool}: khi có hai nguồn cùng ước
+lượng xác suất cho một biến cố, ta trộn chúng bằng trọng số không âm cộng lại
+bằng 1. Kết quả vẫn là một xác suất hợp lệ trong khoảng \([0,1]\). Với
+informative:
 
 \[
 p_{\mathrm{fused}}
@@ -321,8 +435,30 @@ p_{\mathrm{fused}}
 \hat y=\mathbb{1}[p_{\mathrm{fused}}\ge\tau].
 \]
 
-Với humanitarian, mỗi model tạo vector tám xác suất. Pipeline căn cột theo cùng
-thứ tự lớp, điền 0 nếu một model thiếu lớp, rồi tính:
+\paragraph{Ví dụ số.} Giả sử nhánh văn bản tự tin
+\(p_{\mathrm{text}}=0{,}80\) còn nhánh ảnh dè dặt \(p_{\mathrm{image}}=0{,}40\),
+với \(\alpha=0{,}70\):
+\[
+p_{\mathrm{fused}}=0{,}70\times0{,}80+0{,}30\times0{,}40=0{,}68.
+\]
+So với ngưỡng \(\tau=0{,}38\), vì \(0{,}68\ge0{,}38\) nên tweet được phân loại
+\emph{informative}. Trọng số \(\alpha\) lớn hơn cho text phản ánh việc nhánh văn
+bản mạnh hơn trên dev, nhưng ảnh vẫn kéo kết quả xuống một chút so với khi chỉ
+nghe text.
+
+Với humanitarian, mỗi model tạo vector tám xác suất. Trước khi viết công thức
+tám lớp, xét một ví dụ \emph{rút gọn ba lớp} cho dễ hình dung. Giả sử nhánh văn
+bản cho \(\mathbf{q}_{\mathrm{text}}=[0{,}60;\,0{,}30;\,0{,}10]\), nhánh ảnh cho
+\(\mathbf{q}_{\mathrm{image}}=[0{,}20;\,0{,}50;\,0{,}30]\), với
+\(\beta=0{,}55\):
+\[
+\mathbf{q}_{\mathrm{fused}}=0{,}55\,\mathbf{q}_{\mathrm{text}}
++0{,}45\,\mathbf{q}_{\mathrm{image}}
+=[0{,}42;\,0{,}39;\,0{,}19].
+\]
+Tổng vẫn bằng 1; lớp được chọn là lớp có xác suất lớn nhất (ở đây lớp 1, \(0{,}42\)).
+Mở rộng nguyên xi cho tám lớp: pipeline căn cột theo cùng thứ tự lớp, điền 0 nếu
+một model thiếu lớp, rồi tính:
 
 \[
 \mathbf{q}_{\mathrm{fused}}
@@ -475,9 +611,12 @@ cùng event có thể tương quan. Informative F2 theo event nằm trong
 
 \subsection{Risk Score}
 
-Classifier tạo xác suất và category, nhưng dữ liệu không có nhãn Priority.
-Risk Score do đó là một chính sách minh bạch, không phải một model đã được
-chứng minh tối ưu:
+Classifier tạo xác suất và category, nhưng dữ liệu không có nhãn Priority. Vì
+vậy Risk Score được xây như một \emph{weighted scoring model} -- một công cụ kinh
+điển của DSS: liệt kê vài tiêu chí, cho mỗi tiêu chí một trọng số do tổ chức
+chọn, rồi cộng lại thành một điểm tổng để xếp hạng. Nó là một chính sách minh
+bạch, \textbf{không} phải một model đã được chứng minh tối ưu. Công thức không
+``rơi từ trên trời'': mỗi số hạng tương ứng một câu hỏi nghiệp vụ:
 
 \[
 \begin{aligned}
@@ -494,6 +633,32 @@ chứng minh tối ưu:
 \(C_{\mathrm{category}}\) là độ tin cậy category. Nhân confidence với severity
 tránh trường hợp rất chắc chắn rằng bài đăng là not-humanitarian lại làm tăng
 risk. Các ngưỡng 0--39, 40--69 và 70--100 tạo Low, Medium, High.
+
+\paragraph{Ví dụ tính tay.} Một tweet ``bridge collapsed, people trapped'' kèm
+ảnh hạ tầng hư hỏng. Giả sử \(S_{\mathrm{informative}}=88\),
+\(S_{\mathrm{severity}}=80\) (nhóm hạ tầng), \(S_{\mathrm{keyword}}=70\) (có từ
+``trapped''), \(C_{\mathrm{category}}=0{,}9\). Khi đó:
+\[
+\operatorname{Risk}=0{,}40(88)+0{,}25(80)+0{,}20(70)+0{,}15(80\times0{,}9)
+=35{,}2+20+14+10{,}8=80{,}0,
+\]
+rơi vào dải \(70\)--\(100\) nên Priority = High. Lưu ý đây là điểm ưu tiên
+\emph{đọc trước}, không phải lệnh điều động.
+
+\paragraph{Ba phản ví dụ.} Công thức trọng số có những điểm mù cần con người:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Từ khóa trong câu phủ định:} ``thank god, nobody \emph{dead}''
+        vẫn kích hoạt \(S_{\mathrm{keyword}}\) dù ý nghĩa ngược lại; TF--IDF
+        không hiểu phủ định.
+  \item \textbf{Not-humanitarian nhưng conflict cao:} ảnh và text mâu thuẫn mạnh
+        khiến độ tin cậy thấp; điểm severity nhỏ nhưng ca này vẫn nên được review
+        thay vì bỏ qua.
+  \item \textbf{Lớp hiếm xác suất cao nhưng ít bằng chứng:} một dự báo
+        missing/found rất tự tin chỉ dựa trên vài mẫu train; Risk cao không đồng
+        nghĩa đáng tin, nên luôn chuyển con người.
+\end{enumerate}
+Đây chính là lý do Risk Score luôn đi kèm cờ Manual Review, và vì sao trọng số
+được công khai để có thể tranh luận và hiệu chỉnh.
 
 \subsection{Routing, override và sensitivity}
 

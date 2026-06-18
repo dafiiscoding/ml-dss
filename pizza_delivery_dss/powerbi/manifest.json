@@ -8,6 +8,8 @@
     "fact_recommendation_rules.csv",
     "fact_hypothesis_tests.csv",
     "fact_data_realism_audit.csv",
+    "fact_risk_component_policy.csv",
+    "fact_transport_cost_policy.csv",
     "fact_product_type_mix.csv",
     "fact_product_size_mix.csv",
     "fact_top_restaurant_by_type.csv",
@@ -18,5 +20,6 @@
   ],
   "dax": "measures.dax",
   "dashboard_spec": "dashboard_spec.md",
+  "build_guide": "POWERBI_BUILD_GUIDE.md",
   "note": "Create the .pbix manually in Power BI Desktop using this pack."
 }

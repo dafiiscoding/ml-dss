@@ -127,6 +127,10 @@ tests/                Kiểm thử pipeline
 |---|---|
 | Checklist nộp bài | [docs/SUBMISSION_CHECKLIST.md](docs/SUBMISSION_CHECKLIST.md) |
 | Hướng dẫn đọc hiểu/trình bày | [docs/WORKFLOW_PRESENTATION_GUIDE.md](docs/WORKFLOW_PRESENTATION_GUIDE.md) |
+| Hướng dẫn nội dung báo cáo PDF | [reports/REPORT_GUIDE.md](reports/REPORT_GUIDE.md) |
+| Hướng dẫn nội dung slide | [slides/SLIDE_GUIDE.md](slides/SLIDE_GUIDE.md) |
+| Hướng dẫn dựng Power BI | [powerbi/POWERBI_BUILD_GUIDE.md](powerbi/POWERBI_BUILD_GUIDE.md) |
+| Bảng giảm tải scope report/slide | [docs/SCOPE_PRIORITIZATION.md](docs/SCOPE_PRIORITIZATION.md) |
 | Plan dọn sạch project | [docs/CLEANUP_PLAN.md](docs/CLEANUP_PLAN.md) |
 | Hướng dẫn chấm | [INSTRUCTOR.md](INSTRUCTOR.md) |
 | Bản đồ rubric | [docs/GRADING_MAP.md](docs/GRADING_MAP.md) |
@@ -141,7 +145,7 @@ tests/                Kiểm thử pipeline
 | Notebook data forensics | [notebooks/06_data_forensics.ipynb](notebooks/06_data_forensics.ipynb) |
 | Data forensics artifacts | [reports/metrics/generator_reverse_engineering_summary.json](reports/metrics/generator_reverse_engineering_summary.json) |
 | Hình forensics/trend | [reports/figures/feature_information_audit.png](reports/figures/feature_information_audit.png) |
-| Power BI data pack | [powerbi/README.md](powerbi/README.md) |
+| Power BI data pack | [powerbi/README.md](powerbi/README.md), [powerbi/POWERBI_BUILD_GUIDE.md](powerbi/POWERBI_BUILD_GUIDE.md) |
 
 ## Thông tin nhóm
 

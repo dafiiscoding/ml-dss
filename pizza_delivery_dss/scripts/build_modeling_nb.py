@@ -42,7 +42,9 @@ def build():
             1. *Fit* preprocessing + model **chỉ trên train**.
             2. *Chọn* mô hình trên **dev** theo F2 (ưu tiên không bỏ sót đơn trễ).
             3. *Kiểm tra độ ổn định* bằng cross-validation trên train.
-            4. *Khóa* mô hình rồi **báo test một lần**, kèm khoảng tin cậy bootstrap.
+            4. *Stress test* bằng 100 lần chia lại train/dev để xem điểm cao có
+               ổn định hay chỉ may mắn.
+            5. *Khóa* mô hình rồi **báo test một lần**, kèm khoảng tin cậy bootstrap.
 
             **Quyết định đầu ra.** Một mô hình khóa + xác suất trễ để tầng DSS biến
             thành Risk Score/Priority.
@@ -287,7 +289,35 @@ def build():
             Regression vừa cao vừa ổn định, củng cố lựa chọn làm mô hình khóa.
             """
         ),
-        md_cell("## 4c. Dò siêu tham số (tuning)"),
+        md_cell(
+            """
+            ## 4c. 100-run stability audit (kiểm soát may mắn do chia split)
+
+            **Vì sao bước này?**
+            - Làm gì: Gộp train+dev, chia stratified lại 100 lần, mỗi lần fit Logistic Regression và đánh giá trên validation split mới. Test không tham gia.
+            - Vì sao: Cross-validation 5-fold vẫn chỉ là vài lần chia. Với dataset nhỏ và synthetic, cần kiểm tra thêm xem F2 cao có ổn định qua nhiều split hay chỉ do dev split ban đầu "đẹp".
+            - Kỹ thuật: Repeated stratified holdout, giữ threshold mặc định 0.5 và cấu hình LR đã khóa.
+            - Bằng chứng dẫn tới: `reports/metrics/model_stability_100runs.csv` và `model_stability_summary.json` cho thấy F2 mean≈0.9419, p05≈0.8892, p95≈0.9770 trên 100 lần; tức kết quả cao nhưng vẫn có biên dao động thật.
+            """
+        ),
+        code_cell(
+            """
+            stability_summary = pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "model_stability_summary.csv")
+            stability_runs = pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "model_stability_100runs.csv")
+            display(stability_summary[stability_summary["metric"].isin(["f2", "mcc", "recall", "precision"])].round(4))
+            stability_runs[["f2", "mcc", "recall", "precision"]].describe(percentiles=[0.05, 0.5, 0.95]).round(4)
+            """
+        ),
+        img_cell("model_stability_f2_distribution.png"),
+        md_cell(
+            """
+            **Insight.** Phân phối F2 tập trung quanh ~0.94, nhưng đáy 5% vẫn xuống
+            khoảng 0.89 và min ~0.84. Kết luận đúng là: mô hình **ổn định trên dữ
+            liệu này**, nhưng không được nói "chắc chắn luôn đạt 0.95" vì split nhỏ
+            vẫn tạo dao động.
+            """
+        ),
+        md_cell("## 4d. Dò siêu tham số (tuning)"),
         md_cell(
             """
             **Vì sao bước này?**
@@ -300,18 +330,25 @@ def build():
         ),
         code_cell(
             """
-            from pizza_dss.modeling import tune_selected_model
-            df_tuning, best_params, best_score = tune_selected_model(train_df, k=5)
-            print(f"Best parameters: {best_params}")
-            print(f"Best F2 Score: {best_score:.4f}")
-            df_tuning.head()
+            tuning = pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "hyperparameter_tuning.csv")
+            default_vs_tuned = pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "default_vs_tuned_lr.csv")
+            display(tuning.round(4))
+            display(default_vs_tuned[[
+                "model", "param_C", "cv_f2_mean", "cv_f2_std",
+                "f2", "mcc", "delta_dev_f2_vs_default", "decision"
+            ]].round(4))
             """
         ),
         md_cell(
             """
-            **Cách đọc & CAVEAT.** Nhìn bảng trên, ta thấy chênh lệch F2 giữa các giá trị `C` khác nhau rất nhỏ (thường chỉ sai số ở chữ số thập phân thứ 3 hoặc 4).
+            **Cách đọc & CAVEAT.** Bảng đầu là kết quả GridSearchCV trên train;
+            bảng thứ hai là kiểm tra default-vs-tuned trên dev trước khi khóa
+            model. Cột `decision` cho biết cấu hình nào được dùng làm model cuối.
             
-            Vì dữ liệu synthetic vốn có quy luật tất định gần hoàn hảo, thuật toán với tham số mặc định (C=1) đã bắt được gần hết. Do đó, tuning không mang lại bước nhảy vọt, và ta hoàn toàn có thể giữ nguyên cấu hình mặc định (default) làm mô hình khóa để tránh phức tạp hóa vấn đề ("tuning xác nhận default đã tốt").
+            Vì dữ liệu synthetic vốn có quy luật tất định gần hoàn hảo, tuning
+            thường không tạo bước nhảy lớn. Quy tắc khóa đã cố định trong code:
+            chỉ đổi sang tuned LR nếu dev F2 tăng ít nhất 0.01; nếu không, giữ
+            default để tránh phức tạp hóa không cần thiết.
             """
         ),
         md_cell(
@@ -341,11 +378,51 @@ def build():
             - Kết luận: tune LR là đủ và hợp lý; KHÔNG cần tune các model khác.
             """
         ),
+        md_cell(
+            """
+            ## 4e. F-beta threshold analysis (ngưỡng vận hành)
+
+            **Vì sao bước này?**
+            - Làm gì: Quét nhiều ngưỡng xác suất trên dev và tính F1/F2/F3, Precision, Recall, FP/FN cho từng ngưỡng.
+            - Vì sao: `predict_proba` chỉ cho xác suất; quyết định cảnh báo trễ cần một ngưỡng. Ngưỡng 0.5 là mặc định kỹ thuật, không tự động tối ưu cho vận hành.
+            - Kỹ thuật: Threshold optimization trên dev, so sánh F-beta với beta=1/2/3 để thấy cách đổi trọng số Precision-Recall.
+            - Bằng chứng dẫn tới: `reports/metrics/fbeta_threshold_analysis.csv` cho thấy F2/F3 tối ưu trên dev tại threshold≈0.157 với Recall=1.0, FN=0 nhưng FP=12; `fbeta_threshold_policy_transfer.csv` cho thấy khi chuyển threshold này sang test thì FN=0 nhưng FP tăng lên 22 và F2 giảm so với default.
+            """
+        ),
+        code_cell(
+            """
+            threshold_audit = pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "fbeta_threshold_analysis.csv")
+            threshold_transfer = pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "fbeta_threshold_policy_transfer.csv")
+            best_thresholds = threshold_audit[
+                threshold_audit["is_best_for_beta"].astype(str).str.lower().eq("true")
+            ][[
+                "beta", "threshold", "precision", "recall", "fbeta_score",
+                "accuracy", "mcc", "fp", "fn", "tp", "operating_goal"
+            ]]
+            display(best_thresholds.round(4))
+            display(threshold_transfer[
+                (threshold_transfer["split"] == "test") &
+                (threshold_transfer["model"].isin(["default_0_5", "dev_best_f2"]))
+            ][[
+                "model", "threshold", "precision", "recall", "f1", "f2", "mcc", "fp", "fn", "tp"
+            ]].round(4))
+            """
+        ),
+        img_cell("fbeta_threshold_curve.png"),
+        md_cell(
+            """
+            **Insight.** Tối ưu threshold theo dev **không tự động tốt hơn trên
+            test**: ngưỡng F2 ~0.157 bắt hết đơn trễ trên test (FN=0) nhưng FP tăng
+            từ 7 lên 22 nên F2 test giảm. Vì vậy báo cáo chính giữ threshold 0.5
+            cho metric test, còn dashboard trình bày threshold như **policy có thể
+            điều chỉnh** nếu quản lý muốn đổi giữa "ít bỏ sót" và "ít cảnh báo dư".
+            """
+        ),
         md_cell("## 5. Test sau khi khóa mô hình (báo một lần)"),
         code_cell(
             """
-            best_name = dev_metrics.iloc[0]["model"]
-            best_model = fitted[best_name]
+            best_name = "Logistic Regression"
+            best_model = load_best_model()
             prob = predict_delay_probability(best_model, test_df)
             pred = prob >= 0.5
             pd.DataFrame([metric_row(best_name, test_df[TARGET_COLUMN], pred, prob)]).round(4)
@@ -447,6 +524,10 @@ def build():
                  "quyet_dinh": "Khóa mô hình trên compact (12 feature)."},
                 {"cau_hoi": "Mô hình nào?", "bang_chung": "LogReg dẫn đầu F2/MCC, CV ổn định, hệ số diễn giải được.",
                  "quyet_dinh": "Khóa Logistic Regression."},
+                {"cau_hoi": "Điểm cao có ăn may không?", "bang_chung": "100-run train/dev stability: F2 mean≈0.9419, p05≈0.8892.",
+                 "quyet_dinh": "Báo ổn định tương đối, nhưng không overclaim vì split nhỏ và data synthetic."},
+                {"cau_hoi": "Ngưỡng cảnh báo nào?", "bang_chung": "F2/F3 tối ưu dev ở threshold≈0.157; F1 tối ưu 0.44.",
+                 "quyet_dinh": "Giữ 0.5 cho model metric test, trình bày threshold như policy có thể đổi trong DSS."},
                 {"cau_hoi": "Điểm test tin được không?", "bang_chung": "n=201 (~42 trễ); CI bootstrap rộng.",
                  "quyet_dinh": "Báo test kèm CI; không overclaim; nêu rõ dữ liệu synthetic."},
             ])

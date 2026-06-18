@@ -1,0 +1,36 @@
+{
+  "train": {
+    "n_rows": 13608,
+    "empty_after_clean": 0,
+    "empty_after_clean_pct": 0.0,
+    "mean_char_removed_pct": 39.75,
+    "median_char_removed_pct": 40.3
+  },
+  "val": {
+    "n_rows": 2237,
+    "empty_after_clean": 0,
+    "empty_after_clean_pct": 0.0,
+    "mean_char_removed_pct": 40.77,
+    "median_char_removed_pct": 41.18,
+    "oov_token_pct": 7.61
+  },
+  "test": {
+    "n_rows": 2237,
+    "empty_after_clean": 0,
+    "empty_after_clean_pct": 0.0,
+    "mean_char_removed_pct": 40.76,
+    "median_char_removed_pct": 41.27,
+    "oov_token_pct": 7.83
+  },
+  "train_vocab_size": 17184,
+  "examples": [
+    {
+      "before": "RT @Cal_OES: PLS SHARE: Weâ€™re capturing wildfire response, recovery info here: https://t.co/r89LKpjLPj https://t.co/Hi",
+      "after": "rt pls share were capturing wildfire response recovery info here"
+    },
+    {
+      "before": "RT @Cal_OES: PLS SHARE: Weâ€™re capturing wildfire response, recovery info here: https://t.co/r89LKpjLPj https://t.co/Hi",
+      "after": "rt pls share were capturing wildfire response recovery info here"
+    }
+  ]
+}

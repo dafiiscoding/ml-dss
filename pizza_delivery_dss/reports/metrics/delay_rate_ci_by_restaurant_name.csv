@@ -1,0 +1,6 @@
+restaurant_name,orders,delayed,delay_rate,ci_low,ci_high,small_sample
+Domino's,212,62,0.292453,0.235348,0.356946,False
+Little Caesars,199,45,0.226131,0.173515,0.28912,False
+Pizza Hut,194,41,0.21134,0.15978,0.27411,False
+Marco's Pizza,195,36,0.184615,0.136437,0.24498,False
+Papa John's,204,26,0.127451,0.08848,0.180194,False

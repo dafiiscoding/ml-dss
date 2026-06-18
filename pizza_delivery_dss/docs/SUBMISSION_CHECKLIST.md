@@ -10,14 +10,17 @@ artifact, report, slide và Power BI data pack.
 | Mục đích | File |
 |---|---|
 | Báo cáo chính | `reports/PIZZA_DSS_REPORT.pdf` |
+| Hướng dẫn nội dung báo cáo | `reports/REPORT_GUIDE.md` |
 | Slide thuyết trình | `slides/PIZZA_DSS_SLIDE_DECK.pdf` |
+| Hướng dẫn nội dung slide | `slides/SLIDE_GUIDE.md` |
 | Hướng dẫn chấm nhanh | `INSTRUCTOR.md` |
 | Hướng dẫn đọc hiểu/trình bày | `docs/WORKFLOW_PRESENTATION_GUIDE.md` |
+| Bảng giảm tải scope | `docs/SCOPE_PRIORITIZATION.md` |
 | Plan dọn sạch | `docs/CLEANUP_PLAN.md` |
 | Mapping rubric | `docs/GRADING_MAP.md` |
 | Tiến độ và kết quả khóa | `docs/PROGRESS.md` |
 | Reverse-engineering dữ liệu | `reports/metrics/generator_reverse_engineering_summary.json` |
-| Power BI pack | `powerbi/README.md` |
+| Power BI pack | `powerbi/README.md`, `powerbi/POWERBI_BUILD_GUIDE.md` |
 
 ## Notebook theo module
 
@@ -42,10 +45,14 @@ py -3.12 -m venv .venv
 ## Kết quả khóa
 
 - Full runbook: `18/18` bước pass.
-- Unit tests: `17/17` pass.
+- Unit tests: `30/30` pass.
 - Streamlit smoke test: pass.
 - Model chính: Logistic Regression trên compact feature set.
+- Tuning: GridSearchCV trên train chọn `C=0.3`, nhưng dev F2 giảm so với default
+  `C=1.0`, nên model khóa vẫn là Logistic Regression default.
 - Test: Accuracy `0,9602`, F2 `0,9491`, MCC `0,8889`.
+- Risk Score: có `risk_component_policy_spec.csv`, breakdown component trong
+  report/slide/Streamlit và calibration/sensitivity cho ngưỡng 35/65.
 - Forensics: 7 công thức/target tất định khớp tuyệt đối, duration nằm trên
   lưới 5 phút, brand ablation dev F2 giảm `0,0343` khi bỏ restaurant.
 - Threshold trễ là kết quả suy luận từ nhãn: ranh giới quan sát giữa 30 và 35
@@ -53,6 +60,8 @@ py -3.12 -m venv .venv
 - Trend sở thích: có `preference_trend_forecast.csv` và hai hình share forecast
   cho pizza size/type; kết luận phải ghi là minh họa phương pháp vì dữ liệu sinh.
 - Power BI-ready pack đã có fact/dim CSV, DAX measures và dashboard spec.
+- Transport assignment có `transport_cost_policy_spec.csv`; khi bảo vệ cần nói
+  rõ đơn là thật nhưng driver/capacity/base location là giả lập.
 
 ## Lưu ý khi bảo vệ
 

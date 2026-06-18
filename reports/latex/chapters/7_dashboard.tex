@@ -1,4 +1,5 @@
 \chapter{Sản phẩm: Dashboard hỗ trợ điều phối}
+\label{chap:dashboard}
 
 \section{Vai trò của giao diện trong DSS}
 
@@ -79,6 +80,21 @@ Single-Case Demo tải vectorizer và bốn classifier. Model ảnh được laz
 chỉ khi người dùng upload ảnh thì PyTorch/Transformers và CLIP mới được nạp.
 Nhờ vậy chế độ text-only khởi động nhanh và cloud không phải tải CLIP ở mọi
 trang.
+
+\subsection{Vì sao lưu CSV thay vì cơ sở dữ liệu?}
+
+Một câu hỏi hợp lý là vì sao dùng file CSV chứ không phải một cơ sở dữ liệu
+(database). Với một \emph{prototype học thuật chạy offline}, CSV là lựa chọn phù
+hợp: dữ liệu nhỏ, bất biến (chỉ đọc sau khi tính), dễ mở bằng bất kỳ công cụ
+nào, dễ đưa vào Git để version và tái lập, và không cần dựng server. Cả pipeline
+là \emph{read-mostly}: tính một lần, sau đó dashboard chỉ đọc.
+
+CSV \emph{không} phù hợp khi lên production thật, vì nó thiếu: ghi đồng thời
+(concurrent write) an toàn, giao dịch (transaction), chỉ mục (index) để truy vấn
+nhanh, phân quyền truy cập và audit log. Khi đó cần chuyển sang PostgreSQL hoặc
+object storage cho dữ liệu lớn, kèm một hàng đợi (queue) cho luồng nạp thời gian
+thực. Việc giữ CSV ở phiên bản này là quyết định có chủ đích theo phạm vi, không
+phải thiếu sót kỹ thuật.
 
 \section{Công nghệ và lý do lựa chọn}
 

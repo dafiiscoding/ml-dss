@@ -16,16 +16,21 @@ This folder contains Power BI-ready CSV tables and DAX measures. The repository
 does not generate a `.pbix` file automatically because Power BI Desktop is not a
 scriptable dependency in this environment.
 
+For detailed page-by-page build instructions, relationships, visuals, and page
+notes, read `POWERBI_BUILD_GUIDE.md`.
+
 ## Tables
 
 - `fact_orders.csv`: cleaned source order table.
 - `fact_delay_queue.csv`: model/DSS output sorted by delay risk.
 - `fact_transport_assignment.csv`: transportation-problem scenario assignments.
+- `fact_transport_cost_policy.csv`: transparent cost formula for the assignment scenario.
 - `fact_monthly_demand_forecast.csv`: historical monthly demand and seasonal-naive forecast.
 - `fact_hourly_staffing_plan.csv`: scenario staffing by order hour.
 - `fact_recommendation_rules.csv`: popularity-based recommendation rules.
 - `fact_hypothesis_tests.csv`: chi-square hypothesis tests.
 - `fact_data_realism_audit.csv`: synthetic/data-quality warning flags.
+- `fact_risk_component_policy.csv`: Risk Score component formulas, weights, and rationale.
 - `fact_product_type_mix.csv`: order-share and delay-rate by pizza type.
 - `fact_product_size_mix.csv`: order-share and delay-rate by encoded pizza size.
 - `dim_restaurant.csv`: restaurant dimension.
@@ -46,10 +51,12 @@ scriptable dependency in this environment.
 
 3. Model and DSS Queue
    - Table: order_id, restaurant, location, risk score, priority, action.
+   - Table: Risk Score component weights and normalization.
    - Slicer: priority, traffic, restaurant.
 
 4. Transportation Scenario
    - Table: order-driver assignments.
+   - Table: cost formula terms and data source.
    - Bar: assigned orders by driver.
    - KPI: mean assignment cost.
 
@@ -127,6 +134,10 @@ CALCULATE(COUNTROWS(fact_data_realism_audit), fact_data_realism_audit[severity] 
 def _write_dashboard_spec():
     content = """# PowerBI Dashboard Specification
 
+Detailed import steps, relationships, visual field choices and caveats are in
+`POWERBI_BUILD_GUIDE.md`. This file is the short page specification used by the
+pipeline artifact.
+
 ## Page 1 - Executive Overview
 
 Purpose: show whether delivery delay is an operational issue and where workload
@@ -160,6 +171,7 @@ Visuals:
   delayed_probability, recommended_action.
 - Bar: High/Medium/Low counts.
 - Card: Average Delay Risk.
+- Table: `fact_risk_component_policy` with component, weight, formula and rationale.
 
 ## Page 4 - Transportation Scenario
 
@@ -168,6 +180,7 @@ Purpose: demonstrate prescriptive DSS inspired by the transportation problem.
 Visuals:
 
 - Table: order-driver assignments.
+- Table: `fact_transport_cost_policy` with term, formula, source and effect.
 - Bar: Assigned Orders by Driver.
 - Card: Average Assignment Cost.
 - Bar: Assignment Cost by Order.
@@ -225,6 +238,8 @@ def build_powerbi_pack():
         "fact_recommendation_rules.csv": "recommendation_rules.csv",
         "fact_hypothesis_tests.csv": "hypothesis_tests.csv",
         "fact_data_realism_audit.csv": "synthetic_data_audit.csv",
+        "fact_risk_component_policy.csv": "risk_component_policy_spec.csv",
+        "fact_transport_cost_policy.csv": "transport_cost_policy_spec.csv",
         "fact_product_type_mix.csv": "type_mix.csv",
         "fact_product_size_mix.csv": "size_mix.csv",
         "fact_top_restaurant_by_type.csv": "top_restaurant_by_type.csv",
@@ -268,6 +283,7 @@ def build_powerbi_pack():
         ],
         "dax": "measures.dax",
         "dashboard_spec": "dashboard_spec.md",
+        "build_guide": "POWERBI_BUILD_GUIDE.md",
         "note": "Create the .pbix manually in Power BI Desktop using this pack.",
     }
     (POWERBI_DIR / "manifest.json").write_text(

@@ -1,0 +1,5 @@
+distance_band,orders,delayed,delay_rate,ci_low,ci_high,small_sample
+8+ km,68,68,1.0,0.946527,1.0,False
+6-8 km,100,96,0.96,0.901628,0.984337,False
+3-6 km,623,46,0.073836,0.05581,0.097086,False
+0-3 km,213,0,0.0,0.0,0.017716,False

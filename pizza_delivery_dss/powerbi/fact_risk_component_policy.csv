@@ -1,0 +1,7 @@
+component,score_formula,normalization,weight,rationale
+model_probability,delayed_probability * 100,Xác suất trễ từ model được đổi từ 0-1 sang 0-100.,0.55,Tín hiệu học máy là bằng chứng chính nên chiếm hơn một nửa Risk Score.
+traffic_pressure,"Low=20, Medium=60, High=100",Traffic ordinal được ánh xạ thành áp lực vận hành trên thang 0-100.,0.15,Traffic là driver rủi ro rõ trong EDA và tác động trực tiếp tới giao hàng.
+distance_pressure,"min(distance_km / 10 * 100, 100)","10 km là mức xa nhất trong dữ liệu, nên distance được scale tuyến tính 0-100.",0.12,"Đơn càng xa càng ít buffer, nhưng vẫn thấp hơn trọng số model/traffic."
+peak_pressure,"100 nếu peak hour, ngược lại 20","Peak hour là cờ nhị phân, đổi thành mức áp lực cao/thấp.",0.08,Giờ cao điểm ảnh hưởng năng lực vận hành nhưng không mạnh bằng traffic/distance.
+complexity_pressure,"min(pizza_complexity / 20 * 100, 100)","Pizza complexity tối đa quan sát là 20, nên scale tuyến tính 0-100.",0.06,"Đơn phức tạp có thể làm chuẩn bị lâu hơn, dùng như tín hiệu phụ."
+weekend_pressure,"70 nếu weekend, ngược lại 40","Weekend là cờ nhị phân, đổi thành áp lực vừa/cao trên thang 0-100.",0.04,"Weekend là yếu tố phụ, giữ trọng số nhỏ vì audit cho thấy tín hiệu yếu."

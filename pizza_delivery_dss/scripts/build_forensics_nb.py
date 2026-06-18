@@ -134,11 +134,7 @@ def build():
             - Bằng chứng dẫn tới: Mọi đơn `is_delayed = False` đều có `duration <= 30`, mọi đơn `True` đều có `duration >= 35`. Nghĩa là ngưỡng cắt (cut-off) thực sự nằm ở 30 phút.
             """
         ),
-        code_cell(
-            """
-            infer_delay_threshold(df).head(12)
-            """
-        ),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "delay_threshold_inference.csv").head(12)'),
         md_cell(
             """
             **Insight.** File chỉ cho nhãn `is_delayed`, không cho SLA. Threshold
@@ -191,7 +187,7 @@ def build():
             thật bao nhiêu %, và nhiễu lớn cỡ nào.
             """
         ),
-        code_cell("duration_generator_reconstruction(df)"),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "duration_generator_reconstruction.csv")'),
         md_cell(
             """
             **Insight.** R² cao + tỷ lệ `round5(dự đoán)` khớp duration lớn ⇒ duration
@@ -235,7 +231,7 @@ def build():
             trộn nhãn để dựng mức nền do may rủi, rồi so với MI quan sát.
             """
         ),
-        code_cell("mi_permutation_audit(df, n_perm=200).round(6)"),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "mi_permutation_audit.csv").round(6)'),
         md_cell(
             """
             **Insight.** Những feature có `p_value` lớn (vd `restaurant_name`,
@@ -292,7 +288,7 @@ def build():
             một cách đáng kể không.
             """
         ),
-        code_cell("bootstrap_brand_delta_f2(n_boot=2000)"),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "brand_delta_f2_bootstrap.csv")'),
         md_cell(
             """
             **Insight.** Nếu `ci_includes_zero = True`, mức ΔF2 của brand **nằm trong

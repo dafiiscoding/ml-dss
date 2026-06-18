@@ -150,11 +150,75 @@ def build():
             - Bằng chứng dẫn tới: `pizza_size` mang tính thứ bậc tự nhiên. Các ngưỡng `time_segment` (0,11,15,17,21,24) khớp với các ca hoạt động thực tế (Lunch, Afternoon, Dinner, Late).
             """
         ),
+        md_cell(
+            """
+            **Vì sao FE `pizza_size_score`?**
+            - Làm gì: Ánh xạ Small/Medium/Large/XL thành 1/2/3/4.
+            - Vì sao: Size có thứ tự tự nhiên; XL lớn hơn Large, Large lớn hơn Medium.
+              Ordinal score giữ được quan hệ tăng dần để mô hình tuyến tính đọc được.
+            - Kỹ thuật: Ordinal encoding.
+            - Bằng chứng dẫn tới: `SIZE_SCORE` trong `data_loader.py` và
+              `generator_deterministic_formulas.csv` cho thấy `pizza_complexity =
+              toppings_count * pizza_size_score`, tức generator cũng xem size là
+              thang thứ bậc.
+            """
+        ),
+        md_cell(
+            """
+            **Vì sao FE `pizza_size_code` / `pizza_size_label`?**
+            - Làm gì: Tạo mã `01`..`04` và nhãn `01_Small`..`04_XL`.
+            - Vì sao: Dashboard/notebook cần sort đúng thứ tự size; nếu sort chữ
+              đơn thuần thì Large/Medium/Small/XL dễ bị xếp sai ngữ nghĩa.
+            - Kỹ thuật: Label engineering phục vụ báo cáo/BI, không phải feature
+              chính cho model compact.
+            - Bằng chứng dẫn tới: `size_mix.csv` và Power BI pack cần hiển thị size
+              theo thứ tự Small → Medium → Large → XL.
+            """
+        ),
+        md_cell(
+            """
+            **Vì sao FE `time_segment`?**
+            - Làm gì: Gom `order_hour` vào Other/Lunch/Afternoon/Dinner/Late bằng
+              các mốc 0, 11, 15, 17, 21, 24.
+            - Vì sao: Điều phối nhân sự thường ra quyết định theo ca, không theo
+              từng giờ rời rạc; dinner peak là ngữ cảnh vận hành quan trọng.
+            - Kỹ thuật: Binning bằng `pd.cut`.
+            - Bằng chứng dẫn tới: `hourly_staffing_plan.csv` chỉ ra peak hour 19h,
+              nằm trong nhóm Dinner.
+            """
+        ),
+        md_cell(
+            """
+            **Vì sao FE `complexity_band` và `distance_band`?**
+            - Làm gì: Gom complexity thành Low/Medium/High/Very High và distance
+              thành 0-3/3-6/6-8/8+ km.
+            - Vì sao: Band giúp EDA, association rules và dashboard đọc rủi ro theo
+              nhóm vận hành thay vì nhìn số liên tục khó diễn giải.
+            - Kỹ thuật: Binning có ngưỡng cố định.
+            - Bằng chứng dẫn tới: `delay_rate_by_distance_band.csv` và
+              `delay_rate_by_complexity_band.csv` cho thấy delay rate thay đổi theo
+              các dải này; `risk_calibration.csv` dùng cùng tư duy band để kiểm tra
+              Risk Score.
+            """
+        ),
+        md_cell(
+            """
+            **Vì sao FE `order_period` / `order_weekday`?**
+            - Làm gì: Tách tháng dạng `YYYY-MM`, thứ trong tuần dạng số và tên ngày.
+            - Vì sao: Forecast cần chuỗi theo tháng; customer behavior và staffing
+              cần biết weekday/weekend hoặc ngày trong tuần.
+            - Kỹ thuật: Datetime feature extraction.
+            - Bằng chứng dẫn tới: `monthly_demand_forecast.csv`,
+              `preference_trend_forecast.csv` và `hourly_staffing_plan.csv` đều cần
+              feature thời gian đã chuẩn hóa.
+            """
+        ),
         code_cell(
             """
             df[[
                 "pizza_size", "pizza_size_score", "pizza_size_code", "pizza_size_label",
-                "time_segment", "complexity_band", "distance_band", "order_period"
+                "time_segment", "complexity_band", "distance_band", "order_period",
+                "order_weekday", "order_weekday_name"
             ]].head()
             """
         ),
@@ -173,6 +237,48 @@ def build():
               - Cột **Redundant** (`estimated_duration_min`, `topping_density`, `pizza_complexity`, `traffic_impact`) bị loại trong tập feature gọn (`COMPACT_FEATURE_COLUMNS`) để tránh đa cộng tuyến.
             - Kỹ thuật: Feature Selection (Leakage detection, Deterministic formula discovery).
             - Bằng chứng dẫn tới: `redundant_feature_audit.csv` và `generator_deterministic_formulas.csv` cho thấy sai số max_abs_error ≈ 0 khi phục hồi công thức. Nghĩa là chúng được tính toán trực tiếp từ các cột khác.
+            """
+        ),
+        md_cell(
+            """
+            **Vì sao cấm từng leakage column?**
+            - Làm gì: Chặn 5 cột hậu nghiệm khỏi `FEATURE_COLUMNS`.
+            - Vì sao: Khi đơn vừa được đặt, hệ thống chưa biết thời gian giao thật,
+              thời gian kết thúc, hay thống kê trung bình tính từ kết quả giao.
+            - Kỹ thuật: Leakage audit + feature contract.
+            - Bằng chứng dẫn tới:
+              `delivery_duration_min` phục dựng nhãn với mismatch 0;
+              `delay_min = delivery_duration_min - estimated_duration_min`;
+              `delivery_efficiency_min_per_km = delivery_duration_min / distance_km`;
+              `restaurant_avg_time` là thống kê hậu nghiệm theo nhà hàng;
+              `delivery_time` chỉ có sau khi giao xong. Các quan hệ này nằm trong
+              `data_quality_summary.json`, `redundant_feature_audit.csv` và
+              `generator_deterministic_formulas.csv`.
+            """
+        ),
+        code_cell(
+            """
+            pd.DataFrame([
+                {"column": "delivery_duration_min", "why_blocked": "Actual duration after delivery; reconstructs is_delayed with 0 mismatch."},
+                {"column": "delay_min", "why_blocked": "Formula from actual duration minus estimated duration."},
+                {"column": "delivery_efficiency_min_per_km", "why_blocked": "Formula from actual duration divided by distance."},
+                {"column": "restaurant_avg_time", "why_blocked": "Post-hoc restaurant aggregate derived from delivery outcomes."},
+                {"column": "delivery_time", "why_blocked": "Timestamp known only after the order has been delivered."},
+            ])
+            """
+        ),
+        md_cell(
+            """
+            **Vì sao bỏ cột deterministic khỏi compact model?**
+            - Làm gì: Compact feature set giữ biến gốc và bỏ các biến công thức như
+              `estimated_duration_min`, `topping_density`, `pizza_complexity`,
+              `traffic_impact`.
+            - Vì sao: Các cột này không thêm thông tin mới; giữ lại dễ làm mô hình
+              phụ thuộc vào bản sao của cùng tín hiệu và khó giải thích hơn.
+            - Kỹ thuật: Redundant feature removal.
+            - Bằng chứng dẫn tới: `redundant_feature_audit.csv` ghi max_abs_error
+              xấp xỉ 0 cho các công thức; `feature_set_comparison.csv` cho thấy
+              compact vẫn đạt F2 ngang hoặc tốt hơn full.
             """
         ),
         code_cell(

@@ -8,8 +8,11 @@
 - Dataset: Kaggle `akshaygaikwad448/pizza-delivery-data-with-enhanced-features`
 - Báo cáo draft: `reports/final_report_draft.md`
 - Báo cáo PDF: `reports/PIZZA_DSS_REPORT.pdf`
+- Hướng dẫn nội dung báo cáo: `reports/REPORT_GUIDE.md`
 - Slide PDF: `slides/PIZZA_DSS_SLIDE_DECK.pdf`
+- Hướng dẫn nội dung slide: `slides/SLIDE_GUIDE.md`
 - Power BI pack: `powerbi/`
+- Hướng dẫn dựng Power BI: `powerbi/POWERBI_BUILD_GUIDE.md`
 
 ## Lộ trình đọc
 
@@ -21,8 +24,10 @@
    data forensics.
 3. Đối chiếu metric trong `reports/metrics/`, đặc biệt nhóm reverse-engineering
    mới nếu cần kiểm tra phần data forensics.
-4. Kiểm tra slide tại `slides/PIZZA_DSS_SLIDE_DECK.pdf`.
-5. Kiểm tra Power BI-ready pack tại `powerbi/`.
+4. Kiểm tra slide tại `slides/PIZZA_DSS_SLIDE_DECK.pdf`; nếu cần speaking
+   notes, mở `slides/SLIDE_GUIDE.md`.
+5. Kiểm tra Power BI-ready pack tại `powerbi/`; nếu cần dựng `.pbix`, mở
+   `powerbi/POWERBI_BUILD_GUIDE.md`.
 6. Chạy dashboard:
 
 ```powershell
@@ -49,10 +54,10 @@ cd pizza_delivery_dss
 | Feature set comparison | `reports/metrics/feature_set_comparison.csv` |
 | Baseline | `reports/metrics/baseline_test_metrics.csv` |
 | DSS Risk/Priority/Action | `src/pizza_dss/decision_rules.py` |
-| Tối ưu vận tải | `src/pizza_dss/transport_optimization.py`, `reports/metrics/transport_assignment.csv` |
+| Tối ưu vận tải | `src/pizza_dss/transport_optimization.py`, `reports/metrics/transport_assignment.csv`, `reports/metrics/transport_cost_policy_spec.csv` |
 | Dashboard queue | `data/processed/delay_priority_queue.csv` |
-| Power BI pack | `powerbi/fact_orders.csv`, `powerbi/measures.dax`, `powerbi/dashboard_spec.md` |
-| Report/slide | `reports/PIZZA_DSS_REPORT.pdf`, `slides/PIZZA_DSS_SLIDE_DECK.pdf` |
+| Power BI pack | `powerbi/fact_orders.csv`, `powerbi/measures.dax`, `powerbi/dashboard_spec.md`, `powerbi/POWERBI_BUILD_GUIDE.md` |
+| Report/slide | `reports/PIZZA_DSS_REPORT.pdf`, `reports/REPORT_GUIDE.md`, `slides/PIZZA_DSS_SLIDE_DECK.pdf`, `slides/SLIDE_GUIDE.md` |
 | Kiểm thử | `tests/test_pipeline.py` |
 
 ## Giao thức đánh giá
@@ -67,6 +72,8 @@ cd pizza_delivery_dss
   ưu thống kê.
 - Tối ưu vận tải dùng đơn hàng thật nhưng fleet/tài xế giả lập vì dataset không
   có bảng tài xế thật.
+- Cost assignment đã được tách thành bảng policy riêng; không cần đọc code mới
+  thấy công thức.
 - Dataset có nhiều dấu hiệu synthetic; forecast/recommendation là demo quy
   trình DSS, không phải claim sản xuất.
 - Reverse-engineering cho thấy nhiều cột là công thức tất định; brand có artifact

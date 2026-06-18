@@ -1,0 +1,4 @@
+traffic_level,orders,delayed,delay_rate,ci_low,ci_high,small_sample
+High,328,165,0.503049,0.449217,0.55681,False
+Medium,398,44,0.110553,0.083391,0.145161,False
+Low,278,1,0.003597,0.000635,0.020091,False

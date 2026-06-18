@@ -1,5 +1,9 @@
 # PowerBI Dashboard Specification
 
+Detailed import steps, relationships, visual field choices and caveats are in
+`POWERBI_BUILD_GUIDE.md`. This file is the short page specification used by the
+pipeline artifact.
+
 ## Page 1 - Executive Overview
 
 Purpose: show whether delivery delay is an operational issue and where workload
@@ -33,6 +37,7 @@ Visuals:
   delayed_probability, recommended_action.
 - Bar: High/Medium/Low counts.
 - Card: Average Delay Risk.
+- Table: `fact_risk_component_policy` with component, weight, formula and rationale.
 
 ## Page 4 - Transportation Scenario
 
@@ -41,6 +46,7 @@ Purpose: demonstrate prescriptive DSS inspired by the transportation problem.
 Visuals:
 
 - Table: order-driver assignments.
+- Table: `fact_transport_cost_policy` with term, formula, source and effect.
 - Bar: Assigned Orders by Driver.
 - Card: Average Assignment Cost.
 - Bar: Assignment Cost by Order.

@@ -1,0 +1,5 @@
+cluster,orders,order_share,delay_rate,avg_distance_km,avg_toppings,dominant_traffic,dominant_size
+1,246,0.245,0.6382,7.484,4.691,High,XL
+0,448,0.4462,0.1161,4.856,3.491,Medium,Medium
+2,259,0.258,0.0039,2.983,1.931,Low,Medium
+3,51,0.0508,0.0,3.451,3.098,High,Medium

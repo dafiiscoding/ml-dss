@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.linear_model import LogisticRegression
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import (
     accuracy_score,
     balanced_accuracy_score,
@@ -29,7 +30,7 @@ from sklearn.metrics import (
     roc_auc_score,
     roc_curve,
 )
-from sklearn.model_selection import StratifiedKFold, cross_validate, GridSearchCV
+from sklearn.model_selection import StratifiedKFold, cross_validate, GridSearchCV, train_test_split
 from sklearn.metrics import make_scorer, precision_recall_curve
 from sklearn.naive_bayes import GaussianNB
 from sklearn.pipeline import Pipeline
@@ -230,11 +231,9 @@ def build_models():
             SimpleKNNClassifier(n_neighbors=15),
             n_neighbors=15,
         ),
-        "SVM": SVC(
-            kernel="rbf",
-            class_weight="balanced",
-            probability=True,
-            random_state=RANDOM_STATE,
+        "SVM": CalibratedClassifierCV(
+            estimator=SVC(kernel="rbf", class_weight="balanced", random_state=RANDOM_STATE),
+            cv=3,
         ),
         "Random Forest": _optional_classifier(
             "sklearn.ensemble",
@@ -403,7 +402,7 @@ def cross_validate_models(train_df, k=5):
     return pd.DataFrame(rows).sort_values("f2_mean", ascending=False).reset_index(drop=True)
 
 
-def tune_selected_model(train_df, k=5):
+def tune_selected_model(train_df, k=5, write_artifact=False):
     """Dò siêu tham số cho mô hình tốt nhất (Logistic Regression) bằng GridSearchCV
     trên tập train với StratifiedKFold. Metric lựa chọn là F2.
     """
@@ -427,7 +426,7 @@ def tune_selected_model(train_df, k=5):
         scoring=scoring,
         cv=cv,
         return_train_score=False,
-        n_jobs=-1
+        n_jobs=1
     )
     
     grid_search.fit(X, y)
@@ -442,9 +441,71 @@ def tune_selected_model(train_df, k=5):
         })
     
     df_results = pd.DataFrame(rows).sort_values("mean_test_f2", ascending=False).reset_index(drop=True)
-    df_results.to_csv(METRICS_DIR / "hyperparameter_tuning.csv", index=False)
+    if write_artifact:
+        METRICS_DIR.mkdir(parents=True, exist_ok=True)
+        df_results.to_csv(METRICS_DIR / "hyperparameter_tuning.csv", index=False)
     
     return df_results, grid_search.best_params_, grid_search.best_score_
+
+
+def compare_default_vs_tuned_lr(train_df, dev_df, tuning_results=None, min_dev_f2_improvement=0.01):
+    """Compare default LR against the best tuned-C LR on dev.
+
+    Tuning is done by CV on train, but the decision to replace the locked model
+    still needs a dev comparison so the report can justify whether the extra
+    complexity is worth it.
+    """
+    if tuning_results is None:
+        tuning_results, _, _ = tune_selected_model(train_df, k=5)
+    tuned_c = float(tuning_results.iloc[0]["param_C"])
+    specs = [
+        ("default_lr", 1.0, "Default Logistic Regression C=1.0"),
+        ("tuned_lr", tuned_c, f"Tuned Logistic Regression C={tuned_c:g}"),
+    ]
+    rows = []
+    fitted = {}
+    for variant, c_value, note in specs:
+        model = build_pipeline(
+            LogisticRegression(
+                C=c_value,
+                class_weight="balanced",
+                max_iter=2000,
+                random_state=RANDOM_STATE,
+            ),
+            ACTIVE_NUMERIC_FEATURES,
+            ACTIVE_CATEGORICAL_FEATURES,
+        )
+        model.fit(train_df[ACTIVE_FEATURE_COLUMNS], train_df[TARGET_COLUMN])
+        y_pred = model.predict(dev_df[ACTIVE_FEATURE_COLUMNS])
+        y_prob = _positive_probability(model, dev_df[ACTIVE_FEATURE_COLUMNS])
+        row = metric_row(variant, dev_df[TARGET_COLUMN], y_pred, y_prob)
+        row["param_C"] = c_value
+        row["cv_f2_mean"] = float(
+            tuning_results.loc[tuning_results["param_C"].astype(float).eq(c_value), "mean_test_f2"].iloc[0]
+        ) if c_value in set(tuning_results["param_C"].astype(float)) else np.nan
+        row["cv_f2_std"] = float(
+            tuning_results.loc[tuning_results["param_C"].astype(float).eq(c_value), "std_test_f2"].iloc[0]
+        ) if c_value in set(tuning_results["param_C"].astype(float)) else np.nan
+        row["note"] = note
+        rows.append(row)
+        fitted[variant] = model
+
+    out = pd.DataFrame(rows)
+    default_f2 = float(out.loc[out["model"] == "default_lr", "f2"].iloc[0])
+    tuned_f2 = float(out.loc[out["model"] == "tuned_lr", "f2"].iloc[0])
+    delta = tuned_f2 - default_f2
+    locked_variant = "tuned_lr" if delta >= min_dev_f2_improvement else "default_lr"
+    out["delta_dev_f2_vs_default"] = out["f2"] - default_f2
+    out["decision"] = np.where(
+        out["model"].eq(locked_variant),
+        "locked",
+        "not_locked",
+    )
+    out["decision_reason"] = (
+        f"Use tuned LR only if dev F2 improves by at least {min_dev_f2_improvement:.3f}; "
+        f"observed tuned-default delta is {delta:.4f}."
+    )
+    return out.sort_values("model").reset_index(drop=True), fitted[locked_variant], locked_variant
 
 
 def bootstrap_test_metrics(model, test_df, n_boot=2000, seed=RANDOM_STATE):
@@ -486,6 +547,256 @@ def bootstrap_test_metrics(model, test_df, n_boot=2000, seed=RANDOM_STATE):
             }
         )
     return pd.DataFrame(rows)
+
+
+def fbeta_threshold_analysis(
+    model,
+    dev_df,
+    betas=(1, 2, 3),
+    thresholds=None,
+    write_artifact=False,
+):
+    """Evaluate operating thresholds on dev for F1/F2/F3.
+
+    This is an operating-policy audit, not model selection on test. The locked
+    model produces probabilities; dev is used to show how the threshold changes
+    the FP/FN trade-off before test is reported once.
+    """
+    X = dev_df[ACTIVE_FEATURE_COLUMNS]
+    y_true = dev_df[TARGET_COLUMN].to_numpy(dtype=bool)
+    prob = _positive_probability(model, X)
+    if thresholds is None:
+        thresholds = np.unique(np.r_[0.0, 1.0, np.linspace(0.01, 0.99, 99), prob])
+    rows = []
+    for beta in betas:
+        for threshold in thresholds:
+            y_pred = prob >= float(threshold)
+            tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[False, True]).ravel()
+            rows.append(
+                {
+                    "beta": float(beta),
+                    "threshold": float(threshold),
+                    "precision": precision_score(y_true, y_pred, zero_division=0),
+                    "recall": recall_score(y_true, y_pred, zero_division=0),
+                    "fbeta_score": fbeta_score(y_true, y_pred, beta=beta, zero_division=0),
+                    "f1": f1_score(y_true, y_pred, zero_division=0),
+                    "accuracy": accuracy_score(y_true, y_pred),
+                    "balanced_accuracy": balanced_accuracy_score(y_true, y_pred),
+                    "mcc": matthews_corrcoef(y_true, y_pred),
+                    "predicted_delayed_rate": float(y_pred.mean()),
+                    "tn": int(tn),
+                    "fp": int(fp),
+                    "fn": int(fn),
+                    "tp": int(tp),
+                }
+            )
+    out = pd.DataFrame(rows)
+    out["is_best_for_beta"] = False
+    best_index = (
+        out.sort_values(
+            ["beta", "fbeta_score", "mcc", "balanced_accuracy"],
+            ascending=[True, False, False, False],
+        )
+        .groupby("beta")
+        .head(1)
+        .index
+    )
+    out.loc[best_index, "is_best_for_beta"] = True
+    out["operating_goal"] = np.select(
+        [out["beta"].eq(1), out["beta"].eq(2), out["beta"].eq(3)],
+        [
+            "balance_precision_recall",
+            "coursework_policy_prioritize_recall",
+            "high_recall_stress_test",
+        ],
+        default="custom_beta",
+    )
+    out = out.sort_values(["beta", "threshold"]).reset_index(drop=True)
+    if write_artifact:
+        METRICS_DIR.mkdir(parents=True, exist_ok=True)
+        out.round(6).to_csv(METRICS_DIR / "fbeta_threshold_analysis.csv", index=False)
+    return out
+
+
+def build_fbeta_threshold_figure(threshold_df):
+    """Plot F-beta against threshold for beta=1,2,3 on dev."""
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(7, 4.8))
+    for beta, group in threshold_df.groupby("beta"):
+        ordered = group.sort_values("threshold")
+        ax.plot(ordered["threshold"], ordered["fbeta_score"], label=f"F{beta:g}")
+        best = group[group["is_best_for_beta"]].iloc[0]
+        ax.scatter(best["threshold"], best["fbeta_score"], s=45, zorder=5)
+        ax.annotate(
+            f"{best['threshold']:.2f}",
+            (best["threshold"], best["fbeta_score"]),
+            textcoords="offset points",
+            xytext=(5, 5),
+            fontsize=8,
+        )
+    ax.axvline(0.5, color="grey", linestyle="--", linewidth=1, label="Default 0.50")
+    ax.set_xlabel("Delay probability threshold")
+    ax.set_ylabel("F-beta score on dev")
+    ax.set_title("F-beta threshold analysis on dev")
+    ax.set_ylim(0, 1.05)
+    ax.legend(loc="lower left", fontsize=8)
+    fig.tight_layout()
+    path = FIGURES_DIR / "fbeta_threshold_curve.png"
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+    return path
+
+
+def evaluate_threshold_policy_transfer(model, dev_df, test_df, threshold_df, write_artifact=False):
+    """Lock candidate thresholds on dev, then compare their transfer to test.
+
+    This makes threshold tuning auditable: the chosen thresholds come from dev,
+    while test is only used for the final comparison after the policy is fixed.
+    """
+    best = threshold_df[threshold_df["is_best_for_beta"]].set_index("beta")
+    specs = [
+        ("default_0_5", 0.5, "fixed_default_threshold"),
+        ("dev_best_f1", float(best.loc[1.0, "threshold"]), "best_f1_on_dev"),
+        ("dev_best_f2", float(best.loc[2.0, "threshold"]), "best_f2_on_dev"),
+        ("dev_best_f3", float(best.loc[3.0, "threshold"]), "best_f3_on_dev"),
+    ]
+    rows = []
+    for split_name, frame in (("dev", dev_df), ("test", test_df)):
+        y_true = frame[TARGET_COLUMN]
+        prob = _positive_probability(model, frame[ACTIVE_FEATURE_COLUMNS])
+        for policy, threshold, source in specs:
+            row = metric_row(policy, y_true, prob >= threshold, prob)
+            row.update(
+                {
+                    "split": split_name,
+                    "threshold": threshold,
+                    "threshold_source": source,
+                }
+            )
+            rows.append(row)
+    out = pd.DataFrame(rows)
+    if write_artifact:
+        METRICS_DIR.mkdir(parents=True, exist_ok=True)
+        out.round(6).to_csv(METRICS_DIR / "fbeta_threshold_policy_transfer.csv", index=False)
+    return out
+
+
+def model_stability_audit(
+    train_df,
+    dev_df=None,
+    n_runs=100,
+    validation_size=None,
+    c_value=1.0,
+    seed=RANDOM_STATE,
+    write_artifact=False,
+):
+    """Repeated stratified train/dev resampling audit for the locked LR family.
+
+    The audit uses only train+dev rows, never test. Its purpose is to check
+    whether high F2 is stable across many random splits or depends on one lucky
+    dev split.
+    """
+    if dev_df is not None:
+        pool = pd.concat([train_df, dev_df], ignore_index=True)
+        default_validation_size = len(dev_df) / len(pool)
+    else:
+        pool = train_df.reset_index(drop=True).copy()
+        default_validation_size = 0.25
+    validation_size = default_validation_size if validation_size is None else validation_size
+
+    rows = []
+    for run in range(int(n_runs)):
+        split_train, split_dev = train_test_split(
+            pool,
+            test_size=validation_size,
+            stratify=pool[TARGET_COLUMN],
+            random_state=seed + run,
+        )
+        model = build_pipeline(
+            LogisticRegression(
+                C=float(c_value),
+                class_weight="balanced",
+                max_iter=2000,
+                random_state=seed,
+            ),
+            ACTIVE_NUMERIC_FEATURES,
+            ACTIVE_CATEGORICAL_FEATURES,
+        )
+        model.fit(split_train[ACTIVE_FEATURE_COLUMNS], split_train[TARGET_COLUMN])
+        prob = _positive_probability(model, split_dev[ACTIVE_FEATURE_COLUMNS])
+        pred = prob >= 0.5
+        row = metric_row("Logistic Regression repeated split", split_dev[TARGET_COLUMN], pred, prob)
+        row.update(
+            {
+                "run": run + 1,
+                "param_C": float(c_value),
+                "threshold": 0.5,
+                "pool_rows": int(len(pool)),
+                "train_rows": int(len(split_train)),
+                "validation_rows": int(len(split_dev)),
+                "validation_delayed": int(split_dev[TARGET_COLUMN].sum()),
+            }
+        )
+        rows.append(row)
+    out = pd.DataFrame(rows).sort_values("run").reset_index(drop=True)
+    if write_artifact:
+        METRICS_DIR.mkdir(parents=True, exist_ok=True)
+        out.round(6).to_csv(METRICS_DIR / "model_stability_100runs.csv", index=False)
+    return out
+
+
+def summarize_model_stability(stability_df):
+    """Return JSON-serializable summary stats for the repeated split audit."""
+    metric_names = ["f2", "balanced_accuracy", "mcc", "recall", "precision", "roc_auc"]
+    summary = {
+        "audit_scope": "train_dev_pool_only_no_test",
+        "model_family": "Logistic Regression",
+        "n_runs": int(len(stability_df)),
+        "threshold": float(stability_df["threshold"].iloc[0]) if len(stability_df) else 0.5,
+        "param_C": float(stability_df["param_C"].iloc[0]) if len(stability_df) else 1.0,
+        "metrics": {},
+    }
+    for metric in metric_names:
+        values = stability_df[metric].dropna().astype(float)
+        summary["metrics"][metric] = {
+            "mean": round(float(values.mean()), 6),
+            "std": round(float(values.std(ddof=0)), 6),
+            "min": round(float(values.min()), 6),
+            "p05": round(float(np.percentile(values, 5)), 6),
+            "p50": round(float(np.percentile(values, 50)), 6),
+            "p95": round(float(np.percentile(values, 95)), 6),
+            "max": round(float(values.max()), 6),
+        }
+    return summary
+
+
+def stability_summary_frame(summary):
+    rows = []
+    for metric, stats in summary["metrics"].items():
+        row = {"metric": metric}
+        row.update(stats)
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def build_model_stability_figure(stability_df):
+    """Histogram of F2 across repeated train/dev splits."""
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    values = stability_df["f2"].astype(float)
+    fig, ax = plt.subplots(figsize=(7, 4.6))
+    ax.hist(values, bins=14, color="#4c78a8", edgecolor="white")
+    ax.axvline(values.mean(), color="#d62728", linewidth=2, label=f"Mean={values.mean():.3f}")
+    ax.axvline(np.percentile(values, 5), color="grey", linestyle="--", linewidth=1, label="5th/95th percentile")
+    ax.axvline(np.percentile(values, 95), color="grey", linestyle="--", linewidth=1)
+    ax.set_xlabel("F2 on validation split")
+    ax.set_ylabel("Number of runs")
+    ax.set_title("100-run repeated split stability audit (train+dev only)")
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    path = FIGURES_DIR / "model_stability_f2_distribution.png"
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+    return path
 
 
 def build_threshold_figure(model, dev_df):
@@ -617,13 +928,56 @@ def train_and_evaluate():
     best_name = select_best_model(dev_metrics)
     best_model = fitted[best_name]
 
-    # Hyperparameter tuning for the selected model
+    # Hyperparameter tuning for the selected model family. We tune only the
+    # selected Logistic Regression and keep the default unless tuned dev F2
+    # improves enough to justify a more complex locked configuration.
     tuning_results = None
     best_params = None
+    default_vs_tuned = None
+    tuning_decision = None
     if best_name == "Logistic Regression":
-        tuning_results, best_params, best_score = tune_selected_model(train_df, k=5)
-        # Note: We keep the default model as the locked model if the tuning doesn't
-        # drastically improve the result, as instructed ("tuning xác nhận default đã tốt").
+        tuning_results, best_params, best_score = tune_selected_model(
+            train_df, k=5, write_artifact=True
+        )
+        default_vs_tuned, tuned_candidate, locked_variant = compare_default_vs_tuned_lr(
+            train_df, dev_df, tuning_results=tuning_results
+        )
+        default_vs_tuned.round(4).to_csv(
+            METRICS_DIR / "default_vs_tuned_lr.csv", index=False
+        )
+        tuning_decision = default_vs_tuned.loc[
+            default_vs_tuned["decision"] == "locked"
+        ].iloc[0].to_dict()
+        if locked_variant == "tuned_lr":
+            best_model = tuned_candidate
+
+    fbeta_thresholds = fbeta_threshold_analysis(best_model, dev_df, write_artifact=True)
+    build_fbeta_threshold_figure(fbeta_thresholds)
+    threshold_policy_transfer = evaluate_threshold_policy_transfer(
+        best_model,
+        dev_df,
+        test_df,
+        fbeta_thresholds,
+        write_artifact=True,
+    )
+
+    locked_c = 1.0
+    if tuning_decision is not None:
+        locked_c = float(tuning_decision["param_C"])
+    stability_runs = model_stability_audit(
+        train_df,
+        dev_df,
+        n_runs=100,
+        c_value=locked_c,
+        write_artifact=True,
+    )
+    stability_summary = summarize_model_stability(stability_runs)
+    stability_summary_frame(stability_summary).to_csv(
+        METRICS_DIR / "model_stability_summary.csv", index=False
+    )
+    with open(METRICS_DIR / "model_stability_summary.json", "w", encoding="utf-8") as stream:
+        json.dump(stability_summary, stream, indent=2)
+    build_model_stability_figure(stability_runs)
 
     X_test = test_df[ACTIVE_FEATURE_COLUMNS]
     y_test = test_df[TARGET_COLUMN]
@@ -637,6 +991,17 @@ def train_and_evaluate():
     baseline_test.round(4).to_csv(METRICS_DIR / "baseline_test_metrics.csv", index=False)
     dev_metrics.round(4).to_csv(METRICS_DIR / "model_dev_comparison.csv", index=False)
     cv_metrics.round(4).to_csv(METRICS_DIR / "model_cv_metrics.csv", index=False)
+    if tuning_results is None:
+        pd.DataFrame(
+            [
+                {
+                    "param_C": np.nan,
+                    "mean_test_f2": np.nan,
+                    "std_test_f2": np.nan,
+                    "note": "Tuning skipped because locked model family was not Logistic Regression.",
+                }
+            ]
+        ).to_csv(METRICS_DIR / "hyperparameter_tuning.csv", index=False)
     feature_set_comparison.round(4).to_csv(
         METRICS_DIR / "feature_set_comparison.csv", index=False
     )
@@ -656,9 +1021,29 @@ def train_and_evaluate():
         "test_metrics": test_metrics.iloc[0].to_dict(),
         "cv_metrics_top": cv_metrics.iloc[0].to_dict(),
         "test_bootstrap_ci": bootstrap_ci.to_dict(orient="records"),
+        "fbeta_threshold_best": fbeta_thresholds[fbeta_thresholds["is_best_for_beta"]]
+        .sort_values("beta")
+        .to_dict(orient="records"),
+        "fbeta_threshold_policy_transfer": threshold_policy_transfer.to_dict(orient="records"),
+        "stability_audit": stability_summary,
     }
     if best_params is not None:
         summary["tuning_best_params"] = best_params
+    if tuning_decision is not None:
+        summary["locked_model_params"] = {
+            "family": "Logistic Regression",
+            "model__C": float(tuning_decision["param_C"]),
+        }
+        summary["tuning_decision"] = {
+            "locked_variant": tuning_decision["model"],
+            "decision_reason": tuning_decision["decision_reason"],
+            "default_vs_tuned_delta_dev_f2": float(
+                default_vs_tuned.loc[
+                    default_vs_tuned["model"] == "tuned_lr",
+                    "delta_dev_f2_vs_default",
+                ].iloc[0]
+            ),
+        }
 
     with open(METRICS_DIR / "model_summary.json", "w", encoding="utf-8") as stream:
         json.dump(summary, stream, indent=2)

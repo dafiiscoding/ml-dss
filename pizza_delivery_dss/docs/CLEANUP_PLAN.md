@@ -9,7 +9,7 @@ CrisisMMD ở thư mục cha.
 Project đã ổn về mặt học thuật:
 
 - `scripts.run_all` pass 18/18.
-- Unit tests pass 17/17.
+- Unit tests pass 30/30.
 - Có đủ code, dữ liệu, notebook, metrics, figures, report PDF, slide PDF,
   dashboard Streamlit và Power BI data pack.
 - Điểm cần nhớ: dữ liệu synthetic mạnh; mọi phân tích forecast/brand/preference
@@ -27,10 +27,10 @@ Project đã ổn về mặt học thuật:
 - `models/best_delay_model.joblib`: giữ để dashboard/demo không cần train lại.
 - `reports/metrics/`: giữ vì là nguồn số liệu kỹ thuật.
 - `reports/figures/`: giữ vì report/slide dùng trực tiếp.
-- `reports/PIZZA_DSS_REPORT.pdf` và `reports/latex/main.tex`: giữ PDF nộp và source LaTeX.
-- `slides/PIZZA_DSS_SLIDE_DECK.pdf` và `slides/pizza_dss_slides.tex`: giữ slide nộp và source.
+- `reports/PIZZA_DSS_REPORT.pdf`, `reports/REPORT_GUIDE.md` và `reports/latex/main.tex`: giữ PDF nộp, hướng dẫn nội dung và source LaTeX.
+- `slides/PIZZA_DSS_SLIDE_DECK.pdf`, `slides/SLIDE_GUIDE.md` và `slides/pizza_dss_slides.tex`: giữ slide nộp, speaking notes và source.
 - `notebooks/*.ipynb`: giữ vì là minh chứng quy trình theo module.
-- `powerbi/`: giữ vì user yêu cầu có dashboard Power BI-ready.
+- `powerbi/`: giữ vì user yêu cầu có dashboard Power BI-ready, gồm cả `POWERBI_BUILD_GUIDE.md`.
 
 ## Nên xóa hoặc không đưa vào GitHub
 

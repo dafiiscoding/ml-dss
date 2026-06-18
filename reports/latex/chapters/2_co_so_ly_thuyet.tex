@@ -205,7 +205,36 @@ dự án này, con người xuất hiện ở ba mức:
         hàng review và hiệu quả sau triển khai.
 \end{itemize}
 
-Manual Review không chỉ là một ``nhãn lỗi''. Nó là một cơ chế quản trị rủi ro:
+Manual Review (kiểm tra thủ công) có một quy trình cụ thể chứ không chỉ là một
+cái cờ bật/tắt. Khi hệ thống đánh dấu một tweet cần review, năm bước sau được
+thực hiện bởi con người:
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  node distance=4mm,
+  mrstep/.style={draw=HUSTBlue,rounded corners=2pt,fill=boxgray,align=center,
+    text width=2.45cm,minimum height=1.35cm},
+  arrow/.style={-{Latex[length=2.2mm]},thick,HUSTBlue}
+]
+\node[mrstep] (s1) {1. Hệ thống\\nêu \emph{lý do}\\(conflict cao)};
+\node[mrstep,right=of s1] (s2) {2. Người xem\\tweet, ảnh,\\nguồn, thời điểm};
+\node[mrstep,right=of s2] (s3) {3. Đối chiếu\\nguồn thứ hai\\(hotline, báo)};
+\node[mrstep,right=of s3] (s4) {4. Chấp nhận\\hoặc sửa\\category \& priority};
+\node[mrstep,right=of s4] (s5) {5. Ghi lại\\kết quả\\xác minh};
+\draw[arrow] (s1) -- (s2);
+\draw[arrow] (s2) -- (s3);
+\draw[arrow] (s3) -- (s4);
+\draw[arrow] (s4) -- (s5);
+\end{tikzpicture}
+\caption{Quy trình Manual Review: hệ thống chỉ nêu lý do, con người mới là người
+xác minh và quyết định.}
+\label{fig:manual-review}
+\end{figure}
+
+Manual Review vì vậy không chỉ là một ``nhãn lỗi''. Nó là một cơ chế quản trị
+rủi ro:
 hệ thống chủ động chuyển các trường hợp bất đồng mạnh cho người có trách nhiệm.
 Tuy nhiên, công suất con người là hữu hạn. Nếu ngưỡng quá thấp, gần như mọi
 bài đăng đều bị chuyển review và DSS không còn giảm tải. Vì vậy ngưỡng conflict
@@ -228,3 +257,90 @@ classifier được đánh giá trên nhãn informative/humanitarian, nhưng kh�
 chứng minh Priority là tối ưu khi chưa có nhãn Priority. Thay vào đó, báo cáo
 phải công khai công thức, thử nhiều ngưỡng và mô tả điều kiện cần để xác nhận
 chính sách trong tương lai.
+
+Bảng~\ref{tab:evidence-policy} áp dụng nguyên tắc này cho một ca cụ thể, tách
+rõ đâu là số đo, đâu là suy luận, đâu là lựa chọn của tổ chức và đâu là việc
+nằm ngoài hệ thống.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Bốn mức khẳng định cho một tweet ``cầu sập, người mắc kẹt''.}
+\label{tab:evidence-policy}
+\begin{tabularx}{\textwidth}{p{3.4cm}X}
+\toprule
+\textbf{Mức} & \textbf{Ví dụ trên ca này}\\
+\midrule
+Bằng chứng dữ liệu & Xác suất informative 0,93; nhánh ảnh và văn bản cùng cho
+nhóm hạ tầng; conflict score thấp.\\
+Suy luận phân tích & ``Hai phương thức đồng thuận và xác suất cao nên ca này ít
+khả năng là báo động giả.''\\
+Chính sách vận hành & Trọng số severity của nhóm hạ tầng và ngưỡng Priority do
+nhóm chọn $\rightarrow$ xếp High.\\
+Hành động ngoài hệ thống & Điều xe, gọi đội cứu hộ: \emph{không} thuộc hệ thống;
+do con người và cơ quan nghiệp vụ thực hiện sau khi xác minh.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Bản đồ kiến thức học phần}
+\label{sec:concept-map}
+
+Báo cáo dùng nhiều kỹ thuật, nhưng không phải kỹ thuật nào cũng là \emph{trọng
+tâm} của học phần Hệ hỗ trợ quyết định. Bảng~\ref{tab:concept-map} phân biệt
+phần thuộc nội dung môn học (trung tâm) với phần công cụ bổ trợ nằm ngoài slide.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Bản đồ kiến thức: nội dung học phần và vai trò trong dự án.}
+\label{tab:concept-map}
+\begin{tabularx}{\textwidth}{p{2.4cm}p{5.2cm}X}
+\toprule
+\textbf{Nhóm} & \textbf{Nội dung học phần} & \textbf{Vai trò trong dự án}\\
+\midrule
+Trung tâm & DSS, quy trình ra quyết định & Từ dự báo tới hàng đợi hành động\\
+Trung tâm & Học máy và đánh giá & Train/dev/test, metric, baseline\\
+Trung tâm & Decision Tree, NB, k-NN, SVM, Ensemble & Sáu mô hình so sánh\\
+Trung tâm & Text Mining, Social Media Mining & Làm sạch tweet, TF--IDF\\
+Trung tâm & Phân cụm (Clustering) & K-Means khám phá chủ đề\\
+Trung tâm & Phân tích luật kết hợp & Apriori trên từ khóa/hashtag\\
+Trung tâm & BI/Dashboard & Streamlit trình bày và thao tác hàng đợi\\
+\midrule
+Bổ trợ & CLIP/ViT & Trích đặc trưng ảnh cố định (frozen)\\
+Bổ trợ & SHA/pHash, t-SNE, bootstrap & Kiểm soát rò rỉ và độ bền\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{insight}[Nội dung học phần thể hiện ở đâu?]
+Phần \emph{trung tâm} của bài tập là tầng DSS (Chương~\ref{chap:dss}) và sáu
+classifier cùng cách đánh giá (Chương~\ref{chap:mohinh}), dựa trên Text Mining,
+Clustering và Association Analysis ở Chương~\ref{chap:eda}. CLIP \emph{không}
+được coi là đóng góp thuật toán chính: nó chỉ là một bộ trích đặc trưng ảnh dùng
+sẵn. Điều được chấm trong học phần là cách chọn mô hình, đánh giá trung thực và
+biến kết quả thành quyết định, không phải việc gọi một mô hình ảnh có sẵn.
+\end{insight}
+
+\subsection{Vai trò của các công cụ tính toán}
+
+Một số người đọc có thể thắc mắc vì sao một dự án ``khá lớn'' lại không dùng các
+framework học sâu hay xử lý phân tán. Lý do nằm ở \emph{quy mô và mục tiêu}:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PyTorch} chỉ đóng vai trò \emph{runtime} để nạp và chạy CLIP đã
+        huấn luyện sẵn. Dự án không tự xây dựng hay fine-tune mạng nơ-ron sâu
+        nào; mọi phần học máy ``của dự án'' nằm ở các classifier cổ điển trên
+        scikit-learn.
+  \item \textbf{PySpark} không được dùng vì 18.082 dòng và embedding 512 chiều
+        vừa khít bộ nhớ một máy. Spark giải quyết bài toán dữ liệu phân tán hàng
+        triệu đến hàng tỷ bản ghi; với quy mô này nó chỉ thêm chi phí vận hành mà
+        không gỡ được nút thắt nào. Spark sẽ cần thiết nếu sau này dữ liệu chảy
+        liên tục, đạt hàng triệu bản ghi hoặc phải xử lý phân tán nhiều nguồn.
+  \item \textbf{scikit-learn, pandas} là phần lõi cho mô hình hóa và xử lý bảng;
+        \textbf{Streamlit} dựng dashboard. Vai trò chi tiết của từng thư viện
+        nằm ở bảng công nghệ Chương~\ref{chap:dashboard}.
+\end{itemize}
+
+Tóm lại, lựa chọn công cụ bám theo nguyên tắc tối thiểu cần thiết: chỉ thêm một
+công nghệ khi nó giải quyết một nút thắt thật, không thêm để ``cho oai''.

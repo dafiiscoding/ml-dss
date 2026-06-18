@@ -29,6 +29,29 @@ tăng .0106 là nhỏ về độ lớn thực tiễn dù CI bootstrap của gain
 Giá trị bổ sung rõ hơn ở Accuracy (.6948 so với .6275), F1 (.8025 so với
 .7711), Balanced Accuracy (.5944 so với .5000) và MCC (.3325 so với 0).
 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\scriptsize]
+\def\sc{7.0}
+\foreach \v/\lab/\x in {0.0106/F2/0, 0.0314/F1/1.5, 0.0673/Accuracy/3.0,
+  0.0944/{Bal. Acc.}/4.5, 0.3325/MCC/6.0}{
+  \fill[HUSTRed!55] (\x,0) rectangle ++(0.95,\v*\sc);
+  \node[above,font=\tiny] at (\x+0.47,\v*\sc) {+\v};
+  \node[below,align=center,font=\tiny] at (\x+0.47,0) {\lab};
+}
+\draw[->] (-0.2,0) -- (7.2,0);
+\node[rotate=90,anchor=south,font=\tiny] at (-0.45,1.2) {Gain so dummy};
+\end{tikzpicture}
+\caption{Mức tăng của Late Fusion so với baseline always-informative theo từng
+metric (canonical test). F2 gần như không nhúc nhích, nhưng các metric cân bằng
+(Balanced Accuracy, MCC) tăng rõ -- đây mới là giá trị thật của fusion.}
+\label{fig:informative-delta}
+\end{figure}
+
+Hình~\ref{fig:informative-delta} cho thấy ngay vì sao không được khoe F2 đơn
+độc: cột F2 thấp nhất, còn MCC tăng từ 0 lên .3325 mới là bằng chứng mô hình
+phân biệt hai lớp hơn hẳn dự báo hằng.
+
 Điều này có nghĩa hệ thống phân biệt hai lớp tốt hơn dự báo hằng, nhưng ưu tiên
 Recall khiến nhiều not-informative vẫn bị chuyển tiếp. Trong bối cảnh cứu trợ,
 đó có thể là đánh đổi chấp nhận được ở tầng sàng lọc đầu tiên, miễn là tầng sau
@@ -47,6 +70,28 @@ other-relevant và .5363 ở rescue/donation, nhưng chỉ .0714 ở missing/fou
 Do đó hệ thống có giá trị cho tổ chức hàng đợi tổng thể, chưa đủ tin cậy để một
 nhãn lớp hiếm tự kích hoạt điều động sinh tử.
 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\scriptsize]
+\def\sc{5.5}
+\foreach \v/\lab/\x in {0.0686/Majority/0, 0.3260/Text-only/1.4,
+  0.3646/Image-only/2.8, 0.4005/Fusion/4.2}{
+  \fill[HUSTBlue!60] (\x,0) rectangle ++(0.9,\v*\sc);
+  \node[above,font=\tiny] at (\x+0.45,\v*\sc) {\v};
+  \node[below,align=center] at (\x+0.45,0) {\lab};
+}
+\draw[->] (-0.2,0) -- (5.4,0);
+\node[rotate=90,anchor=south] at (-0.4,1.1) {Macro-F1};
+\end{tikzpicture}
+\caption{Tiến triển Macro-F1 humanitarian qua các mốc đối chứng trên canonical
+test: mỗi bước thêm thông tin đều nhích lên, fusion cao nhất.}
+\label{fig:results-progression}
+\end{figure}
+
+Hình~\ref{fig:results-progression} cho thấy điều mà một bảng số khó truyền tải
+ngay: khoảng cách lớn nhất là từ majority lên các mô hình thật, và fusion vượt
+cả hai nhánh đơn lẻ. Người đọc không cần tự trừ các con số trong bảng.
+
 \subsection{Giá trị của nhánh ảnh}
 
 Image-only tốt hơn text-only ở humanitarian Macro-F1 (.3646 so với .3260), và
@@ -62,14 +107,66 @@ xác minh thay vì tự chọn một nhánh.
 \section{Ý nghĩa của Manual Review}
 
 Với giới hạn công suất dev 25\%, ngưỡng conflict 0,54 tạo review rate 24,85\%
-trên canonical test. Precision .7532 nghĩa là khoảng ba phần tư case được chọn
-review thực sự mang cờ bất đồng theo annotation; Recall .3295 nghĩa là hệ thống
-chỉ thu hồi khoảng một phần ba toàn bộ case bất đồng.
+trên canonical test. Diễn giải bằng \emph{số ca} dễ hình dung hơn tỷ lệ: trên
+2.169 dòng test, hệ thống đẩy khoảng \(539\) ca vào hàng review. Precision .7532
+nghĩa là trong \(539\) ca đó có khoảng \(406\) ca thực sự bất đồng theo
+annotation và khoảng \(133\) ca là báo nhầm. Recall .3295 nghĩa là hệ thống chỉ
+thu hồi khoảng một phần ba \emph{toàn bộ} ca bất đồng -- phần còn lại lọt qua.
+Đây là một đánh đổi công suất: muốn bắt nhiều hơn phải hạ ngưỡng và chấp nhận
+hàng review dài hơn.
 
 Đây là cơ chế \textit{triage}, không phải detector toàn diện. Nếu trung tâm có
 thêm người, có thể hạ threshold để tăng Recall. Nếu hàng đợi quá tải, cần tăng
 threshold hoặc ưu tiên conflict đi cùng category nghiêm trọng. Thay đổi threshold
 phải được giám sát bằng cả review rate và chất lượng review, không chỉ một metric.
+
+\section{Một số ca minh họa end-to-end}
+
+Để thấy hệ thống ``chạy'' chứ không chỉ là bảng số, Bảng~\ref{tab:casestudies}
+theo dõi ba kịch bản minh họa đi hết luồng: xác suất hai nhánh $\rightarrow$
+fusion $\rightarrow$ conflict $\rightarrow$ Risk/Priority $\rightarrow$ đề xuất
+$\rightarrow$ bước con người phải làm. Các số mang tính minh họa cho cơ chế, phù
+hợp với các tình huống đã nêu ở Mục~\ref{sec:scenarios}.
+
+\begin{table}[H]\centering\scriptsize
+\caption{Ba ca minh họa đi hết luồng quyết định.}
+\label{tab:casestudies}
+\begin{tabularx}{\textwidth}{p{2.5cm}p{1cm}p{1cm}p{1cm}X}
+\toprule
+\textbf{Ca} & \(p_{\text{text}}\) & \(p_{\text{img}}\) & \textbf{Conflict} &
+\textbf{Luồng và bước con người}\\
+\midrule
+A. ``Bridge collapsed, people trapped'' + ảnh hạ tầng hỏng &
+0,92 & 0,88 & thấp &
+Fusion cao, đồng thuận $\rightarrow$ Risk High, route Emergency Team. Người xác
+minh \emph{vị trí} qua hotline trước khi điều lực lượng.\\
+B. ``Urgent help needed!'' + ảnh selfie không liên quan &
+0,85 & 0,30 & \textbf{cao} &
+Bất đồng mạnh $\rightarrow$ giữ ưu tiên nhưng bật Manual Review. Người xem ảnh và
+văn bản, đối chiếu nguồn thứ hai.\\
+C. Dự báo missing/found rất tự tin nhưng lớp chỉ có ít mẫu train &
+-- & -- & -- &
+Xác suất cao \emph{không} đồng nghĩa đáng tin $\rightarrow$ bắt buộc xác minh
+trước mọi hành động (xem lớp hiếm ở Chương~\ref{chap:mohinh}).\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Điểm chung của ba ca: hệ thống chỉ \emph{đề xuất thứ tự và đội phụ trách}; mọi
+hành động có hậu quả đều có một bước con người chèn vào trước.
+
+Hình~\ref{fig:case-studies} lấy \emph{ba ca thật} từ test (ảnh và số liệu do hệ
+thống sinh ra, không dàn dựng) minh họa đúng ba tình huống trên:
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{case_studies.png}
+\caption{Ba ca thật từ test. A: tin đồng thuận, Risk 87,5 $\rightarrow$ High,
+không cần review. B: xung đột cao (conflict 0,92) nên bật Manual Review dù vẫn
+ưu tiên. C: tweet ``no missing child'' -- một câu \emph{phủ định} thật, lớp
+missing/found hiếm, hệ thống chuyển review thay vì tin tuyệt đối. Ca C cho thấy
+đúng điểm yếu phủ định của TF--IDF đã nêu ở Chương~\ref{chap:mohinh}.}
+\label{fig:case-studies}
+\end{figure}
 
 \section{Khuyến nghị vận hành}
 

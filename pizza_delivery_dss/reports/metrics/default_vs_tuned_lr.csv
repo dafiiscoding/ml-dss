@@ -1,0 +1,3 @@
+model,accuracy,balanced_accuracy,precision,recall,f1,f2,mcc,roc_auc,tn,fp,fn,tp,param_C,cv_f2_mean,cv_f2_std,note,delta_dev_f2_vs_default,decision,decision_reason
+default_lr,0.9701,0.9636,0.9091,0.9524,0.9302,0.9434,0.9117,0.9942,155,4,2,40,1.0,0.9387,0.0323,Default Logistic Regression C=1.0,0.0,locked,Use tuned LR only if dev F2 improves by at least 0.010; observed tuned-default delta is -0.0540.
+tuned_lr,0.9602,0.931,0.925,0.881,0.9024,0.8894,0.8779,0.9936,156,3,5,37,0.3,0.9437,0.0375,Tuned Logistic Regression C=0.3,-0.054,not_locked,Use tuned LR only if dev F2 improves by at least 0.010; observed tuned-default delta is -0.0540.

@@ -1,4 +1,5 @@
 \chapter{Phân tích khám phá dữ liệu}
+\label{chap:eda}
 
 \section{Mục đích và nguyên tắc EDA}
 
@@ -60,12 +61,52 @@ EDA chưa chứng minh model sẽ thất bại trên event mới, vì tất cả
 hiện trong train/dev/test. Tuy nhiên, nó chỉ ra rằng metric gộp có thể che khác
 biệt từng thảm họa. Vì vậy dashboard có bộ lọc event và phần đánh giá sau này
 báo cáo độ ổn định theo event. Một đánh giá nghiêm ngặt hơn trong tương lai là
-leave-one-event-out: giữ toàn bộ một thảm họa ngoài train.
+\emph{leave-one-event-out}: giữ toàn bộ một thảm họa ngoài train
+(Hình~\ref{fig:loeo}). Cách chia chính thức hiện tại cho mỗi event xuất hiện ở
+cả ba split, nên mô hình luôn ``đã thấy'' kiểu dữ liệu của mọi sự kiện -- một
+điều kiện dễ hơn thực tế triển khai.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\scriptsize,
+  ev/.style={draw,minimum width=0.7cm,minimum height=0.5cm,inner sep=0pt},
+  tr/.style={ev,fill=HUSTBlue!25},
+  te/.style={ev,fill=HUSTRed!35}]
+% official split
+\node[font=\small\bfseries] at (-2.3,0.6) {Chia chính thức};
+\foreach \e/\x in {E1/0,E2/0.75,E3/1.5,E4/2.25,E5/3.0}{
+  \node[tr] at (\x,0.85) {}; \node[tr] at (\x,0.35) {}; \node[te] at (\x,-0.15) {};
+  \node[font=\tiny] at (\x+0.25,1.2) {\e};
+}
+\node[font=\tiny,left] at (-0.45,0.85) {train};
+\node[font=\tiny,left] at (-0.45,0.35) {dev};
+\node[font=\tiny,left] at (-0.45,-0.15) {test};
+% leave one event out
+\node[font=\small\bfseries] at (-2.3,-1.3) {Leave-one-event-out};
+\foreach \e/\x in {E1/0,E2/0.75,E3/1.5,E4/2.25}{
+  \node[tr] at (\x,-1.05) {};
+}
+\node[te] at (3.0,-1.05) {};
+\node[font=\tiny] at (3.0,-0.65) {E5 (giữ ngoài)};
+\node[font=\tiny,left] at (-0.45,-1.05) {train};
+\end{tikzpicture}
+\caption{Chia chính thức: mọi sự kiện có mặt ở cả train/dev/test. Leave-one-event-out:
+toàn bộ một sự kiện bị giữ ngoài train để đo domain shift thật.}
+\label{fig:loeo}
+\end{figure}
 
 \section{Khám phá văn bản}
 
-Tweet có trung bình 117,48 ký tự và 11,72 từ sau làm sạch. Số từ trung bình của
-informative là 11,75, gần như bằng 11,68 của not-informative.
+Phần này không nhảy thẳng vào con số. Quy trình EDA văn bản đi theo bảy bước để
+mỗi biểu đồ trả lời một câu hỏi cụ thể: (1) đặt câu hỏi (độ dài có phân biệt được
+nhãn không?); (2) tạo biến độ dài ký tự và số token; (3) phân nhóm theo nhãn và
+sự kiện; (4) so sánh phân bố; (5) xem top token nổi bật; (6) kiểm tra nhiễu còn
+sót; (7) rút kết luận có giới hạn. Cần phân biệt rõ \emph{thống kê mô tả} (dữ
+liệu trông thế nào) với \emph{bằng chứng dự báo} (đặc trưng có giúp phân loại
+không) -- EDA chỉ cho cái thứ nhất.
+
+Áp dụng bước (2)--(4): tweet có trung bình 117,48 ký tự và 11,72 từ sau làm sạch.
+Số từ trung bình của informative là 11,75, gần như bằng 11,68 của not-informative.
 
 \begin{figure}[H]\centering
 \includegraphics[width=0.92\textwidth]{text_length_distribution.png}
@@ -92,10 +133,40 @@ J=\sum_{i=1}^{n}
 \left\|\mathbf{x}_i-\boldsymbol{\mu}_{c_i}\right\|_2^2.
 \]
 
-Thuật toán lặp hai bước: gán mỗi điểm vào tâm gần nhất, rồi cập nhật tâm bằng
-trung bình các điểm được gán. K-Means nhanh và dễ đọc top term từ centroid,
-nhưng phải chọn \(K\), nhạy với khởi tạo và giả định cụm gần dạng cầu trong
-không gian khoảng cách \cite{macqueen1967}.
+Thuật toán lặp hai bước (Hình~\ref{fig:kmeans-iter}): gán mỗi điểm vào tâm gần
+nhất, rồi cập nhật tâm bằng trung bình các điểm được gán; lặp tới khi tâm không
+đổi. K-Means nhanh và dễ đọc top term từ centroid, nhưng phải chọn \(K\), nhạy
+với khởi tạo và giả định cụm gần \emph{dạng cầu} trong không gian khoảng cách
+\cite{macqueen1967}. Giả định dạng cầu này yếu khi không gian là TF--IDF nhiều
+nghìn chiều và thưa, một lý do khiến silhouette dưới đây rất thấp.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\scriptsize,scale=0.9,
+  pt/.style={circle,fill=black!55,inner sep=1.1pt},
+  c1/.style={star,star points=5,fill=HUSTBlue,inner sep=1.6pt},
+  c2/.style={star,star points=5,fill=HUSTRed,inner sep=1.6pt}]
+% Step 1: assign
+\begin{scope}
+  \node[font=\small\bfseries] at (1,2.3) {1. Gán điểm vào tâm gần nhất};
+  \foreach \x/\y in {0.2/0.4,0.5/0.9,0.9/0.5,0.4/1.3}{\node[pt,HUSTBlue!70,fill=HUSTBlue!50] at (\x,\y){};}
+  \foreach \x/\y in {1.6/1.5,1.9/1.0,2.1/1.7,1.7/0.9}{\node[pt,HUSTRed!70,fill=HUSTRed!50] at (\x,\y){};}
+  \node[c1] at (0.5,0.8){}; \node[c2] at (1.8,1.3){};
+\end{scope}
+% Step 2: update
+\begin{scope}[xshift=4.2cm]
+  \node[font=\small\bfseries] at (1,2.3) {2. Dịch tâm về trung bình cụm};
+  \foreach \x/\y in {0.2/0.4,0.5/0.9,0.9/0.5,0.4/1.3}{\node[pt,fill=HUSTBlue!50] at (\x,\y){};}
+  \foreach \x/\y in {1.6/1.5,1.9/1.0,2.1/1.7,1.7/0.9}{\node[pt,fill=HUSTRed!50] at (\x,\y){};}
+  \node[c1] at (0.5,0.78){}; \node[c2] at (1.83,1.28){};
+  \draw[-{Latex[length=1.5mm]},HUSTBlue,thick] (0.5,0.8)--(0.5,0.78);
+  \draw[-{Latex[length=1.5mm]},HUSTRed,thick] (1.8,1.3)--(1.83,1.28);
+\end{scope}
+\end{tikzpicture}
+\caption{Một vòng lặp K-Means trên ví dụ 2D: gán điểm theo tâm gần nhất rồi cập
+nhật tâm. Ngôi sao là centroid.}
+\label{fig:kmeans-iter}
+\end{figure}
 
 Dự án dùng TF--IDF tối đa 2.000 unigram/bigram, \code{min\_df=3}, mười lần
 khởi tạo và random seed 42. Sweep \(K=2,\ldots,12\) được thực hiện trên cùng
@@ -139,10 +210,28 @@ hiện nhóm nội dung; nó không đủ ổn định để thay classifier ho�
 \subsection{Từ tweet thành transaction}
 
 Association analysis tìm các item thường xuất hiện cùng nhau. Mỗi tweet được
-chuyển thành một ``giỏ'' gồm từ khóa khủng hoảng và hashtag. Chỉ transaction có
-ít nhất hai item được giữ. Nếu một từ đã xuất hiện dưới dạng hashtag, phiên bản
-không có dấu \# bị bỏ để tránh luật hiển nhiên như
-\(\{\#earthquake\}\Rightarrow\{earthquake\}\).
+chuyển thành một ``giỏ'' (transaction) gồm từ khóa khủng hoảng và hashtag. Ví dụ
+cụ thể: tweet ``\#iran \#earthquake rescue teams searching'' sau khi tách trở
+thành giỏ \(\{\#iran, \#earthquake, rescue\}\), rồi được biểu diễn thành một hàng
+one-hot (giá trị 1 ở các cột item có mặt, 0 ở các cột còn lại):
+
+\begin{table}[H]\centering\small
+\caption{Một tweet biến thành transaction one-hot.}
+\begin{tabular}{lccccc}
+\toprule
+& \texttt{\#iran} & \texttt{\#earthquake} & \texttt{rescue} & \texttt{flood} & \texttt{\dots}\\
+\midrule
+transaction & 1 & 1 & 1 & 0 & \dots\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Chỉ transaction có \emph{ít nhất hai item} được giữ, vì một luật cần cả tiền đề
+và kết quả. Nếu một từ đã xuất hiện dưới dạng hashtag, phiên bản không có dấu
+\# bị bỏ để tránh luật hiển nhiên như
+\(\{\#earthquake\}\Rightarrow\{earthquake\}\). Một điểm dễ nhầm:
+\textbf{mẫu số của support là số transaction đã giữ}, không phải toàn bộ 13.608
+tweet train.
 
 Apriori dựa trên tính chất: nếu một itemset không đủ phổ biến, mọi superset của
 nó cũng không thể đủ phổ biến. Nhờ vậy thuật toán loại sớm nhiều ứng viên
@@ -182,6 +271,11 @@ giữ, không phải toàn bộ 13.608 tweet. Ngưỡng dùng là support 0,005 
 \end{tabular}
 \end{table}
 
+Đọc một dòng cụ thể: luật \(\{\#iran\}\Rightarrow\{\#earthquake\}\) có
+support \(0{,}018\) (1,8\% giỏ chứa cả hai), confidence \(0{,}717\) (trong các
+giỏ có \texttt{\#iran}, 71,7\% cũng có \texttt{\#earthquake}) và lift \(18{,}5\)
+(cặp này đi cùng nhau cao gấp khoảng 18,5 lần so với khi hai hashtag độc lập).
+
 Các luật chủ yếu nối địa danh với sự kiện, phù hợp cho filter và drill-down.
 Lift cao không có nghĩa tiền đề gây ra kết quả; nó cũng có thể cao vì hai hashtag
 cùng được dùng trong một chiến dịch truyền thông nhỏ. Association rules vì vậy
@@ -194,14 +288,39 @@ mode màu; toàn bộ được chuyển RGB trước CLIP. Gallery theo lớp đ
 để kiểm tra trực quan rằng dữ liệu là ảnh thảm họa thật, không phải ô màu hay
 placeholder.
 
+Gallery theo lớp (lấy mẫu xác định bằng seed) đã trình bày ở
+Chương~\ref{chap:dulieu}; ở đây tập trung vào \emph{không gian embedding}.
+
+\subsection{PCA: vì sao 512 chiều khó nhìn}
+
+Embedding CLIP đã có sẵn 512 chiều. Vì vậy để trực quan hóa phải \emph{giảm}
+chiều, không phải ``tăng chiều''. PCA (Principal Component Analysis) tìm các trục
+giữ nhiều phương sai nhất rồi chiếu dữ liệu xuống vài trục đó. Trên 13.608
+embedding train, kết quả định lượng cho thấy không gian rất ``trải'':
+
+\begin{itemize}[leftmargin=*]
+  \item thành phần chính thứ nhất (PC1) chỉ giữ \textbf{7,5\%} phương sai, PC2
+        giữ \textbf{4,8\%}; hai trục đầu cộng lại chỉ \textbf{12,4\%};
+  \item cần tới \textbf{32} thành phần mới đạt 50\% phương sai tích lũy.
+\end{itemize}
+
+Con số này giải thích vì sao một hình 2D bất kỳ (PCA hay t-SNE) chỉ thấy một
+lát rất mỏng của thông tin, và vì sao các lớp trông chồng lấn dù classifier vẫn
+phân biệt được trên đủ 512 chiều.
+
 \begin{figure}[H]\centering
-\includegraphics[width=\textwidth]{image_gallery.png}
-\caption{Một số ảnh train theo tám lớp humanitarian.}
+\includegraphics[width=\textwidth]{pca_clip.png}
+\caption{Trái: phương sai tích lũy theo số thành phần PCA (đường ngang 80\% chưa
+đạt trong 50 thành phần). Phải: hình chiếu PCA 2D tuyến tính của embedding train,
+tô màu theo nhãn -- các lớp chồng lấn vì 2 trục chỉ giữ 12,4\% phương sai.}
+\label{fig:pca-clip}
 \end{figure}
 
 t-SNE là phương pháp giảm chiều phi tuyến, cố gắng bảo toàn lân cận cục bộ khi
-chiếu vector 512 chiều xuống hai chiều \cite{maaten2008}. Hình t-SNE được tạo
-từ 3.000 embedding train, perplexity 30, khởi tạo PCA và seed 42.
+chiếu vector 512 chiều xuống hai chiều \cite{maaten2008}. Khác PCA tuyến tính,
+t-SNE giữ \emph{lân cận cục bộ} nhưng \emph{không} bảo toàn khoảng cách toàn cục,
+nên không dùng để chấm điểm mô hình. Hình t-SNE được tạo từ 3.000 embedding
+train, perplexity 30, khởi tạo PCA và seed 42.
 
 \begin{figure}[H]\centering
 \includegraphics[width=0.82\textwidth]{tsne_clip.png}

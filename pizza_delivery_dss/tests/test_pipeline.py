@@ -26,7 +26,13 @@ from pizza_dss.data_forensics import (
     mi_permutation_audit,
     uniformity_tests,
 )
-from pizza_dss.decision_rules import get_dss_decision
+from pizza_dss.decision_rules import (
+    RISK_COMPONENT_WEIGHTS,
+    calculate_delay_risk_score,
+    explain_delay_risk_score,
+    get_dss_decision,
+    risk_component_policy_spec,
+)
 from pizza_dss.eda import (
     delay_rate_with_ci,
     duration_delay_profile,
@@ -38,13 +44,18 @@ from pizza_dss.eda import (
 )
 from pizza_dss.modeling import (
     bootstrap_test_metrics,
+    compare_default_vs_tuned_lr,
     compare_models,
     cross_validate_models,
     evaluate_baselines,
+    evaluate_threshold_policy_transfer,
+    fbeta_threshold_analysis,
     load_best_model,
+    model_stability_audit,
+    summarize_model_stability,
     tune_selected_model,
 )
-from pizza_dss.transport_optimization import solve_transport_assignment
+from pizza_dss.transport_optimization import solve_transport_assignment, transport_cost_policy_spec
 
 
 class PizzaDataTests(unittest.TestCase):
@@ -100,6 +111,10 @@ class PizzaModelAndDecisionTests(unittest.TestCase):
         self.assertIn("mean_test_f2", results.columns)
         self.assertGreaterEqual(best_score, 0)
         self.assertIn("model__C", best_params)
+        comparison, _, locked_variant = compare_default_vs_tuned_lr(self.train, self.dev, results)
+        self.assertEqual(set(comparison["model"]), {"default_lr", "tuned_lr"})
+        self.assertIn(locked_variant, {"default_lr", "tuned_lr"})
+        self.assertIn("delta_dev_f2_vs_default", comparison.columns)
 
     def test_decision_rules_escalate_high_probability_case(self):
         order = self.test.iloc[0].copy()
@@ -109,11 +124,30 @@ class PizzaModelAndDecisionTests(unittest.TestCase):
         self.assertEqual(decision["priority"], "High")
         self.assertIn("backup driver", decision["recommended_action"])
 
+    def test_risk_score_breakdown_matches_score(self):
+        order = self.test.iloc[0].copy()
+        explanation = explain_delay_risk_score(order, 0.75)
+        self.assertEqual(
+            {row["component"] for row in explanation},
+            set(RISK_COMPONENT_WEIGHTS),
+        )
+        self.assertAlmostEqual(
+            sum(row["weighted_contribution"] for row in explanation),
+            calculate_delay_risk_score(order, 0.75),
+            delta=0.06,
+        )
+        policy = risk_component_policy_spec()
+        self.assertAlmostEqual(sum(row["weight"] for row in policy), 1.0)
+        self.assertTrue(all(row["normalization"] for row in policy))
+
     def test_transport_assignment_uses_unique_driver_slots(self):
         assignments = solve_transport_assignment(top_n=8)
         self.assertEqual(len(assignments), 8)
         self.assertEqual(assignments["driver_slot"].nunique(), 8)
         self.assertTrue((assignments["estimated_assignment_cost"] >= 0).all())
+        policy = transport_cost_policy_spec()
+        self.assertGreaterEqual(len(policy), 4)
+        self.assertTrue(all(item["formula"] and item["source"] for item in policy))
 
     def test_business_forecast_and_recommendations_run(self):
         df = load_dataset()
@@ -196,6 +230,26 @@ class PizzaDepthAnalysisTests(unittest.TestCase):
         bt = bootstrap_test_metrics(load_best_model(), self.test, n_boot=200)
         self.assertEqual(set(bt["metric"]), {"f2", "balanced_accuracy", "mcc", "recall"})
         self.assertTrue((bt["ci_low_2_5"] <= bt["ci_high_97_5"]).all())
+
+    def test_fbeta_threshold_analysis_marks_one_best_per_beta(self):
+        model = load_best_model()
+        audit = fbeta_threshold_analysis(model, self.dev, thresholds=[0.3, 0.5, 0.7])
+        self.assertEqual(set(audit["beta"]), {1.0, 2.0, 3.0})
+        self.assertTrue((audit["threshold"].between(0, 1)).all())
+        self.assertEqual(int(audit["is_best_for_beta"].sum()), 3)
+        self.assertIn("fbeta_score", audit.columns)
+        transfer = evaluate_threshold_policy_transfer(model, self.dev, self.test, audit)
+        self.assertEqual(set(transfer["split"]), {"dev", "test"})
+        self.assertIn("dev_best_f2", set(transfer["model"]))
+
+    def test_model_stability_audit_uses_multiple_splits(self):
+        audit = model_stability_audit(self.train, self.dev, n_runs=5)
+        self.assertEqual(len(audit), 5)
+        self.assertTrue((audit["f2"] >= 0).all())
+        summary = summarize_model_stability(audit)
+        self.assertEqual(summary["n_runs"], 5)
+        self.assertIn("f2", summary["metrics"])
+        self.assertIn("p05", summary["metrics"]["f2"])
 
     def test_delay_rate_with_ci_bounds(self):
         out = delay_rate_with_ci(self.df, "traffic_level")

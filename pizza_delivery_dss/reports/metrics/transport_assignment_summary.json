@@ -5,5 +5,7 @@
   "total_capacity": 12,
   "mean_assignment_cost": 32.84,
   "high_priority_assigned": 12,
+  "algorithm": "Hungarian linear sum assignment; greedy fallback if scipy is unavailable",
+  "cost_formula": "distance_km*3.2/speed_factor + 0.35*(100-risk_score) + high_traffic_penalty - same_location_bonus, floored at 0",
   "note": "Drivers/capacity are simulated because the Kaggle dataset has no driver table."
 }

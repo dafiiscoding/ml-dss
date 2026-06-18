@@ -1,0 +1,6 @@
+term,formula,source,effect
+travel_minutes,distance_km * 3.2 / driver_speed_factor,distance_km từ đơn thật; speed_factor từ fleet giả lập,Đơn xa hoặc tài xế chậm hơn có cost cao hơn.
+priority_penalty,0.35 * (100 - delay_risk_score),delay_risk_score từ queue DSS,Đơn risk càng cao thì penalty càng thấp để được ưu tiên gán.
+high_traffic_penalty,"6 nếu traffic_level == 'High', ngược lại 0",traffic_level từ đơn thật,Traffic cao làm tăng cost vì cần thêm buffer vận hành.
+same_location_bonus,"-8 nếu order.location == driver.base_location, ngược lại 0",location từ đơn thật; base_location từ fleet giả lập,Ưu tiên tài xế cùng khu vực để giảm chi phí proxy.
+cost_floor,"max(travel + priority + traffic - same_location_bonus, 0)",quy tắc an toàn của mô hình cost,Đảm bảo cost không âm khi có bonus cùng khu vực.

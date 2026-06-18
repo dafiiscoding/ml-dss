@@ -208,8 +208,8 @@ def build():
             """
         ),
         md_cell("**Delay rate kèm khoảng tin cậy Wilson** (đọc kèm `orders` để không tin nhóm nhỏ):"),
-        code_cell('delay_rate_with_ci(df, "distance_band").round(4)'),
-        code_cell('delay_rate_with_ci(df, "traffic_level").round(4)'),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "delay_rate_ci_by_distance_band.csv").round(4)'),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "delay_rate_ci_by_traffic_level.csv").round(4)'),
         md_cell(
             """
             **Insight (bảng CI).** Delay rate tăng đơn điệu theo distance band và
@@ -378,13 +378,9 @@ def build():
             - Bằng chứng dẫn tới: Mô hình supervised (LogReg) cho thấy distance và traffic quan trọng. Unsupervised learning (Clustering/Apriori) tái xác nhận điều này một cách độc lập khi nhóm có distance/traffic cao lại chính là nhóm có delay rate cao nhất.
             """
         ),
-        code_cell(
-            """
-            kmeans_silhouette_sweep(df).round(4)
-            """
-        ),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "kmeans_silhouette.csv").round(4)'),
         md_cell("**Profile từng cụm** (cụm *nghĩa là gì*, không chỉ silhouette):"),
-        code_cell("kmeans_cluster_profile(df, k=4)"),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "kmeans_cluster_profile.csv").round(4)'),
         md_cell(
             """
             **Insight (cụm).** Các cụm tách chủ yếu theo distance/traffic: cụm có

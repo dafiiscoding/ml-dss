@@ -28,6 +28,16 @@
 - **Cross-validation (CV) — kiểm định chéo**: chia train thành k phần, lần lượt
   học k-1 phần và kiểm trên phần còn lại; báo **trung bình ± độ lệch chuẩn** để
   biết mô hình *ổn định* hay *ăn may*.
+- **Repeated stratified holdout**: lặp nhiều lần việc chia lại train/validation
+  có giữ tỷ lệ lớp; dùng để kiểm tra điểm số có ổn định qua nhiều split không.
+- **Hyperparameter (siêu tham số)**: tham số do người làm mô hình chọn trước khi
+  học, ví dụ `C` của Logistic Regression; khác với hệ số mô hình học từ dữ liệu.
+- **Hyperparameter tuning**: thử nhiều giá trị siêu tham số để tìm cấu hình tốt
+  hơn, nhưng chỉ được dùng train/CV/dev, không dùng test để tránh leakage.
+- **GridSearchCV**: thử toàn bộ lưới siêu tham số bằng cross-validation và chọn
+  tổ hợp có metric trung bình tốt nhất.
+- **Regularization / C**: regularization là mức phạt giúp mô hình bớt quá khớp;
+  trong Logistic Regression, `C` nhỏ nghĩa là phạt mạnh hơn, mô hình đơn giản hơn.
 - **Bootstrap**: lấy mẫu lại có hoàn lại nhiều lần để ước lượng **khoảng tin cậy**.
 - **CI (Confidence Interval) — khoảng tin cậy 95%**: dải giá trị hợp lý của một
   con số. CI **rộng** = không chắc (thường do ít dữ liệu). CI chứa 0 = hiệu ứng
@@ -45,6 +55,8 @@
 - **F1**: trung bình điều hòa của Precision và Recall (cân bằng hai bên).
 - **F2**: như F1 nhưng **ưu tiên Recall gấp đôi**. Chọn F2 vì *bỏ sót đơn trễ
   (FN) tốn hơn* cảnh báo dư (FP).
+- **F3**: F-beta với beta=3, ưu tiên Recall mạnh hơn F2; dùng như stress test
+  khi nhóm muốn gần như không bỏ sót đơn trễ.
 - **Balanced Accuracy**: trung bình recall của hai lớp — công bằng với lớp thiểu số.
 - **MCC (Matthews Correlation Coefficient)**: điểm tổng hợp trong [-1, 1]; 0 =
   đoán mò, 1 = hoàn hảo. Bền với mất cân bằng lớp.
@@ -55,6 +67,8 @@
     nhầm), **FN** âm-giả (**bỏ sót đơn trễ** — tốn nhất).
 - **PR curve (Precision-Recall)**: đường đánh đổi Precision↔Recall theo ngưỡng;
   dùng để chọn ngưỡng tối ưu F2.
+- **Threshold optimization**: thử nhiều ngưỡng xác suất để chọn policy vận hành
+  phù hợp (ví dụ ưu tiên Recall thì hạ ngưỡng, chấp nhận thêm FP).
 
 ## 4. Các mô hình (classifiers)
 
@@ -109,6 +123,10 @@
 
 - **Delay Risk Score (0–100)**: điểm rủi ro trễ = trộn có trọng số xác suất mô
   hình + các "áp lực" vận hành (traffic, distance, peak, complexity, weekend).
+- **Normalization (chuẩn hóa thang điểm)**: đổi các tín hiệu khác đơn vị
+  (xác suất, km, traffic, peak hour) về cùng thang 0-100 để cộng được với nhau.
+- **Weighted scoring model**: mô hình chấm điểm bằng cách nhân từng thành phần
+  với trọng số rồi cộng lại; minh bạch nhưng là policy, không phải tối ưu tự động.
 - **Priority (mức ưu tiên)**: Low / Medium / High theo ngưỡng điểm (35 / 65).
 - **Calibration (hiệu chuẩn)**: kiểm tra đơn điểm-cao có *thật sự* trễ nhiều hơn.
 - **Assignment / Transportation problem (bài toán phân công)**: gán đơn ↔ tài xế

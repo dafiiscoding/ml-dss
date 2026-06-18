@@ -178,7 +178,7 @@ def build():
             - Bằng chứng dẫn tới: Dataset gồm chưa tới 3 năm (thiếu dữ liệu để fit mô hình chuỗi thời gian xịn), tháng cuối bị cắt cụt (partial month). So sánh MAPE chứng tỏ tín hiệu xu hướng trong dataset khá yếu.
             """
         ),
-        code_cell("forecast_method_comparison(df)"),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "forecast_method_comparison.csv")'),
         md_cell(
             """
             **Insight (forecast).** Cả hai phương pháp đều có MAPE cao trên dữ liệu
@@ -211,7 +211,7 @@ def build():
             - Bằng chứng dẫn tới: Đa số các loại pizza/size báo cáo `trend = no_trend` (p-value >= 0.05), xác nhận bản chất dữ liệu không có trend, giải thích vì sao forecast có sai số cao.
             """
         ),
-        code_cell("preference_trend_tests(df)"),
+        code_cell('pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "preference_trend_tests.csv")'),
         md_cell(
             """
             **Insight (trend).** Hầu hết category có `trend = no_trend` (p ≥ 0.05):

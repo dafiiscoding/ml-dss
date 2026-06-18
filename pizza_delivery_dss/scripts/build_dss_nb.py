@@ -68,10 +68,19 @@ def build():
             from pizza_dss.config import PRIORITY_LOW_MAX, PRIORITY_MEDIUM_MAX
             from pizza_dss.dashboard_data import build_dashboard_data
             from pizza_dss.data_loader import load_processed_splits
-            from pizza_dss.decision_rules import calculate_delay_risk_components, calculate_delay_risk_score, get_priority_level
+            from pizza_dss.decision_rules import (
+                calculate_delay_risk_components,
+                calculate_delay_risk_score,
+                explain_delay_risk_score,
+                get_priority_level,
+            )
             from pizza_dss.modeling import load_best_model, predict_delay_probability
             from pizza_dss.powerbi import build_powerbi_pack
-            from pizza_dss.transport_optimization import build_transport_artifacts, solve_transport_assignment
+            from pizza_dss.transport_optimization import (
+                build_transport_artifacts,
+                solve_transport_assignment,
+                transport_cost_policy_spec,
+            )
             """
         ),
         md_cell(
@@ -90,10 +99,26 @@ def build():
               phí nhỏ nhất (Hungarian; greedy nếu thiếu scipy).
             """
         ),
-        md_cell("## 1. Priority queue"),
+        md_cell(
+            """
+            ## 0b. Risk component policy spec
+
+            **Vì sao bước này?**
+            - Làm gì: Liệt kê từng thành phần của Risk Score, công thức chuẩn hóa về 0-100, trọng số và lý do chọn.
+            - Vì sao: Risk Score là policy DSS do nhóm thiết kế, không phải tham số học tự động. Nếu không có bảng này, người xem chỉ thấy một con số 0-100 nhưng không biết nó đến từ đâu.
+            - Kỹ thuật: Weighted scoring model, normalization về cùng thang 0-100.
+            - Bằng chứng dẫn tới: `reports/metrics/risk_component_policy_spec.csv` là artifact chuẩn; tổng weight = 1.0 và `risk_component_breakdown.csv` cho thấy contribution cộng lại đúng bằng score.
+            """
+        ),
         code_cell(
             """
             queue = build_dashboard_data()
+            pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "risk_component_policy_spec.csv")
+            """
+        ),
+        md_cell("## 1. Priority queue"),
+        code_cell(
+            """
             queue.head(10)
             """
         ),
@@ -132,12 +157,25 @@ def build():
         ),
         code_cell(
             """
+            pd.DataFrame(explain_delay_risk_score(order, p))[[
+                "component", "component_score", "weight", "weighted_contribution",
+                "score_formula", "normalization", "rationale"
+            ]]
+            """
+        ),
+        code_cell(
+            """
             {
                 "order_id": order["order_id"],
                 "model_probability": round(p, 4),
                 "delay_risk_score": calculate_delay_risk_score(order, p),
                 "priority": get_priority_level(calculate_delay_risk_score(order, p)),
             }
+            """
+        ),
+        code_cell(
+            """
+            pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "risk_component_breakdown.csv").head(18)
             """
         ),
         md_cell("**Insight.** Tổng `contribution` đúng bằng `delay_risk_score`; thành phần xác suất mô hình (0.55) chi phối, các áp lực vận hành tinh chỉnh thêm. Nhờ vậy mỗi điểm số đều *giải thích được* cho người vận hành."),
@@ -154,11 +192,7 @@ def build():
         ),
         code_cell(
             """
-            queue["risk_band"] = pd.cut(queue["delay_risk_score"], [-1, PRIORITY_LOW_MAX, PRIORITY_MEDIUM_MAX, 1000],
-                                        labels=["Low", "Medium", "High"])
-            queue.groupby("risk_band", observed=True)["true_is_delayed"].agg(
-                orders="count", actual_delayed="sum", actual_delay_rate="mean"
-            ).reset_index()
+            pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "risk_calibration.csv")
             """
         ),
         md_cell("**Insight (calibration).** `actual_delay_rate` tăng dần Low → Medium → High ⇒ Risk Score xếp hạng rủi ro đúng hướng với thực tế trên test. Đây là bằng chứng tầng DSS không chỉ đẹp về hình thức mà còn bám outcome."),
@@ -175,12 +209,7 @@ def build():
         ),
         code_cell(
             """
-            rows = []
-            for low, high in [(30, 60), (PRIORITY_LOW_MAX, PRIORITY_MEDIUM_MAX), (40, 70)]:
-                band = pd.cut(queue["delay_risk_score"], [-1, low, high, 1000], labels=["Low", "Medium", "High"])
-                counts = band.value_counts().reindex(["Low", "Medium", "High"]).fillna(0).astype(int)
-                rows.append({"low_cut": low, "high_cut": high, **counts.to_dict()})
-            pd.DataFrame(rows)
+            pd.read_csv(PROJECT_ROOT / "reports" / "metrics" / "priority_threshold_sensitivity.csv")
             """
         ),
         img_cell("risk_score_histogram.png"),
@@ -194,6 +223,20 @@ def build():
             - Vì sao: Bước này là đại diện của tầng Prescriptive (đề xuất hành động). Thay vì để con người tự gán bừa tài xế, ta dùng thuật toán tối ưu. Nếu môi trường có `scipy`, nó dùng thuật toán **Hungarian** để tìm phương án tối ưu toàn cục. Nếu không, nó sẽ fallback sang thuật toán **Greedy** (tham lam) làm giải pháp thay thế.
             - Kỹ thuật: Linear Sum Assignment (Hungarian Algorithm), Greedy Heuristic.
             - Bằng chứng dẫn tới: Tính toán dựa trên một ma trận chi phí (cost matrix) mô phỏng: thời gian đi đường + hình phạt rủi ro trễ + thưởng nếu cùng tuyến. Hàm tối ưu hóa đảm bảo tìm được tổng cost nhỏ nhất có thể, đưa ra khuyến nghị thực tế (actionable recommendation).
+            """
+        ),
+        code_cell(
+            """
+            pd.DataFrame(transport_cost_policy_spec())
+            """
+        ),
+        md_cell(
+            """
+            **Đọc bảng cost policy.** `distance_km`, `traffic_level` và
+            `delay_risk_score` đến từ đơn/queue thật; `speed_factor`,
+            `base_location` và `capacity` là giả lập vì dataset không có bảng tài
+            xế. Vì vậy assignment là demo prescriptive DSS, không phải mô hình
+            dispatch sản xuất.
             """
         ),
         code_cell(
