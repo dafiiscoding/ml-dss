@@ -1,443 +1,296 @@
-\documentclass[aspectratio=169,11pt]{beamer}
+% !TeX program = xelatex
+\documentclass[t, aspectratio=169, 11pt]{beamer}
+
 \usepackage{fontspec}
 \setmainfont{Times New Roman}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{amsmath}
+\setsansfont{Arial}
+\setmonofont[Scale=0.9]{Courier New}
+\usepackage{amsthm,amsmath,amssymb,mathtools}
+\usepackage{bm}
+\usepackage{array,booktabs,multirow,makecell}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usepackage[normalem]{ulem}
+\usepackage{etoolbox}
+\usetikzlibrary{positioning,calc,arrows.meta,backgrounds,shapes.geometric}
 
-\usetheme{Madrid}
-\usecolortheme{default}
-\setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{footline}{%
-  \hfill\scriptsize\insertframenumber/\inserttotalframenumber\hspace{0.8em}\vspace{0.4em}
+\makeatletter
+\patchcmd{\beamer@sectionintoc}{\vskip1.5em}{\vskip0.55em}{}{}
+\makeatother
+
+% --- CẤU HÌNH LỀ ---
+\def\slideContentLeftMargin{0.5cm}
+\def\slideContentRightMargin{1cm}
+\def\hustHeaderHeight{1cm}
+\def\slideContentBotMargin{2.5cm}
+\def\slideContentTopPadding{1.3cm}
+
+\usepackage[red, 169]{beamerthemeHUST}
+
+\graphicspath{{images/}{../reports/figures/}{./}}
+
+\setbeamertemplate{footline}{\vspace{2.3cm}}
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamertemplate{itemize subitem}{\small\textbullet}
+\setbeamertemplate{itemize subsubitem}{\small\textbullet}
+\setbeamercolor{itemize item}{fg=black!80}
+\setbeamercolor{itemize subitem}{fg=black!70}
+\setbeamercolor{itemize subsubitem}{fg=black!70}
+
+\renewcommand{\titlePageTitleX}{-0.5cm}
+\renewcommand{\titlePageTitleY}{-0.5cm}
+\renewcommand{\hustTitleAlign}{\alignLeft}
+\renewcommand{\hustSubtitleAlign}{\alignLeft}
+\renewcommand{\hustAuthorAlign}{\alignLeft}
+\renewcommand{\hustInstAlign}{\alignLeft}
+
+\title{Hệ hỗ trợ quyết định (DSS) điều phối giao Pizza}
+\subtitle{Từ dữ liệu thô, dự báo học máy đến tối ưu vận tải và Dashboard}
+\author{\textbf{Nhóm 29}}
+\institute{
+Đại học Bách khoa Hà Nội -- Khoa Toán Tin \\
+Giảng viên: TS. Lê Hải Hà \quad \quad Hướng dẫn TH: TS. Trịnh Đình Thăng
 }
-\definecolor{HustRed}{RGB}{160,30,45}
-\definecolor{Ink}{RGB}{30,36,45}
-\setbeamercolor{structure}{fg=HustRed}
-\setbeamercolor{frametitle}{fg=Ink,bg=white}
-\setbeamerfont{frametitle}{series=\bfseries,size=\large}
-
-\title[Pizza Delivery DSS]{Hệ hỗ trợ quyết định điều phối giao pizza}
-\subtitle{Dự báo đơn trễ, xếp ưu tiên và tham khảo bài toán vận tải}
-\author{Nhóm 29}
-\institute{Đại học Bách khoa Hà Nội -- Khoa Toán Tin\\TS. Lê Hải Hà; TS. Trịnh Đình Thăng}
 \date{Tháng 6 năm 2026}
 
 \begin{document}
 
-\begin{frame}
-  \titlepage
+\begin{frame}[plain]
+    \titlepage
 \end{frame}
 
-\begin{frame}{Thông điệp chính}
-  \begin{block}{Luận điểm}
-  Một DSS nhỏ nhưng đầy đủ có thể chuyển dữ liệu đơn hàng pizza thành hàng đợi
-  ưu tiên và gợi ý hành động vận hành.
-  \end{block}
-  \begin{itemize}
-    \item Dữ liệu Kaggle thật: 1.004 đơn hàng, 25 cột gốc, 37 cột sau FE.
-    \item Kiểm soát leakage: không dùng duration/delay sau giao hàng làm feature.
-    \item Audit dữ liệu synthetic: 12 cảnh báo data-realism.
-    \item Thêm reverse-engineering generator, behavior, forecasting, recommendation, staffing và transportation scenario.
-  \end{itemize}
+\begin{frame}{1. Bài toán \& Quyết định cần hỗ trợ}
+    \begin{columns}
+        \column{0.5\linewidth}
+        \textbf{Bài toán thực tế}
+        \begin{itemize}
+            \item Cửa hàng nhận nhiều đơn cùng lúc. Nguồn lực tài xế có hạn.
+            \item Điều phối viên cần biết đơn nào nguy cơ trễ cao để ưu tiên giao trước.
+        \end{itemize}
+        
+        \vspace{0.4cm}
+        \textbf{Hệ hỗ trợ quyết định (DSS)}
+        \begin{itemize}
+            \item \textbf{Input:} Dữ liệu đơn hàng lúc mới đặt.
+            \item \textbf{Predictive:} AI dự báo xác suất trễ.
+            \item \textbf{Prescriptive:} Gợi ý hành động \& Gán tài xế tối ưu.
+        \end{itemize}
+        
+        \column{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth,height=0.6\textheight,keepaspectratio]{../reports/figures/pipeline_overview.png}
+    \end{columns}
 \end{frame}
 
-\begin{frame}{Bài toán quyết định}
-  \begin{columns}
-    \column{0.52\linewidth}
-    \textbf{Người dùng}: quản lý vận hành/điều phối giao hàng.
+\begin{frame}{2. Dữ liệu, Rò rỉ (Leakage) \& Ngưỡng mục tiêu}
+    \begin{columns}
+        \column{0.5\linewidth}
+        \textbf{Ngăn chặn Data Leakage:}
+        \begin{itemize}
+            \item Chỉ dùng dữ liệu có sẵn ngay lúc đặt hàng. Các cột như \texttt{delivery\_duration\_min} bị \textbf{cấm tuyệt đối} để mô hình không "học vẹt".
+        \end{itemize}
+        
+        \vspace{0.4cm}
+        \textbf{Xác định ngưỡng Trễ (Delay Threshold):}
+        \begin{itemize}
+            \item Bằng thuật toán quét (Sweep), ta tìm được luật của dữ liệu: Mọi đơn \texttt{duration $\ge$ 35} đều bị gắn mác Trễ. 
+            \item Ngưỡng thực tế là 30 phút.
+        \end{itemize}
+
+        \column{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth,height=0.6\textheight,keepaspectratio]{../reports/figures/delay_threshold_inference.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{3. Khám định Dữ liệu (Synthetic Forensics)}
+    \begin{columns}
+        \column{0.5\linewidth}
+        \textbf{Tại sao phải Khám định?}
+        \begin{itemize}
+            \item Để chứng minh dữ liệu Kaggle này là dữ liệu sinh tự động (Synthetic) bằng thuật toán.
+            \item Đảm bảo nhóm không \textit{overclaim} (nói quá) về độ chính xác kinh doanh thực tế.
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Bằng chứng:}
+        \begin{itemize}
+            \item 4 tính năng (như Estimated Duration, Pizza Complexity) là công thức toán học nội suy 100\% từ cột khác (Sai số = 0).
+            \item Quyết định: Loại bỏ chúng khỏi \textbf{Compact Feature Set} để chống đa cộng tuyến.
+        \end{itemize}
+        
+        \column{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth,height=0.6\textheight,keepaspectratio]{../reports/figures/generator_deterministic_formula_errors.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{4. Phân tích Khám phá (EDA) Cốt lõi}
+    \begin{columns}
+        \column{0.48\linewidth}
+        \textbf{Mất cân bằng nhãn (Imbalance)}
+        \begin{itemize}
+            \item Chỉ có $\sim 21\%$ đơn là trễ. 
+            \item Không thể dùng Accuracy để đánh giá (Đoán "Luôn đúng giờ" cũng đạt 79\%).
+        \end{itemize}
+        \vspace{0.4cm}
+        \textbf{Driver gây trễ (Traffic \& Distance)}
+        \begin{itemize}
+            \item Mức kẹt xe (High Traffic) làm tỷ lệ trễ vọt lên rất cao. Đây là insight vận hành mấu chốt để lập quy tắc phạt.
+        \end{itemize}
+
+        \column{0.5\linewidth}
+        \centering
+        \includegraphics[width=\linewidth,height=0.6\textheight,keepaspectratio]{../reports/figures/delay_rate_by_traffic.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{5. So sánh Mô hình \& Tại sao không chọn Bayes?}
+    \begin{columns}
+        \column{0.5\linewidth}
+        \textbf{Kiểm thử 6 họ mô hình (Classifiers):}
+        \begin{itemize}
+            \item \textbf{Logistic Regression (LR):} Chiến thắng với F2 tốt nhất (0.943), ít Overfit, dễ diễn giải.
+            \item \textbf{SVM \& Random Forest:} Bám sát nhưng chậm và phức tạp hơn.
+            \item \textbf{Tại sao loại Naive Bayes?} Điểm F2 cực thấp (0.66). Lý do: Thuật toán này giả định các tính năng độc lập, trong khi dữ liệu giao hàng có tính liên kết chặt chẽ.
+        \end{itemize}
+        
+        \column{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth,height=0.6\textheight,keepaspectratio]{../reports/figures/model_comparison.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{6. F-Beta, Tuning \& Độ Ổn định}
+    \begin{columns}
+        \column{0.48\linewidth}
+        \textbf{Tuning \& Metric}
+        \begin{itemize}
+            \item \textbf{Ưu tiên F2-Score:} Việc bỏ sót đơn trễ (False Negative) đắt giá hơn nhiều so với việc cảnh báo thừa (False Positive).
+            \item \textbf{Tuning Logistic Reg:} Giữ nguyên $C=1.0$ do dữ liệu synthetic phân cực sẵn, tune tiếp không đem lại lợi ích rõ rệt.
+        \end{itemize}
+        
+        \column{0.5\linewidth}
+        \textbf{Độ Ổn định (Stability Audit)}
+        \begin{itemize}
+            \item Chạy \textit{100 lần chia Random Split} (Train/Dev).
+            \item Điểm F2 không dao động nhiều. Kết quả xuất sắc không phải do "ăn may".
+        \end{itemize}
+        \vspace{0.2cm}
+        \centering
+        \includegraphics[width=0.8\linewidth,height=0.3\textheight,keepaspectratio]{../reports/figures/model_stability_f2_distribution.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{7. Kết quả Test sau khi Khóa mô hình}
+    \begin{columns}
+        \column{0.45\linewidth}
+        \textbf{Đánh giá Test-set}
+        \begin{table}
+            \centering
+            \begin{tabular}{lr}
+            \toprule
+            Metric & Giá trị\\
+            \midrule
+            Accuracy & 0.960\\
+            \textbf{Balanced Acc} & \textbf{0.966}\\
+            Precision & 0.854\\
+            \textbf{Recall} & \textbf{0.976}\\
+            \textbf{F2-Score} & \textbf{0.949}\\
+            MCC & 0.889\\
+            \bottomrule
+            \end{tabular}
+        \end{table}
+        
+        \column{0.52\linewidth}
+        \textbf{So sánh Baseline}
+        \begin{itemize}
+            \item \textbf{Always On-time:} F2 = 0.
+            \item \textbf{Always Delayed:} F2 = 0.569.
+            \item Logistic Regression (F2 = 0.949) hoàn toàn vượt trội Baseline.
+            \item \textbf{Kết luận:} Recall 97.6\% có nghĩa là mô hình gần như \textbf{không bỏ lọt} bất kỳ đơn nào bị trễ.
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{8. Xây dựng Trọng số Rủi ro (Risk Score)}
+    \begin{columns}
+        \column{0.5\linewidth}
+        \textbf{Từ Mô hình đến Nghiệp vụ}
+        \begin{itemize}
+            \item AI không làm "Black Box".
+            \item \textbf{Delay Risk Score (0-100)} = (0.55 $\times$ Xác suất AI) + (0.45 $\times$ Penalty Vận hành: Giao thông, Khoảng cách...).
+            \item Điều phối viên nhìn vào đơn hàng sẽ biết ngay vì sao điểm rủi ro lại cao.
+        \end{itemize}
+        
+        \column{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth,height=0.6\textheight,keepaspectratio]{../reports/figures/risk_component_breakdown.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{9. Delay Priority Queue \& Gợi ý Hành động}
+    \begin{columns}
+        \column{0.55\linewidth}
+        \textbf{Hàng đợi \& Phân luồng ưu tiên}
+        \begin{itemize}
+            \item \textbf{High (> 65):} Khuyến nghị gán tài xế ưu tiên, báo khách hàng nguy cơ trễ.
+            \item \textbf{Medium (35 - 65):} Đẩy nhanh tiến độ làm bánh.
+            \item \textbf{Low (< 35):} Xử lý bình thường.
+        \end{itemize}
+        
+        \column{0.4\linewidth}
+        \begin{center}
+            Hệ thống liên tục quét đơn mới để đẩy lên đỉnh \textbf{Priority Queue}, giúp cửa hàng đối phó với giờ cao điểm (Peak Hours).
+        \end{center}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{10. Ứng dụng Thực tế: Streamlit Dashboard}
     \begin{itemize}
-      \item Đơn nào có nguy cơ giao trễ?
-      \item Đơn nào cần theo dõi trước?
-      \item Gợi ý hành động gì theo mức rủi ro?
+        \item Cung cấp hệ thống tương tác \textbf{Web-based} cho Quản lý / Điều phối viên.
+        \item \textbf{8 Phân hệ tích hợp:} Báo cáo tổng quan, EDA, Forecasting, Model Eval và Action Queue.
+        \item Cung cấp tính năng \textbf{Single Order Demo}: Nhập dữ liệu 1 đơn $\Rightarrow$ Nhận Risk Score \& Explainable breakdown tức thì.
     \end{itemize}
-    \column{0.44\linewidth}
-    \textbf{Luồng DSS}
-    \begin{enumerate}
-      \item Data audit
-      \item Generator forensics
-      \item EDA + behavior
-      \item Forecast + recommendation
-      \item Predictive model
-      \item Risk/Priority rules
-      \item Dashboard/PowerBI
-    \end{enumerate}
-  \end{columns}
+    \vspace{0.8cm}
+    \begin{center}
+        \textit{(Trình chiếu Dashboard trực tiếp)}
+    \end{center}
 \end{frame}
 
-\begin{frame}{Dữ liệu và leakage}
-  \begin{table}
-  \centering
-  \begin{tabular}{lr}
-  \toprule
-  Chỉ tiêu & Giá trị\\
-  \midrule
-  Số đơn hàng & 1.004\\
-  Delayed & 210\\
-  On-time & 794\\
-  Tỷ lệ trễ & 20,92\%\\
-  Missing value & 0\\
-  Duplicate order id & 0\\
-  \bottomrule
-  \end{tabular}
-  \end{table}
-  \vspace{4pt}
-  \alert{\textbf{Audit quan trọng:}} \texttt{is\_delayed = delivery\_duration\_min > 30}.
-  Vì vậy duration, delivery time, delay và delivery efficiency bị chặn khỏi feature.
+\begin{frame}{11. Bài toán Tối ưu Vận tải (Transportation Problem)}
+    \begin{columns}
+        \column{0.48\linewidth}
+        \textbf{Minh họa Prescriptive DSS}
+        \begin{itemize}
+            \item Lấy các đơn hàng \textbf{High Priority}. Giả lập mạng lưới tài xế.
+            \item \textbf{Cost Matrix:} Phạt nặng nếu đơn rủi ro mà không có tài xế, thưởng nếu giao cùng tuyến.
+            \item \textbf{Thuật toán:} Tối ưu hóa toàn cục chi phí giao hàng bằng thuật toán \textbf{Hungarian}.
+        \end{itemize}
+        
+        \column{0.5\linewidth}
+        \centering
+        \includegraphics[width=\linewidth,height=0.6\textheight,keepaspectratio]{../reports/figures/transport_assignment_cost.png}
+    \end{columns}
 \end{frame}
 
-\begin{frame}{Dữ liệu rác: biến điểm yếu thành audit}
-  \begin{columns}
-    \column{0.5\linewidth}
-    \begin{itemize}
-      \item Không missing trên toàn bộ bảng.
-      \item File 2024--25 nhưng có dữ liệu tới 07/2026.
-      \item Duration chỉ có 8 giá trị rời rạc.
-      \item Estimated duration = 2,4 x distance.
-      \item Complexity = toppings x size score.
-    \end{itemize}
-    \column{0.46\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{../reports/figures/synthetic_data_flags.png}
-  \end{columns}
-  \small Kết luận: báo cáo không overclaim; dùng compact feature set để giảm cột trùng thông tin.
-\end{frame}
-
-\begin{frame}{Truy ngược generator}
-  \begin{columns}
-    \column{0.48\linewidth}
-    \begin{itemize}
-      \item 7 công thức/target khớp tuyệt đối.
-      \item Duration nằm trên lưới 5 phút: 15--50.
-      \item Best OLS duration recovery: R2 = 0,8754.
-      \item Brand có artifact nhỏ: bỏ restaurant làm dev F2 giảm 0,0343.
-    \end{itemize}
-    \small Kết luận: dùng dữ liệu để minh họa quy trình DSS, không overclaim thị trường thật.
-    \column{0.48\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{../reports/figures/feature_information_audit.png}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{EDA: trễ là lớp thiểu số}
-  \centering
-  \includegraphics[width=0.64\linewidth]{../reports/figures/delay_distribution.png}
-  \vspace{4pt}
-  \small Accuracy một mình dễ đánh lừa: always-on-time đạt 0,791 nhưng F2 bằng 0.
-\end{frame}
-
-\begin{frame}{EDA: traffic và distance dẫn dắt rủi ro}
-  \centering
-  \includegraphics[width=0.64\linewidth]{../reports/figures/delay_rate_by_traffic.png}
-  \vspace{4pt}
-  \small Insight này được đưa vào Risk Score, nhưng không diễn giải như quan hệ nhân quả tuyệt đối.
-\end{frame}
-
-\begin{frame}{Customer behavior: size, type, location}
-  \begin{columns}
-    \column{0.48\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{../reports/figures/size_preference.png}
-    \column{0.48\linewidth}
-    \begin{itemize}
-      \item Top size: Medium.
-      \item Top type: Non-Veg.
-      \item 60 rule recommendation theo popularity.
-      \item Location có tín hiệu nhưng nhiều nhóm nhỏ, cần diễn giải cẩn thận.
-    \end{itemize}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Forecasting và staffing}
-  \begin{columns}
-    \column{0.54\linewidth}
-    \includegraphics[width=\linewidth]{../reports/figures/monthly_demand_forecast.png}
-    \column{0.42\linewidth}
-    \begin{itemize}
-      \item Seasonal-naive prior-year.
-      \item Backtest: 19 tháng.
-      \item MAE: 12,211 đơn.
-      \item MAPE: 45,7\%, chỉ dùng demo planning.
-      \item Peak staffing hour: 19h.
-    \end{itemize}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Trend sở thích size/type}
-  \begin{columns}
-    \column{0.54\linewidth}
-    \includegraphics[width=\linewidth]{../reports/figures/preference_size_share_forecast.png}
-    \column{0.42\linewidth}
-    \begin{itemize}
-      \item Forecast share theo tháng cho size/type.
-      \item Một số trend có p-value nhỏ.
-      \item Vì dữ liệu synthetic, dùng như demo phương pháp.
-      \item Không kết luận thị hiếu thật.
-    \end{itemize}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Kiến thức môn học được dùng}
-  \begin{table}
-  \centering
-  \begin{tabular}{ll}
-  \toprule
-  Nhóm kiến thức & Thể hiện trong dự án\\
-  \midrule
-  DSS & Predictive + Prescriptive + Dashboard\\
-  ML supervised & Dự báo \texttt{is\_delayed}\\
-  DT/NB/kNN/SVM/RF & So sánh 6 classifier\\
-  Metric & Accuracy, F2, Balanced Accuracy, MCC\\
-  Clustering & K-Means khám phá nhóm đơn\\
-  Association rules & Luật điều kiện đi cùng delayed\\
-  Hypothesis tests & Payment, size, type, location, traffic\\
-  Time series & Demand forecasting và staffing\\
-  Recommendation & Popularity rules theo context\\
-  Transportation problem & Assignment đơn rủi ro cao cho tài xế giả định\\
-  \bottomrule
-  \end{tabular}
-  \end{table}
-\end{frame}
-
-\begin{frame}{Feature engineering: full vs compact}
-  \begin{table}
-  \centering
-  \begin{tabular}{lrrrr}
-  \toprule
-  Feature set & Features & Acc. & F2 & MCC\\
-  \midrule
-  Compact non-redundant & 12 & 0,9701 & 0,9434 & 0,9117\\
-  Full pre-dispatch & 17 & 0,9701 & 0,9286 & 0,9097\\
-  \bottomrule
-  \end{tabular}
-  \end{table}
-  \small Compact bỏ cột deterministic và dùng \texttt{pizza\_size\_score}: Small=1, Medium=2, Large=3, XL=4.
-\end{frame}
-
-\begin{frame}{So sánh model trên dev}
-  \begin{table}
-  \centering
-  \begin{tabular}{lrrrr}
-  \toprule
-  Model & Acc. & Bal. Acc. & F2 & MCC\\
-  \midrule
-  Logistic Regression & 0,9701 & 0,9636 & 0,9434 & 0,9117\\
-  SVM & 0,9602 & 0,9398 & 0,9048 & 0,8796\\
-  Decision Tree & 0,9502 & 0,9335 & 0,8962 & 0,8525\\
-  Random Forest & 0,9652 & 0,9254 & 0,8780 & 0,8926\\
-  k-NN & 0,9353 & 0,8540 & 0,7538 & 0,7970\\
-  Naive Bayes & 0,6368 & 0,7179 & 0,6642 & 0,3544\\
-  \bottomrule
-  \end{tabular}
-  \end{table}
-  \small Chọn Logistic Regression theo F2 trên dev; Naive Bayes được thử nhưng thua rõ do giả định độc lập không hợp dữ liệu.
-\end{frame}
-
-\begin{frame}{Tuning sau khi chọn model}
-  \begin{itemize}
-    \item Chỉ tune Logistic Regression theo nguyên tắc select-then-tune.
-    \item GridSearchCV trên train: \(C \in \{0.1,0.3,1,3,10\}\), scoring F2.
-    \item Best CV: \(C=0.3\), mean F2 0,9437.
-    \item So trên dev: default \(C=1.0\) F2 0,9434; tuned \(C=0.3\) F2 0,8894.
-    \item Quyết định: giữ default LR, không dùng test để chọn tham số.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Kiểm soát F-beta và split may mắn}
-  \begin{columns}
-    \column{0.48\linewidth}
-    \scriptsize
-    \begin{table}
-    \centering
-    \begin{tabular}{lrrrr}
-    \toprule
-    Test policy & Thr. & F2 & FP & FN\\
-    \midrule
-    Default & 0,5000 & 0,9491 & 7 & 1\\
-    Dev-best F2 & 0,1569 & 0,9052 & 22 & 0\\
-    \bottomrule
-    \end{tabular}
-    \end{table}
-    \small Dev-best F2 bắt hết đơn trễ nhưng tăng cảnh báo dư; không chọn bằng test.
-    \column{0.48\linewidth}
-    \includegraphics[width=\linewidth]{../reports/figures/model_stability_f2_distribution.png}
-    \scriptsize 100-run train+dev: F2 mean 0,9419; p05 0,8892; p95 0,9770.
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Kết quả test sau khi khóa mô hình}
-  \begin{columns}
-    \column{0.45\linewidth}
-    \begin{table}
-    \centering
-    \begin{tabular}{lr}
-    \toprule
-    Metric & Giá trị\\
-    \midrule
-    Accuracy & 0,9602\\
-    Balanced Accuracy & 0,9661\\
-    Precision & 0,8542\\
-    Recall & 0,9762\\
-    F1 & 0,9111\\
-    F2 & 0,9491\\
-    MCC & 0,8889\\
-    \bottomrule
-    \end{tabular}
-    \end{table}
-    \column{0.5\linewidth}
-    Confusion matrix:
-    \begin{table}
-    \centering
-    \begin{tabular}{lrr}
-    \toprule
-     & On-time & Delayed\\
-    \midrule
-    Actual on-time & 152 & 7\\
-    Actual delayed & 1 & 41\\
-    \bottomrule
-    \end{tabular}
-    \end{table}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Tầng DSS: từ xác suất đến hành động}
-  \[
-  Risk = 0,55S_{model}+0,15S_{traffic}+0,12S_{distance}
-       +0,08S_{peak}+0,06S_{complexity}+0,04S_{weekend}
-  \]
-  \begin{table}
-  \centering
-  \begin{tabular}{lll}
-  \toprule
-  Risk & Priority & Action\\
-  \midrule
-  0--35 & Low & Hàng đợi bình thường\\
-  36--65 & Medium & Theo dõi tài xế/traffic\\
-  66--100 & High & Escalate, backup driver, customer support\\
-  \bottomrule
-  \end{tabular}
-  \end{table}
-  \small Priority là policy minh bạch, chưa phải tối ưu thống kê.
-\end{frame}
-
-\begin{frame}{Risk Score không phải hộp đen}
-  \begin{columns}
-    \column{0.52\linewidth}
-    \scriptsize
-    \begin{table}
-    \centering
-    \begin{tabular}{lrl}
-    \toprule
-    Component & Weight & Chuẩn hóa\\
-    \midrule
-    Model & 0,55 & \(P(delay)\times100\)\\
-    Traffic & 0,15 & Low/Med/High = 20/60/100\\
-    Distance & 0,12 & \(distance/10\times100\)\\
-    Peak & 0,08 & 100 nếu peak, ngược lại 20\\
-    Complexity & 0,06 & \(complexity/20\times100\)\\
-    Weekend & 0,04 & 70 nếu weekend, ngược lại 40\\
-    \bottomrule
-    \end{tabular}
-    \end{table}
-    \small Weight cộng bằng 1,0; đây là policy có thể chỉnh theo năng lực xử lý.
-    \column{0.44\linewidth}
-    \includegraphics[width=\linewidth]{../reports/figures/risk_component_breakdown.png}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Tham khảo bài toán vận tải}
-  \begin{block}{Ý tưởng}
-  Lấy các đơn có rủi ro cao trong queue, tạo fleet tài xế giả định và giải
-  bài toán assignment tối thiểu chi phí.
-  \end{block}
-  \begin{itemize}
-    \item Đơn hàng là dữ liệu thật từ queue.
-    \item Driver/capacity là kịch bản mô phỏng vì dataset gốc không có.
-    \item Cost = travel proxy + priority penalty + traffic penalty - same-location bonus.
-    \item Solver: Hungarian; greedy fallback nếu thiếu \texttt{scipy}.
-    \item Output: \texttt{transport\_assignment.csv} + \texttt{transport\_cost\_policy\_spec.csv}.
-  \end{itemize}
-  \vspace{0.1cm}
-  \small Đây là minh họa prescriptive DSS, không claim tối ưu điều phối tài xế thật.
-\end{frame}
-
-\begin{frame}{Dashboard Streamlit và PowerBI}
-  \begin{columns}
-    \column{0.48\linewidth}
-    \textbf{Streamlit}
-    \begin{itemize}
-      \item Overview
-      \item EDA
-      \item Customer Behavior
-      \item Forecast \& Staffing
-      \item Model Evaluation
-      \item Single Order Demo
-      \item Delay Queue
-      \item Data Quality
-    \end{itemize}
-    \column{0.48\linewidth}
-    \textbf{PowerBI pack}
-    \begin{itemize}
-      \item fact orders
-      \item fact delay queue
-      \item fact transport assignment
-      \item fact transport cost policy
-      \item fact forecast/staffing/recommendation
-      \item fact hypothesis/data realism audit
-      \item dimensions
-      \item DAX measures
-    \end{itemize}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Minh chứng tái lập}
-  \begin{itemize}
-    \item 6 notebook theo module: data, EDA, modeling, DSS/PowerBI, business, forensics.
-    \item \texttt{python -m scripts.run\_all}: 18 bước tái tạo pipeline.
-    \item 30 unit tests: schema, leakage, split, forensics, model, DSS, forecast, assignment.
-    \item Streamlit AppTest kiểm tra dashboard không exception.
-    \item LaTeX report compile bằng XeLaTeX.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Câu hỏi phản biện đã khóa}
-  \small
-  \begin{tabular}{p{0.36\linewidth}p{0.56\linewidth}}
-  \toprule
-  Câu hỏi & Trả lời ngắn\\
-  \midrule
-  Sao biết 30 phút là trễ? & Suy luận từ nhãn: on-time max 30, delayed min 35; không giả định SLA.\\
-  Sao không dùng duration? & Duration là thông tin sau giao, phục dựng nhãn nên leakage.\\
-  Sao không chọn Bayes? & Đã thử; dev F2/MCC thấp vì giả định độc lập không hợp dữ liệu sinh.\\
-  F-beta tối ưu chưa? & Có quét dev; dev-best F2 tăng FP trên test nên giữ threshold 0,5.\\
-  Điểm cao có may mắn? & 100-run F2 mean 0,9419; vẫn caveat data synthetic/gần tất định.\\
-  Assignment thật không? & Đơn thật, driver/fleet giả lập; chỉ là prototype prescriptive DSS.\\
-  \bottomrule
-  \end{tabular}
-\end{frame}
-
-\begin{frame}{Giới hạn và hướng phát triển}
-  \begin{itemize}
-    \item Dataset nhỏ và có tính mô phỏng.
-    \item Có 12 cảnh báo data-realism; không overclaim kết quả kinh doanh.
-    \item Brand/preference trend có artifact từ generator, không phải kết luận thị trường thật.
-    \item Chronological holdout không có delayed sample, nên bản học thuật dùng stratified split.
-    \item Forecast MAPE 45,7\%, chỉ là demo planning.
-    \item Driver/fleet là mô phỏng, chưa phải dữ liệu điều phối thật.
-    \item Priority chưa được tối ưu bằng cost/SLA thật.
-    \item Hướng phát triển: thu thập driver logs, SLA, route distance, cost và kiểm thử theo thời gian.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Kết luận}
-  \begin{block}{Kết quả}
-  Dự án pizza giữ quy trình DSS đầy đủ nhưng nhỏ hơn CrisisMMD: dữ liệu thật,
-  audit leakage, audit synthetic, generator forensics, EDA, hypothesis tests,
-  behavior, forecasting, recommendation, model comparison, DSS rules, transportation scenario,
-  Streamlit, PowerBI pack, LaTeX report và slide.
-  \end{block}
-  \centering
-  \Large Cảm ơn thầy cô và các bạn!
+\begin{frame}{12. Giới hạn \& Kết luận}
+    \begin{columns}
+        \column{0.48\linewidth}
+        \textbf{Hạn chế (Caveats)}
+        \begin{itemize}
+            \item \textbf{Dữ liệu sinh (Synthetic):} Forecast nhu cầu hay Preference trends không mang ý nghĩa thị trường thực, chỉ mang tính minh họa phương pháp luận.
+            \item Tài xế trong bài toán vận tải chỉ là tham số giả lập.
+        \end{itemize}
+        
+        \column{0.48\linewidth}
+        \textbf{Kết luận}
+        \begin{itemize}
+            \item Hoàn thiện một chu trình \textbf{DSS khép kín}.
+            \item Đảm bảo độ nghiêm ngặt khoa học (ngăn rò rỉ, giải thích được).
+            \item Sẵn sàng triển khai thành công cụ vận hành.
+        \end{itemize}
+    \end{columns}
 \end{frame}
 
 \end{document}
